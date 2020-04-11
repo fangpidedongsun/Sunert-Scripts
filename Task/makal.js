@@ -136,7 +136,7 @@ return new Promise((resolve, reject) => {
     sy.get(infourl, (error, response, data) =>{
     //sy.log(`${cookieName}, data: ${data}`)
      let result = JSON.parse(data)
-     if (n <6&&n>0){
+     if (n<=6&&n>0){
         detail = `今日获取金币:${result.result.weeks[n].point}  `
         }
     else if(n==0) {
