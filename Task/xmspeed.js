@@ -5,7 +5,7 @@
 2.APP登陆账号后，点击右下角'福利'选项,即可获取Cookie.
 3.宝箱y从0点开始，可每隔一小时开启一次，每天最多5次，金币账户与喜马拉雅标准版不同账户
 4.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
-5.转盘无效
+5.转盘无效，仅开启宝箱
 仅测试Quantumult x，Surge、Loon自行测试
 by Macsuny
 
@@ -64,9 +64,7 @@ function sign() {
 })
     shareurl = {url: 'https://m.ximalaya.com/speed/web-earn/inspire/lottery/action',
     	headers: {Cookie:cookieVal},
-     body: `{
- "sign": "EyiP5CRKRY1/oHgdyzm3SxC2jw+NrghwZG5ND4Z1+ZWVH4ttwx+nBDog+H33Et9sTDR9DxMWxgnmsghCN4MEj8Oniv8USRK2E6Jw6w6GgdOhi7PR/6aqYLQi2iaHFz6feM3skLmMGkvZsv1amzTjjs97faLzgZVT7scElwvoldQ="
-}`
+        body: ``
     } // 手动抓取请求"body"值无效果
      shareurl.headers['Content-Type'] = 'application/json;charset=utf-8'
     sy.post(shareurl, (error, response, data) => {
