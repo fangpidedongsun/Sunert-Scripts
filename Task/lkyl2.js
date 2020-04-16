@@ -29,9 +29,9 @@ hostname = draw.jdfcloud.com
 ~~~~~~~~~~~~~~~~
 
 */
-const cookieName = '来客有礼'
-const signurlKey = 'sy_signurl_lkyl'
-const signheaderKey = 'sy_signheader_lkyl'
+const cookieName = '来客有礼2'
+const signurlKey = 'sy_signurl_lkyl2'
+const signheaderKey = 'sy_signheader_lkyl2'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)
