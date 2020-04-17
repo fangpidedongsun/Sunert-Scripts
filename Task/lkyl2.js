@@ -65,7 +65,7 @@ function sign() {
 		headers: JSON.parse(signheaderVal)
 	}
     sy.post(signurl, (error, response, data) => {
-      sy.log(`${cookieName}, data: ${data}`)
+      //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {
@@ -84,6 +84,8 @@ function sign() {
      })
    })
   }
+
+
 function lottery() {
    return new Promise((resolve, reject) =>{
 	  let daytaskurl = {
@@ -98,11 +100,45 @@ function lottery() {
       if (result.success == true) {
       //detail += `\n今日抽奖获取银豆: ${result.data.rewardAmount}`
       }
+    video()
+    resolve()
+      })
+   })
+}
+
+function video() {
+   return new Promise((resolve, reject) =>{
+	  let videourl = {
+		url: `https://draw.jdfcloud.com//api/bean/square/silverBean/task/join?appId=${appid}`,
+		headers: JSON.parse(signheaderVal),
+          body: `{"openId": "['openid']","taskCode": "watch_video"}`}
+     videourl.headers['Content-Length'] = `0`;
+    sy.post(videourl, (error, response, data) => {
+      sy.log(`${cookieName}, data: ${data}`)
+      let result = JSON.parse(data)
+      const title = `${cookieName}`
+      if (result.success == true) {
+      //detail += `\n今日抽奖获取银豆: ${result.data.rewardAmount}`
+      }
+     let videotaskurl = {
+		url: `https://draw.jdfcloud.com//api/bean/square/silverBean/taskReward/get?openId=${openid}&taskCode=watch_video&inviterOpenId=&appId=${appid}`,
+		headers: JSON.parse(signheaderVal)
+     }
+     videotaskurl.headers['Content-Length'] = `0`;
+    sy.get(videotaskurl, (error, response, data) => {
+      sy.log(`${cookieName}, data: ${data}`)
+      let result = JSON.parse(data)
+      const title = `${cookieName}`
+      if (result.success == true) {
+      //detail += `\n今日抽奖获取银豆: ${result.data.rewardAmount}`
+      }
+     })
     award()
     resolve()
       })
    })
 }
+
 
 function award() {
    return new Promise((resolve, reject) =>{
@@ -112,11 +148,12 @@ function award() {
 	}
      weektaskurl.headers['Content-Length'] = `0`;
     sy.get(weektaskurl, (error, response, data) => {
-      sy.log(`${cookieName}, data: ${data}`)
+      //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {
-     for (i=0;i<result.data.homeActivities.length;i++)
+        detail += `  您已参与${result.data.homeActivities.length}个抽奖`
+     for (i=0;i < 3;i++)
 {   
    lotteryId = result.data.homeActivities[i].activityId
    let awardurl = {  
@@ -125,7 +162,7 @@ function award() {
 	}
     sy.post(awardurl, (error, response, data) =>
   {
-     sy.log(`${cookieName}, data: ${data}`)
+     //sy.log(`${cookieName}, data: ${data}`)
        })
       }
      }
@@ -143,7 +180,7 @@ return new Promise((resolve, reject) => {
    beanurl.headers['Content-Length'] = `0`;
     sy.post(beanurl, (error, response, data) =>
   {
-    sy.log(`${cookieName}, data: ${data}`)
+    //sy.log(`${cookieName}, data: ${data}`)
    })
    total()
   resolve()
@@ -157,7 +194,7 @@ function total() {
 	}
      lotteryurl.headers['Content-Length'] = `0`;
     sy.get(lotteryurl, (error, response, data) => {
-      sy.log(`${cookieName}, data: ${data}`)
+      //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {
@@ -170,7 +207,7 @@ function total() {
 	}
     hinturl.headers['Content-Length'] = `0`;
     sy.get(hinturl, (error, response, data) => {
-      sy.log(`${cookieName}, data: ${data}`)
+      //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (SilverBean >= 20) {
