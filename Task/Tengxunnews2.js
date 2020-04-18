@@ -1,20 +1,15 @@
-
 /*
-
-
 Cookie登录app签到页获取，第一次获取后可以注释掉。
 
 [rewrite_local]
-#腾讯新闻app签到，by红鲤鱼与绿鲤鱼与驴
-完全瞎搞，试试先，估计不管用2010.1.31
+#腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
-http:\/\/mtrace\.qq\.com\/mkvcollect* url script-request-header Tengxunnews.js
+http:\/\/mtrace\.qq\.com\/mkvcollect\?k url script-request-header Tengxunnews.js
 
 [task_local]
-# 表示每天1分执行一次
+# 表示每天1点5分执行一次
+5 1 * * * Tengxunnews.js
 
-[mitm]
-hostname = mtrace.qq.com
 */
 var note = "";
 var tip = "";
@@ -32,21 +27,20 @@ if ($nobyda.isRequest) {
 
 function coinget() {
   const coinUrl = {
-    url: `https://api.inews.qq.com/task/v1/usermergetask/list?isJailbreak`,
+    url: `https://r.inews.qq.com/getUserExpConfs?isJailbreak=`,
     headers: {
       Cookie: KEY,
     }
   };
-  $nobyda.get(coinUrl, function(error, response, data) {
+  $nobyda.post(coinUrl, function(error, response, data) {
     if (error) {
          $nobyda.notify("获取金币失败‼️", "", "");
      if (log) console.log("获取金币" + data)
     } else {
      const jb = JSON.parse(data)
-     var notb = "您总计有" + jb.data.points +'个金币'+'，  明天将获得'+ next+'个金币';
-     //console.log(note+","+notb+ "\n" )
-    money()
-    $nobyda.notify(note+ "\n" ,notb, str)
+console.log(jb)
+     
+    //$nobyda.notify(note+ "\n" ,notb, str)
         }
       })
     }
@@ -58,7 +52,7 @@ function money() {
       Cookie: KEY,
     }
   };
-  $nobyda.post(moneyUrl, function(error, response, data) {
+  $nobyda.post(moneyUrl, function(error,response, data) {
     if (error) {
          $nobyda.notify("获取收益信息失败‼️", "", "");
      if (log) console.log("获取收益信息" + data)
@@ -67,6 +61,7 @@ function money() {
      notb = '共计' + jb.data.wealth[0].title +'个金币    '+"现金总计" + jb.data.wealth[1].title+'元';
      console.log(note+","+notb+ "\n" )
     $nobyda.notify(note+ "\n" ,notb, str)
+    coinget()
         }
       })
     }
@@ -85,7 +80,7 @@ function getsign() {
        if (log) console.log("腾讯新闻签到失败" + data)
     } else {
     const obj = JSON.parse(data)
-    console.log("原始数据:"+data)
+    //console.log("原始数据:"+data)
       if (obj.info=="success"){
        console.log("腾讯新闻 签到成功，已连续签到" + obj.data.signin_days+"天"+"\n")
        note = "腾讯新闻"
@@ -93,7 +88,7 @@ function getsign() {
        tip = obj.data.tip_soup
        author= obj.data.author
        str =  "签到成功，已连续签到" + obj.data.signin_days+"天  "+'明天将获得'+ next +'个金币'+ '\n'+tip.replace(/[\<|\.|\>|br]/g,"")+ author
-       money()
+    money()
 } else {
     $nobyda.notify("签到失败，🉐登录腾讯新闻app获取cookie", "", "")
     console.log("签到失败，🉐登录腾讯新闻app获取cookie"+data)

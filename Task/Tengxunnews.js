@@ -6,6 +6,8 @@ Cookie登录app签到页获取，第一次获取后可以注释掉。
 [rewrite_local]
 #腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
+现无法自动领取红包，每日手动领取红包地址: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
+
 http:\/\/mtrace\.qq\.com\/mkvcollect\?k url script-request-header Tengxunnews.js
 
 [task_local]
@@ -27,44 +29,23 @@ if ($nobyda.isRequest) {
   $nobyda.end()
 }
 
-function coinget() {
-  const coinUrl = {
-    url: `https://api.inews.qq.com/task/v1/usermergetask/list?isJailbreak`,
-    headers: {
-      Cookie: KEY,
-    }
-  };
-  $nobyda.get(coinUrl, function(error, response, data) {
-    if (error) {
-         $nobyda.notify("获取金币失败‼️", "", "");
-     if (log) console.log("获取金币" + data)
-    } else {
-     const jb = JSON.parse(data)
-     var notb = "您总计有" + jb.data.points +'个金币'+'，  明天将获得'+ next+'个金币';
-     //console.log(note+","+notb+ "\n" )
-      money()
-    $nobyda.notify(note+ "\n" ,notb, str)
-        }
-      })
-    }
-
-function money() {
-  const moneyUrl = {
+function earning() {
+  const earningUrl = {
     url: `https://api.inews.qq.com/activity/v1/usercenter/activity/list?isJailbreak`,
     headers: {
       Cookie: KEY,
     }
   };
-  $nobyda.post(moneyUrl, function(error, response, data) {
+  $nobyda.post(earningUrl, function(error, response, data) {
     if (error) {
-         $nobyda.notify("获取信息失败‼️", "", "");
-     if (log) console.log("获取信息" + data)
+         $nobyda.notify("获取收益信息失败‼️", "", "");
+     if (log) console.log("获取收益" + data)
     } else {
      const jb = JSON.parse(data)
      notb = '共计' + jb.data.wealth[0].title +'个金币    '+"现金总计" + jb.data.wealth[1].title+'元';
      console.log(note+","+notb+ "\n" )
     $nobyda.notify(note+ "\n" ,notb, str)
-        }
+         }
       })
     }
 
@@ -90,7 +71,7 @@ function getsign() {
        tip = obj.data.tip_soup
        author= obj.data.author
        str =  "签到成功，已连续签到" + obj.data.signin_days+"天  "+'明天将获得'+ next +'个金币'+ '\n'+tip.replace(/[\<|\.|\>|br]/g,"")+ author
-       money()
+       earning()
 } else {
     $nobyda.notify("签到失败，🉐登录腾讯新闻app获取cookie", "", "")
     console.log("签到失败，🉐登录腾讯新闻app获取cookie"+data)
@@ -124,8 +105,7 @@ function GetCookie() {
   } else {
     $nobyda.notify("写入" + CookieName + "Cookie失败‼️", "", "配置错误, 无法读取请求头, ");
   }
-    console.log("cookie输出成功？" + cookie);
-  
+    console.log("cookie输出成功？" + cookie)
 }
 
 
