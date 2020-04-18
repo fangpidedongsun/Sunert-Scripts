@@ -12,9 +12,11 @@ by Macsuny
 ~~~~~~~~~~~~~~~~
 Surge 4.0 :
 [Script]
-cron "0 9 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/xmspeed.js
+xmspeed.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/xmspeed.js,script-update-interval=0
+
 # 获取喜马拉雅极速版 Cookie.
-http-request https:\/\/m\.ximalaya\.com\/speed\/task-center\/account\/coin script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/xmspeed.js
+xmspeed.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/xmspeed.js,type=http-request,pattern=https:\/\/m\.ximalaya\.com\/speed\/task-center\/account\/coin
+
 ~~~~~~~~~~~~~~~~
 QX 1.0.6+ :
 [task_local]
