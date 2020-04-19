@@ -1,4 +1,28 @@
- 
+ /*
+腾讯新闻签到修改版
+获取Cookie方法:
+ 1. 把以下地址复制到响应配置下 
+ [task_local]
+0 9 * * * txnews.js, tag=腾讯新闻
+
+ [rewrite_local]
+https:\/\/api\.prize\.qq\.com\/v1\/newsapp\/rp\/common\?isJailbreak url script-request-header txnews.js
+
+ [MITM]
+hostname = api.prize.qq.com
+
+2.复制链接: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
+到浏览器，然后跳转志腾讯新闻客户端，即可获取Cookie，并获取每日红包
+
+~~~~~~~~~~~~~~~~
+
+Cookie获取后，请注释掉Cookie地址。
+
+#腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
+
+现无法自动领取红包，每日手动领取红包地址: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
+
+*/
 const cookieName = '腾讯新闻二'
 const signurlKey = 'sy_signurl_txnews2'
 const signheaderKey = 'sy_signheader_txnews2'
@@ -38,7 +62,7 @@ function getsign() {
         sy.msg("腾讯新闻签到失败‼️", "", "");
        if (log) console.log("腾讯新闻签到失败" + data)
     } else {
-    const obj = JSON.parse(data)
+      const obj = JSON.parse(data)
     //console.log(”原始数据:“+data)
       if (obj.info=="success"){
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")

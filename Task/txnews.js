@@ -1,4 +1,28 @@
- 
+/*
+腾讯新闻签到修改版
+获取Cookie方法:
+ 1. 把以下地址复制到响应配置下 
+ [task_local]
+0 9 * * * txnews.js, tag=腾讯新闻
+
+ [rewrite_local]
+https:\/\/api\.prize\.qq\.com\/v1\/newsapp\/rp\/common\?isJailbreak url script-request-header txnews.js
+
+ [MITM]
+hostname = api.prize.qq.com
+
+2.复制链接: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
+到浏览器，然后跳转志腾讯新闻客户端，即可获取Cookie，并获取每日红包
+
+~~~~~~~~~~~~~~~~
+
+Cookie获取后，请注释掉Cookie地址。
+
+#腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
+
+现无法自动领取红包，每日手动领取红包地址: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
+
+*/
 const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews'
 const signheaderKey = 'sy_signheader_txnews'
@@ -78,9 +102,9 @@ function coinget() {
     }
 function cashget() {
   const cashUrl = {
-    url: signurlVal,
+    url: `https://api.prize.qq.com/v1/newsapp/answer/other/config?`,
     headers: JSON.parse(signheaderVal),
-    body: 'actEname=newsapp_cj'
+    body: 'actname=news-wxplugin-carousel'
   };
     sy.post(cashUrl, function(error, response, data) {
     if (error) {
@@ -88,15 +112,15 @@ function cashget() {
          if (log) console.log("获取红包" + data)
       } else {
      const obj = JSON.parse(data)
-     sy.log(note+`，`+ 'data: '+ obj)
-     if (obj.code == -6007){
-             str += `${obj.msg}`
+     sy.log(note+`，`+ 'data: '+ `${data}`)
+     if (obj.code == '-6007'){
+             str += `\n${obj.message}`
             }
-     else if (obj.code == -6000){
-        str += `\n${obj.msg}`
+     else if (obj.code == -6006){
+        str += `\n${obj.message}`
          }
      else {
-       sy.log(`返回信息: ${obj.msg}, 错误代码: ${obj.code}`)
+       sy.log(`返回信息: ${obj.message}, 错误代码: ${obj.code}`)
           }
        //sy.msg(note, notb, str)
         }
@@ -146,4 +170,4 @@ function init() {
     }
     return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
   }
-sy.done()
+
