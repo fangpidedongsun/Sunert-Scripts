@@ -14,9 +14,10 @@ By Macsuny
 ~~~~~~~~~~~~~~~~
 Surge 4.0 :
 [Script]
-cron "0 9 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
+dianshijia2.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js,script-update-interval=0
+
 # 获取电视家 Cookie.
-http-request http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia2.js
+dianshijia2.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia2.js,type=http-request,pattern=http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\?
 ~~~~~~~~~~~~~~~~
 
 QX 1.0.6+ :
