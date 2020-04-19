@@ -12,7 +12,8 @@ https:\/\/api\.prize\.qq\.com\/v1\/newsapp\/rp\/common\?isJailbreak url script-r
 hostname = api.prize.qq.com
 
 2.复制链接: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
-到浏览器，然后跳转志腾讯新闻客户端，即可获取Cookie，并获取每日红包
+到浏览器，然后跳转志腾讯新闻客户端(客户端关闭状态下)，即可获取Cookie，并获取每日红包
+
 
 ~~~~~~~~~~~~~~~~
 
@@ -66,7 +67,7 @@ function getsign() {
     //console.log(”原始数据:“+data)
       if (obj.info=="success"){
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
-       note = '腾讯新闻'
+       note = '腾讯新闻二'
        next = obj.data.next_points
        tip = obj.data.tip_soup
        author= obj.data.author
@@ -112,11 +113,11 @@ function cashget() {
          if (log) console.log("获取红包" + data)
       } else {
      const obj = JSON.parse(data)
-     sy.log(note+`，`+ 'data: '+ obj)
+     sy.log(note+`，`+ 'data: '+ `${data}`)
      if (obj.code == -6007){
              str += `${obj.msg}`
             }
-     else if (obj.code == -6000){
+     else if (obj.code == -6006){
         str += `\n${obj.msg}`
           }
      else {

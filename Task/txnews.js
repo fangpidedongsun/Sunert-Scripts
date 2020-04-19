@@ -12,7 +12,7 @@ https:\/\/api\.prize\.qq\.com\/v1\/newsapp\/rp\/common\?isJailbreak url script-r
 hostname = api.prize.qq.com
 
 2.复制链接: https://news.qq.com/FERD/cjRedDown.htm?app=newslite
-到浏览器，然后跳转志腾讯新闻客户端，即可获取Cookie，并获取每日红包
+到浏览器，然后跳转志腾讯新闻客户端(客户端关闭状态下)，即可获取Cookie，并获取每日红包
 
 ~~~~~~~~~~~~~~~~
 
