@@ -49,7 +49,10 @@ if ($request && $request.method != 'OPTIONS') {
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
+const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 
+
+//签到
 function getsign() {
   const llUrl = {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,
@@ -66,11 +69,12 @@ function getsign() {
     //console.log(”原始数据:“+data)
       if (obj.info=="success"){
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
-       note = '腾讯新闻'
+ 
        next = obj.data.next_points
        tip = obj.data.tip_soup
-       author= obj.data.author
-       str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'+ '\n'+tip.replace(/[\<|\.|\>|br]/g,"")+ author
+       
+      Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
+       str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'
     coinget()
 } else {
       sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
@@ -80,6 +84,7 @@ function getsign() {
   })
 }
 
+//获取收益信息
 function coinget() {
   const coinUrl = {
     url: `https://api.inews.qq.com/activity/v1/usercenter/activity/list?isJailbreak`,
@@ -94,38 +99,79 @@ function coinget() {
     } else {
      const jb = JSON.parse(data)
      notb = '共计' + jb.data.wealth[0].title +'个金币    '+"现金总计" + jb.data.wealth[1].title+'元';
-     console.log(note+","+notb+ "\n" )
-   sy.msg(note, notb, str)
+     console.log(cookieName +","+notb+ "\n" )
      cashget()
         }
       })
     }
+
+
+// 激活红包
 function cashget() {
   const cashUrl = {
-    url: `https://api.prize.qq.com/v1/newsapp/answer/other/config?`,
-    headers: JSON.parse(signheaderVal),
-    body: 'actname=news-wxplugin-carousel'
+    url: `https://api.inews.qq.com/activity/v1/user/activity/get?isJailbreak=0&appver=13.4.1_qqnews_6.0.90&${ID}`,
+   headers: {
+      Cookie: `${JSON.parse(signheaderVal).Cookie}`,
+    },
   };
-    sy.post(cashUrl, function(error, response, data) {
-    if (error) {
-         sy.msg("获取红包失败‼️", "", "");
-         if (log) console.log("获取红包" + data)
-      } else {
-     const obj = JSON.parse(data)
-     sy.log(note+`，`+ 'data: '+ `${data}`)
-     if (obj.code == '-6007'){
-             str += `\n${obj.message}`
+    sy.get(cashUrl, function(error, response, data) {
+       sy.log(`激活红包奖励: ` + data)
+        })
+     read()
+   }
+
+//阅读获取红包
+function read() {
+  const cashUrl = {
+    url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
+      headers: {
+      Cookie: `${JSON.parse(signheaderVal).Cookie}`,
+    },
+    body: 'activity_id=stair_redpack_chajian'
+  };
+    sy.post(cashUrl, (error, response, data) => {
+      try {
+        sy.log(`${cookieName}阅读 - data: ${data}`)
+        read.cash = JSON.parse(data)
+        if (read.cash.ret == 0){
+             str += `\n`+`阅读奖励: `+ read.cash.data.redpack.amount/100+`元`
             }
-     else if (obj.code == -6006){
-        str += `\n${obj.message}`
-         }
-     else {
-       sy.log(`返回信息: ${obj.message}, 错误代码: ${obj.code}`)
+     else if (read.cash.ret == 2013){
+        //str += `\n阅读红包: ${read.cash.info}`+`\n`+ Dictum
+       StepsTotal()
           }
-       //sy.msg(note, notb, str)
+       }
+      catch (e) {
+      sy.log(`❌ ${cookieName} read - 阅读奖励: ${e}`)
+     }
+  })
+}
+//阅读文章统计
+function StepsTotal() {
+  const StepsUrl = {
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
+      headers: {
+      Cookie: `${JSON.parse(signheaderVal).Cookie}`,
+    },
+  };
+    sy.get(StepsUrl, (error, response, data) => {
+      try {
+        sy.log(`${cookieName}阅读统计 - data: ${data}`)
+        article = JSON.parse(data)
+        if (article.ret == 0){
+         articletotal = '\n今日共'+article.data.extends.redpack_total+'个红包，' +'已领取'+article.data.extends.redpack_got+'个，'+`今日已阅读`+ article.data.extends.article.have_read_num+`篇文章，`+ `再读`+article.data.extends.article.redpack_read_num+'篇，可继续领取红包'          
+         str +=  articletotal +`\n`+ Dictum
+         sy.msg(cookieName, notb, str)
         }
-      })
-    }
+        else {
+     sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
+        }
+       }
+      catch (e) {
+      sy.msg(`❌ ${cookieName} - 阅读统计: ${e}`)
+     }
+  })
+}
 
 function init() {
     isSurge = () => {
