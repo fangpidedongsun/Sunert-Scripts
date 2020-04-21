@@ -54,6 +54,7 @@ if ($request && $request.method != 'OPTIONS') {
 
 //签到
 function getsign() {
+return new Promise((resolve, reject) => {
   const llUrl = {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
@@ -70,7 +71,9 @@ function getsign() {
       else {
         sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
         console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
-     }
+       }
+    resolve()
+    })
   })
 }
 
@@ -162,13 +165,14 @@ function Redpack() {
            //sy.log(cookieName+` `+notb+`\n`+ str)
                }
           else { 
+   sy.log(notb)
             notb += " 今日阶梯红包已领完 💤"
-            //sy.msg(cookieName, notb, str)
-            //sy.log(cookieName+` `+notb+`\n`+ str)
+          //sy.msg(cookieName, notb, str)
+          //sy.log(cookieName+` `+notb+`\n`+ str)
                }
              }
         else {
-          notb = "  领取阶梯红包失败❌"
+            notb += "  领取阶梯红包失败❌"
             sy.msg(cookieName, notb, str)
              }
        }
@@ -180,21 +184,23 @@ function Redpack() {
 
 //收益总计
 function getTotal() {
+return new Promise((resolve, reject) => {
   const totalUrl = {
     url: `https://api.inews.qq.com/activity/v1/usercenter/activity/list?isJailbreak`,
-    headers: {Cookie: cookieVal}
-  };
+    headers: {Cookie: cookieVal}};
     sy.post(totalUrl, function(error,response, data) {
     if (error) {
         sy.msg("获取收益信息失败‼️", "", error);
      if (log) console.log("获取收益信息" + data)
     } else {
-     const obj = JSON.parse(data)
-           notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" +obj.data.wealth[1].title+'元';
-     console.log(cookieName+","+notb+ "\n" )
-     Redpack()
+         const obj = JSON.parse(data)
+           notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" + obj.data.wealth[1].title+'元'
+        Redpack()
+        //sy.log(cookieName+","+notb+ "\n" )
         }
-     })
+      resolve()
+      })
+   })
  }
 
 function init() {
