@@ -134,7 +134,7 @@ function Redpack() {
         sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-            redpack = `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元`
+            redpack = `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元 🌷`
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){

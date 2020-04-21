@@ -1,5 +1,6 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包
+此脚本只开启红包通知和错误通知，其他一律关闭通知
 获取Cookie方法:
  1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
  [task_local]
@@ -125,7 +126,7 @@ function StepsTotal() {
        articletotal = `\n今日已阅读` + article.data.extends.article.redpack_read_num+ `篇，`+ `共领取`+  article.data.extends.redpack_got+`个阶梯红包`
      }
         str += articletotal + `\n`+ Dictum
-         Redpack()
+        getTotal()
         }
         else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
@@ -150,20 +151,26 @@ function Redpack() {
         sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-            redpack = `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元`
+            notb += `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元 🌷`
+           sy.msg(cookieName, notb, str)
+           sy.log(cookieName+` `+notb+`\n`+ str)
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
-            redpack = " 继续阅读领取红包"
+           notb += " 继续阅读领取红包"
+           //sy.msg(cookieName, notb, str)
+           //sy.log(cookieName+` `+notb+`\n`+ str)
                }
           else { 
-            redpack = " 今日阶梯红包已领完"
+            notb += " 今日阶梯红包已领完 💤"
+            //sy.msg(cookieName, notb, str)
+            //sy.log(cookieName+` `+notb+`\n`+ str)
                }
              }
         else {
-        redpack = "  领取阶梯红包失败❌"
+          notb = "  领取阶梯红包失败❌"
+            sy.msg(cookieName, notb, str)
              }
-       getTotal()
        }
       catch (e) {
       sy.log(`❌ ${cookieName} read - 阅读奖励: ${e}`)
@@ -182,10 +189,10 @@ function getTotal() {
         sy.msg("获取收益信息失败‼️", "", error);
      if (log) console.log("获取收益信息" + data)
     } else {
-     const jb = JSON.parse(data)
-           notb = '总计:'+jb.data.wealth[0].title +'金币  '+"红包" +jb.data.wealth[1].title+'元'+ redpack;
+     const obj = JSON.parse(data)
+           notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" +obj.data.wealth[1].title+'元';
      console.log(cookieName+","+notb+ "\n" )
-     sy.msg(cookieName, notb, str)
+     Redpack()
         }
      })
  }
