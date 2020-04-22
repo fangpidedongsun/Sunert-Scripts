@@ -24,7 +24,7 @@ QX 1.0.6+ :
 
 [rewrite_local]
 # Get cookie. QX 1.0.5(188+):
-https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid url script-response-body weibo.js
+https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid url script-request-header weibo.js
 ~~~~~~~~~~~~~~~~
 QX or Surge [MITM]
 hostname = api.weibo.cn
