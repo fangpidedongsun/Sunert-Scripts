@@ -58,7 +58,7 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/checkin\/a
   const signheaderVal = JSON.stringify($request.headers)
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
   if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
-  sy.msg(cookieName, `获取微博签到Cookie: 成功`, ``)
+  sy.msg(CookieName, `获取微博签到Cookie: 成功`, ``)
 } else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/home\/welfare\/signin\/do\?_=[1-9]+/)) {
   const payurl = $request.url
   const payheaderVal = JSON.stringify($request.headers)
