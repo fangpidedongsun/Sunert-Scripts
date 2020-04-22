@@ -1101,14 +1101,15 @@ function JingDMakeup(s) {
 }
 
 function JingDongClean(s) {
-
-  return new Promise(resolve => { setTimeout(() => {
-    const JDCUUrl = {
-      url: 'https://api.m.jd.com/client.action?functionId=userSign',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded", Cookie: KEY,
-      },
-      body: "body=%7B%22riskParam%22%3A%7B%22eid%22%3A%22O5X6JYMZTXIEX4VBCBWEM5PTIZV6HXH7M3AI75EABM5GBZYVQKRGQJ5A2PPO5PSELSRMI72SYF4KTCB4NIU6AZQ3O6C3J7ZVEP3RVDFEBKVN2RER2GTQ%22%2C%22shshshfpb%22%3A%22v1%5C%2FzMYRjEWKgYe%2BUiNwEvaVlrHBQGVwqLx4CsS9PH1s0s0Vs9AWk%2B7vr9KSHh3BQd5NTukznDTZnd75xHzonHnw%3D%3D%22%2C%22pageClickKey%22%3A%22Babel_Sign%22%2C%22childActivityUrl%22%3A%22-1%22%7D%2C%22url%22%3A%22%22%2C%22params%22%3A%22%7B%5C%22enActK%5C%22%3A%5C%22v9TYVRbhHwPpSSPNbcKAdJlZ4xzX%5C%2FMxy32c5sfRo%5C%2Fq8aZs%5C%2Fn4coLNw%3D%3D%5C%22%2C%5C%22isFloatLayer%5C%22%3Afalse%2C%5C%22ruleSrv%5C%22%3A%5C%2200561054_31187133_t1%5C%22%2C%5C%22signId%5C%22%3A%5C%22M%2BQKQlR6WzAaZs%5C%2Fn4coLNw%3D%3D%5C%22%7D%22%2C%22geo%22%3A%7B%22lng%22%3A%220.000000%22%2C%22lat%22%3A%220.000000%22%7D%7D&client=apple&clientVersion=8.5.4&openudid=1fce88cd05c42fe2b054e846f11bdf33f016d676&scope=11&sign=f6fdebfbbca3dc070d12c21cfa363abe&st=1584621861304&sv=112"
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const JDCUUrl = {
+        url: 'https://api.m.jd.com/client.action?functionId=userSign',
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: KEY,
+        },
+        body: "body=%7B%22riskParam%22%3A%7B%22eid%22%3A%22O5X6JYMZTXIEX4VBCBWEM5PTIZV6HXH7M3AI75EABM5GBZYVQKRGQJ5A2PPO5PSELSRMI72SYF4KTCB4NIU6AZQ3O6C3J7ZVEP3RVDFEBKVN2RER2GTQ%22%2C%22shshshfpb%22%3A%22v1%5C%2FzMYRjEWKgYe%2BUiNwEvaVlrHBQGVwqLx4CsS9PH1s0s0Vs9AWk%2B7vr9KSHh3BQd5NTukznDTZnd75xHzonHnw%3D%3D%22%2C%22pageClickKey%22%3A%22Babel_Sign%22%2C%22childActivityUrl%22%3A%22-1%22%7D%2C%22url%22%3A%22%22%2C%22params%22%3A%22%7B%5C%22enActK%5C%22%3A%5C%22oGmTXSK90yd%5C%2FY5ySQ6lLT5NmN0DauNQUvF9rIC9%2BeN8aZs%5C%2Fn4coLNw%3D%3D%5C%22%2C%5C%22isFloatLayer%5C%22%3Afalse%2C%5C%22ruleSrv%5C%22%3A%5C%2200561054_32319687_t1%5C%22%2C%5C%22signId%5C%22%3A%5C%22eol02KzmdrYaZs%5C%2Fn4coLNw%3D%3D%5C%22%7D%22%2C%22geo%22%3A%7B%22lng%22%3A%220.000000%22%2C%22lat%22%3A%220.000000%22%7D%7D&client=apple&clientVersion=8.5.6&openudid=1fce88cd05c42fe2b054e846f11bdf33f016d676&rfs=0000&scope=11&sign=e0fc6f49a39bdf97c7aa56c2bb59a0e2&st=1586760768055&sv=122"
     };
 
     $nobyda.post(JDCUUrl, function(error, response, data) {
@@ -1345,14 +1346,15 @@ function JingDongShoes(s) {
 }
 
 function JDPersonalCare(s) {
-
-  return new Promise(resolve => { setTimeout(() => {
-    const JDPCUrl = {
-      url: 'https://api.m.jd.com/client.action?functionId=userSign',
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded", Cookie: KEY,
-      },
-      body: "body=%7B%22riskParam%22%3A%7B%22eid%22%3A%22O5X6JYMZTXIEX4VBCBWEM5PTIZV6HXH7M3AI75EABM5GBZYVQKRGQJ5A2PPO5PSELSRMI72SYF4KTCB4NIU6AZQ3O6C3J7ZVEP3RVDFEBKVN2RER2GTQ%22%2C%22shshshfpb%22%3A%22v1%5C%2FzMYRjEWKgYe%2BUiNwEvaVlrHBQGVwqLx4CsS9PH1s0s0Vs9AWk%2B7vr9KSHh3BQd5NTukznDTZnd75xHzonHnw%3D%3D%22%2C%22pageClickKey%22%3A%22Babel_Sign%22%2C%22childActivityUrl%22%3A%22https%3A%5C%2F%5C%2Fpro.m.jd.com%5C%2Fmall%5C%2Factive%5C%2FNJ1kd1PJWhwvhtim73VPsD1HwY3%5C%2Findex.html%3FcollectionId%3D294%22%7D%2C%22url%22%3A%22https%3A%5C%2F%5C%2Fpro.m.jd.com%5C%2Fmall%5C%2Factive%5C%2FNJ1kd1PJWhwvhtim73VPsD1HwY3%5C%2Findex.html%3FcollectionId%3D294%22%2C%22params%22%3A%22%7B%5C%22enActK%5C%22%3A%5C%22rglrZ7sRx6%5C%2FIqNLp1dDmLtTzbV1z8rZ5bgYbPORaFLkaZs%5C%2Fn4coLNw%3D%3D%5C%22%2C%5C%22isFloatLayer%5C%22%3Afalse%2C%5C%22ruleSrv%5C%22%3A%5C%2200167278_30903072_t1%5C%22%2C%5C%22signId%5C%22%3A%5C%22h7%5C%2FZa7aYrp8aZs%5C%2Fn4coLNw%3D%3D%5C%22%7D%22%2C%22geo%22%3A%7B%22lng%22%3A%220.000000%22%2C%22lat%22%3A%220.000000%22%7D%7D&client=apple&clientVersion=8.5.4&openudid=1fce88cd05c42fe2b054e846f11bdf33f016d676&scope=11&sign=f1d029460724ed474b5616a5ab03206f&st=1584364265234&sv=122"
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const JDPCUrl = {
+        url: 'https://api.m.jd.com/client.action?functionId=userSign',
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: KEY,
+        },
+        body: "body=%7B%22riskParam%22%3A%7B%22eid%22%3A%22O5X6JYMZTXIEX4VBCBWEM5PTIZV6HXH7M3AI75EABM5GBZYVQKRGQJ5A2PPO5PSELSRMI72SYF4KTCB4NIU6AZQ3O6C3J7ZVEP3RVDFEBKVN2RER2GTQ%22%2C%22shshshfpb%22%3A%22v1%5C%2FzMYRjEWKgYe%2BUiNwEvaVlrHBQGVwqLx4CsS9PH1s0s0Vs9AWk%2B7vr9KSHh3BQd5NTukznDTZnd75xHzonHnw%3D%3D%22%2C%22pageClickKey%22%3A%22Babel_Sign%22%2C%22childActivityUrl%22%3A%22-1%22%7D%2C%22url%22%3A%22%22%2C%22params%22%3A%22%7B%5C%22enActK%5C%22%3A%5C%22gsryhga41wYrXRW1OyoLfPg5PhCsbHe%5C%2FeByyRzmESYYaZs%5C%2Fn4coLNw%3D%3D%5C%22%2C%5C%22isFloatLayer%5C%22%3Afalse%2C%5C%22ruleSrv%5C%22%3A%5C%2200167278_32217676_t1%5C%22%2C%5C%22signId%5C%22%3A%5C%22yyuljMjpeqcaZs%5C%2Fn4coLNw%3D%3D%5C%22%7D%22%2C%22geo%22%3A%7B%22lng%22%3A%220.000000%22%2C%22lat%22%3A%220.000000%22%7D%7D&client=apple&clientVersion=8.5.6&openudid=1fce88cd05c42fe2b054e846f11bdf33f016d676&partner=apple&rfs=0000&scope=11&sign=1070d1c8a1e7eafe54055d955edb175e&st=1586760561127&sv=112"
     };
 
     $nobyda.post(JDPCUrl, function(error, response, data) {
