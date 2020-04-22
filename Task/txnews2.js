@@ -122,7 +122,7 @@ function StepsTotal() {
         if (article.ret == 0){
          haveread = article.data.extends.article.have_read_num
         if (haveread < 60){
-         articletotal = '\n今日共'+article.data.extends.redpack_total+'个阶梯红包，' +'已领取'+article.data.extends.redpack_got+'个，'+`已阅读`+ haveread+`篇文章，`+ `再读`+article.data.extends.article.redpack_read_num+'篇，可继续领取红包' }
+         articletotal = '\n今日共'+article.data.extends.redpack_total+'个阶梯红包，' +'已领取'+article.data.extends.redpack_got+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+article.data.extends.article.redpack_read_num+'篇，可继续领取红包' }
       if (haveread >= 60&& haveread < 100 ){
          articletotal = '\n今日共'+article.data.extends.redpack_total+'个阶梯红包，' +'已领取'+article.data.extends.redpack_got+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+article.data.extends.article.redpack_read_num+'篇，可领取今日最后一次红包' }
       if (haveread == 100){
@@ -171,6 +171,10 @@ function Redpack() {
           //sy.log(cookieName+` `+notb+`\n`+ str)
                }
              }
+         else if (rcash.ret == 2016){
+           redpack = " "+ rcash.info
+            }
+
         else {
             notb += "  领取阶梯红包失败❌"
             sy.msg(cookieName, notb, str)
