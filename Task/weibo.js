@@ -34,10 +34,10 @@ hostname = api.weibo.cn
 
 const CookieName ='微博签到'
 const signurlKey = 'sy.signurl.wb'
-//const signheaderKey = `sy_signheader_wb`
+const signheaderKey = `sy_signheader_wb`
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
-//const signheaderVal = sy.getdata(signheaderKey)
+const signheaderVal = sy.getdata(signheaderKey)
 
 let isGetCookie = typeof $request !== `undefined`
 if (isGetCookie) {
@@ -48,11 +48,11 @@ if (isGetCookie) {
 function GetCookie() {
 if ($request && $request.method != `OPTIONS`) {
   const signurlVal = $request.url
-  //const signheaderVal = JSON.stringify($request.headers)
+  const signheaderVal = JSON.stringify($request.headers)
   sy.log(`signurlVal:${signurlVal}`)
-  //sy.log(`signheaderVal:${signheaderVal}`)
+  sy.log(`signheaderVal:${signheaderVal}`)
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
-  //if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
+  if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
   sy.msg(CookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
