@@ -134,21 +134,21 @@ function Redpack() {
         sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-            redpack = `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元 🌷`
+             redpack = `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元 🌷`
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
-            redpack = " 继续阅读领取红包"
+             redpack = " 继续阅读领取红包"
                }
           else { 
-            redpack = " 今日阶梯红包已领完"
+             redpack = " 今日阶梯红包已领完"
                }
              }
-         else if (rcash.ret == 2016){
-           redpack = " "+rcash.info
+        else if (rcash.ret == 2016){
+            redpack = " "+rcash.info
             }
         else {
-            redpack = "  领取阶梯红包失败❌"
+            redpack =  " "+rcash.info
              }
        getTotal()
        }

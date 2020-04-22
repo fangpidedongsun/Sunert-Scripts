@@ -2,7 +2,7 @@
 本脚本仅适用于微博每日签到  
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域下
-2.打开微博app,即可获取Cookie,无需手动点击
+2.打开微博主页，点击正文界面的签到,即可获取Cookie.
 3.仅限签到时获取Cookie,已经签到无法获取
 4.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 
@@ -24,7 +24,7 @@ QX 1.0.6+ :
 
 [rewrite_local]
 # Get cookie. QX 1.0.5(188+):
-https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid url script-request-header weibo.js
+https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid url script-response-body weibo.js
 ~~~~~~~~~~~~~~~~
 QX or Surge [MITM]
 hostname = api.weibo.cn
@@ -32,12 +32,12 @@ hostname = api.weibo.cn
 
 */
 
-const CookieName ='微博签到'
-const signurlKey = 'sy.signurl.wb'
-//const signheaderKey = `sy_signheader_wb`
+const CookieName ='微博签到2'
+const signurlKey = 'sy.signurl.wb2'
+const signheaderKey = `sy_signheader_wb2`
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
-//const signheaderVal = sy.getdata(signheaderKey)
+const signheaderVal = sy.getdata(signheaderKey)
 
 let isGetCookie = typeof $request !== `undefined`
 if (isGetCookie) {
@@ -48,11 +48,11 @@ if (isGetCookie) {
 function GetCookie() {
 if ($request && $request.method != `OPTIONS`) {
   const signurlVal = $request.url
-  //const signheaderVal = JSON.stringify($request.headers)
+  const signheaderVal = $request.headers
   sy.log(`signurlVal:${signurlVal}`)
-  //sy.log(`signheaderVal:${signheaderVal}`)
+  sy.log(`signheaderVal:${signheaderVal}`)
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
-  //if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
+  if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
   sy.msg(CookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
