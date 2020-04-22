@@ -33,7 +33,7 @@ hostname = api.weibo.cn
 
 */
 
-const CookieName ='新浪微博2164'
+const CookieName ='新浪微博'
 const signurlKey = 'sy.signurl.wb3'
 const signheaderKey = `sy_signheader_wb3`
 const payheaderKey = `sy_payheader_wb3`
@@ -87,6 +87,7 @@ function sign() {
   paysign()
   })
 }
+
 function paysign() {
    return new Promise((resolve, reject) =>{
     var time = new Date().getTime()
@@ -114,7 +115,6 @@ function paysign() {
   resolve()
   })
 }
-
 
 function init() {
   isSurge = () => {

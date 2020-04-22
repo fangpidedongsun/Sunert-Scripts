@@ -1,6 +1,8 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包
-此脚本只开启红包通知和错误通知，其他一律关闭通知
+
+此脚本只开启红包通知和错误通知，其他通知一律关闭，可视喜好自行开启其他通知
+
 获取Cookie方法:
  1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
  [task_local]
@@ -13,11 +15,12 @@ hostname = api.inews.qq.com
 
 3.打开腾讯新闻app，阅读一篇文章，倒计时结束后即可获取Cookie
 
-4.每日共8个阶梯红包，阅读100篇文章可以全部领取，
+4.现阶段每日共9个阶梯红包，具体阅读篇数视腾讯情况而变动
 
-5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每10分钟运行一次
+5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次
 
-6.可能腾讯有某些限制，有些号码无法领取红包
+6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
+
 
 ~~~~~~~~~~~~~~~~
 Cookie获取后，请注释掉Cookie地址。
@@ -25,7 +28,7 @@ Cookie获取后，请注释掉Cookie地址。
 #腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
 */
-const cookieName = '腾讯新闻二'
+const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews2'
 const cookieKey = 'sy_cookie_txnews2'
 const sy = init()
@@ -153,11 +156,11 @@ function Redpack() {
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
            notb += " 继续阅读领取红包"
            //sy.msg(cookieName, notb, str)
-           sy.log(cookieName+` `+notb+`\n`+ str)
+           //sy.log(cookieName+` `+notb+`\n`+ str)
                }
           else { 
             notb += " 今日阶梯红包已领完 💤"
-            sy.msg(cookieName, notb, str)
+          //sy.msg(cookieName, notb, str)
           //sy.log(cookieName+` `+notb+`\n`+ str)
                }
              }

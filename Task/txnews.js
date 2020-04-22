@@ -12,12 +12,13 @@ hostname = api.inews.qq.com
 
 3.打开腾讯新闻app，阅读一篇文章，倒计时结束后即可获取Cookie
 
-4.每日共8个阶梯红包，阅读100篇文章可以全部领取，
+4.现阶段每日共9个阶梯红包，具体阅读篇数视腾讯情况而变动
 
-5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每10分钟运行一次
+5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次
 
-6.可能腾讯有某些限制，有些号码无法领取红包
+6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
 
+7.此版本会频繁阅读通知，可注释180行关闭通知，或者使用本仓库 txnews2.js
 ~~~~~~~~~~~~~~~~
 Cookie获取后，请注释掉Cookie地址。
 
@@ -93,20 +94,25 @@ function toRead() {
 function StepsTotal() {
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
-   headers: {Cookie: cookieVal},
+   headers: {
+      Cookie: cookieVal,
+    },
   };
-   sy.get(StepsUrl, (error, response, data) => {
-     sy.log(`${cookieName}阅读统计: ${data}`)
-     try {
-         article = JSON.parse(data)
+    sy.get(StepsUrl, (error, response, data) => {
+      try {
+        sy.log(`${cookieName}阅读统计 - data: ${data}`)
+        article = JSON.parse(data)
         if (article.ret == 0){
-         haveread = article.data.extends.article.have_read_num
-        if (haveread < 60){
-         articletotal = '\n今日共'+article.data.extends.redpack_total+'个阶梯红包，' +'已领取'+article.data.extends.redpack_got+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+article.data.extends.article.redpack_read_num+'篇，可继续领取红包' }
-     else if (haveread >= 60&& haveread < 100 ){
-         articletotal = '\n今日共'+article.data.extends.redpack_total+'个阶梯红包，' +'已领取'+article.data.extends.redpack_got+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+article.data.extends.article.redpack_read_num+'篇，可领取今日最后一次红包' }
-      if (haveread == 100){
-       articletotal = `\n今日已阅读` + article.data.extends.article.redpack_read_num+ `篇，`+ `共领取`+  article.data.extends.redpack_got+`个阶梯红包`
+        redpacktotal =  article.data.extends.redpack_total
+         redpackgot = article.data.extends.redpack_got
+           haveread = article.data.extends.article.have_read_num
+         getreadpack = article.data.extends.article.redpack_read_num
+        if (redpackgot < redpacktotal-1){
+         articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可继续领取红包' }
+      if (redpackgot == redpacktotal-1){
+         articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可领取今日最后一次红包' }
+      if (redpackgot == redpacktotal){
+       articletotal = `\n今日已阅读` + getreadpack+ `篇，`+ `共领取`+  redpackgot +`个阶梯红包`
      }
         str += articletotal + `\n`+ Dictum
         Redpack()
@@ -116,7 +122,7 @@ function StepsTotal() {
         }
        }
       catch (e) {
-      sy.msg(cookieName, '阅读统计:失败'+ e)
+      sy.msg(cookieName, "",'阅读统计:失败'+ e)
      }
   })
 }
