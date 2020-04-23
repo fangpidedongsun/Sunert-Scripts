@@ -38,9 +38,9 @@ hostname = api.weibo.cn, pay.sc.weibo.com
 */
 
 const CookieName ='新浪微博'
-const signurlKey = 'sy.signurl.wb'
-const signheaderKey = `sy_signheader_wb`
-const payheaderKey = `sy_payheader_wb`
+const signurlKey = 'sy.signurl.wb2'
+const signheaderKey = `sy_signheader_wb2`
+const payheaderKey = `sy_payheader_wb2`
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)

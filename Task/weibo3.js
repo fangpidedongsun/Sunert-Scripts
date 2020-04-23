@@ -17,8 +17,6 @@ weibo.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercont
 
 # 获取微博 Cookie.
 weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid
-# 微博签到Cookie
-weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\?
 
 ~~~~~~~~~~~~~~~~
 QX 1.0.6+ :
@@ -26,21 +24,19 @@ QX 1.0.6+ :
 0 9 * * * weibo.js
 
 [rewrite_local]
+# Get cookie. QX 1.0.5(188+):
 https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid url script-request-header weibo.js
-
-# 钱包签到Cookie
-https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\? url script-request-header weibo.js
-
 ~~~~~~~~~~~~~~~~
 QX or Surge [MITM]
-hostname = api.weibo.cn, pay.sc.weibo.com
+hostname = api.weibo.cn
 ~~~~~~~~~~~~~~~~
+
 */
 
 const CookieName ='新浪微博'
-const signurlKey = 'sy.signurl.wb'
-const signheaderKey = `sy_signheader_wb`
-const payheaderKey = `sy_payheader_wb`
+const signurlKey = 'sy.signurl.wb3'
+const signheaderKey = `sy_signheader_wb3`
+const payheaderKey = `sy_payheader_wb3`
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)
@@ -71,7 +67,6 @@ function sign() {
    let signurl =  {
       url: signurlVal,
       headers: {"User-Agent": 'Weibo/41997 (iPhone; iOS 13.4.1; Scale/3.00)'}}
-      //headers: JSON.parse(signheaderVal)
      sy.post(signurl, (error, response, data) => {
      sy.log(`${CookieName}, data: ${data}`)
      let result = JSON.parse(data)
@@ -92,6 +87,7 @@ function sign() {
   paysign()
   })
 }
+
 function paysign() {
    return new Promise((resolve, reject) =>{
     var time = new Date().getTime()
@@ -119,7 +115,6 @@ function paysign() {
   resolve()
   })
 }
-
 
 function init() {
   isSurge = () => {
