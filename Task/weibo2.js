@@ -16,9 +16,9 @@ Surge 4.0 :
 weibo.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,script-update-interval=0
 
 # 获取微博 Cookie.
-weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=https:\/\/api\.weibo\.cn\/\d\/video\/machine\?gsid
+weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/api\.weibo\.cn\/\d\/video\/machine\?gsid
 # 微博钱包签到Cookie
-weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\?
+weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=http-request,pattern=https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\?
 
 ~~~~~~~~~~~~~~~~
 QX 1.0.6+ :
