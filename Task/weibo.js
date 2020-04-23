@@ -2,11 +2,11 @@
 本脚本仅适用于微博每日签到  
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域下
-2.如今日未签到，打开微博主页，即可获取Cookie.
-3.打开微博钱包点击签到，获取Cookie
-4.仅限签到时获取Cookie,已经签到无法获取
+2.打开微博App获取Cookie.获取后请注释或禁用Cookie
+3.打开微博钱包点击签到，获取Cookie，
+4.钱包签到时获取Cookie,已经签到无法获取
 5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
-
+6.4月23日更新，更换微博签到Cookie,随时能获取，获取后请禁用
 仅测试Quantumult x，Surge、Loon自行测试
 by Macsuny
 
@@ -16,8 +16,8 @@ Surge 4.0 :
 weibo.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,script-update-interval=0
 
 # 获取微博 Cookie.
-weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid
-# 微博签到Cookie
+weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=https:\/\/api\.weibo\.cn\/\d\/push\/active\?gsid
+# 微博钱包签到Cookie
 weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\?
 
 ~~~~~~~~~~~~~~~~
@@ -26,7 +26,7 @@ QX 1.0.6+ :
 0 9 * * * weibo.js
 
 [rewrite_local]
-https:\/\/api\.weibo\.cn\/\d\/checkin\/add\?gsid url script-request-header weibo.js
+https:\/\/api\.weibo\.cn\/\d\/push\/active\?gsid url script-request-header weibo.js
 
 # 钱包签到Cookie
 https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\? url script-request-header weibo.js
@@ -45,6 +45,8 @@ const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)
 const payheaderVal = sy.getdata(payheaderKey)
+const token = signurlVal.split('?')[1]
+
 let isGetCookie = typeof $request !== `undefined`
 if (isGetCookie) {
    GetCookie()
@@ -53,9 +55,11 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/checkin\/add\?gsid/)) {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/(\/checkin\/add)|(push\/active)/)) {
   const signurlVal = $request.url
   const signheaderVal = JSON.stringify($request.headers)
+   sy.log(`signurlVal:${signurlVal}`)
+   sy.log(`signheaderVal:${signheaderVal}`)
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
   if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
   sy.msg(CookieName, `获取微博签到Cookie: 成功`, ``)
@@ -66,12 +70,12 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/checkin\/a
   sy.msg(CookieName, `获取微博钱包Cookie: 成功`, ``)}
 }
 
+//微博签到
 function sign() {
    return new Promise((resolve, reject) =>{
    let signurl =  {
-      url: signurlVal,
-      headers: {"User-Agent": 'Weibo/41997 (iPhone; iOS 13.4.1; Scale/3.00)'}}
-      //headers: JSON.parse(signheaderVal)
+      url: `https://api.weibo.cn/2/checkin/add?${token}`,
+      headers: JSON.parse(signheaderVal)}
      sy.post(signurl, (error, response, data) => {
      sy.log(`${CookieName}, data: ${data}`)
      let result = JSON.parse(data)
@@ -89,9 +93,10 @@ function sign() {
          }
     resolve()
     })
-  paysign()
+ paysign()
   })
 }
+// 钱包签到
 function paysign() {
    return new Promise((resolve, reject) =>{
     var time = new Date().getTime()
@@ -99,6 +104,7 @@ function paysign() {
       url: `https://pay.sc.weibo.com/aj/mobile/home/welfare/signin/do?_=${time}`,
      headers: JSON.parse(payheaderVal),
 }
+    payurl.headers[""]
      sy.post(payurl, (error, response, data) => {
      sy.log(`${CookieName}钱包, data: ${data}`)
      let result = JSON.parse(data)
