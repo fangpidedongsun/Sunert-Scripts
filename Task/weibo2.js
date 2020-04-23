@@ -78,7 +78,7 @@ function sign() {
    return new Promise((resolve, reject) =>{
    let signurl =  {
       url: `https://api.weibo.cn/2/checkin/add?${token}`,
-      headers: JSON.parse(signheaderVal)}
+      headers: {"User-Agent": `Weibo/41997 (iPhone; iOS 13.4.1; Scale/3.00)`}}
      sy.post(signurl, (error, response, data) => {
      sy.log(`${CookieName}, data: ${data}`)
      let result = JSON.parse(data)
@@ -87,27 +87,40 @@ function sign() {
          detail = `连续签到${result.data.continuous}天，获得收益: ${result.data.desc}💰`  
          }  
      else if (result.errno == 30000){
-         subTitle = `微博签到: 重复‼️`
-         detail = `说明: `+ result.errmsg
+         subTitle = `微博: 重复签到`
+         detail = `签到说明: `+ result.errmsg
+       }
+     else if (result.status == 90005){
+         subTitle = `微博警告 ❗️`
+         detail = `签到说明: `+ result.msg
        }
      else {
          subTitle = `签到失败❌`
          detail = `说明: `+ result.errmsg
          }
-    resolve()
-    })
- paysign()
+   Judgment()
+    },resolve)
   })
 }
+function Judgment() {
+  if (payheaderVal !== undefined|null)
+     {  
+    paysign()  
+   }
+else {
+   subTitle += `  微博钱包未获取Cookie❌`
+   sy.msg(CookieName, subTitle, detail)
+   }
+}
+
 // 钱包签到
 function paysign() {
    return new Promise((resolve, reject) =>{
+   if ( payheaderVal !== `undefined`){
     var time = new Date().getTime()
    let payurl =  {
       url: `https://pay.sc.weibo.com/aj/mobile/home/welfare/signin/do?_=${time}`,
-     headers: JSON.parse(payheaderVal),
-}
-    payurl.headers[""]
+     headers: JSON.parse(payheaderVal)}
      sy.post(payurl, (error, response, data) => {
      sy.log(`${CookieName}钱包, data: ${data}`)
      let result = JSON.parse(data)
@@ -116,19 +129,19 @@ function paysign() {
          detail += `  钱包获取积分:`+ result.score+' 分'
          }  
      else if (result.status == 2){
-         subTitle += `   钱包签到结果: 重复‼️`
+         subTitle += `   钱包: 重复签到`
          //detail += `钱包: `+ result.msg
        }
      else {
-         //subTitle = `签到失败❌`
+         subTitle = `钱包签到失败❌`
          //detail += ` 钱包: `+result.msg
          }
        sy.msg(CookieName, subTitle, detail)
-    })
+       })
+    }
   resolve()
   })
 }
-
 
 function init() {
   isSurge = () => {
