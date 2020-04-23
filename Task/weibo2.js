@@ -41,11 +41,12 @@ const CookieName ='新浪微博'
 const signurlKey = 'sy.signurl.wb2'
 const signheaderKey = `sy_signheader_wb2`
 const payheaderKey = `sy_payheader_wb2`
+const tokenKey = `sy_token_wb2`
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)
 const payheaderVal = sy.getdata(payheaderKey)
-const token = signurlVal.split('?')[1]
+const token = sy.getdata(tokenKey)
 
 let isGetCookie = typeof $request !== `undefined`
 if (isGetCookie) {
@@ -57,11 +58,13 @@ if (isGetCookie) {
 function GetCookie() {
 if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/video\/machine/)) {
   const signurlVal = $request.url
+  const token = signurlVal.split(’?‘)[1]
   const signheaderVal = JSON.stringify($request.headers)
    sy.log(`signurlVal:${signurlVal}`)
    sy.log(`signheaderVal:${signheaderVal}`)
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
   if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
+  if (token) sy.setdata(token, tokenKey)
   sy.msg(CookieName, `获取微博签到Cookie: 成功`, ``)
 } else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/home\/welfare\/signin\/do\?_=[1-9]+/)) {
   const payurl = $request.url
