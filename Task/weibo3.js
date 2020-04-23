@@ -16,7 +16,7 @@ Surge 4.0 :
 weibo.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,script-update-interval=0
 
 # 获取微博 Cookie.
-weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=https:\/\/api\.weibo\.cn\/\d\/push\/active\?gsid
+weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=https:\/\/api\.weibo\.cn\/\d\/video\/machine\?gsid
 # 微博钱包签到Cookie
 weibo.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js,type=http-request,pattern=https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\?
 
@@ -26,7 +26,7 @@ QX 1.0.6+ :
 0 9 * * * weibo.js
 
 [rewrite_local]
-https:\/\/api\.weibo\.cn\/\d\/push\/active\?gsid url script-request-header weibo.js
+https:\/\/api\.weibo\.cn\/\d\/video\/machine\?gsid url script-request-header weibo.js
 
 # 钱包签到Cookie
 https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\? url script-request-header weibo.js
@@ -55,7 +55,7 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/(\/checkin\/add)|(push\/active)/)) {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/video\/machine/)) {
   const signurlVal = $request.url
   const signheaderVal = JSON.stringify($request.headers)
    sy.log(`signurlVal:${signurlVal}`)
