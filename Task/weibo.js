@@ -58,7 +58,7 @@ if (isGetCookie) {
 function GetCookie() {
 if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/video\/machine/)) {
   const signurlVal = $request.url
-  const token = signurlVal.split(’?‘)[1]
+  const token = signurlVal.split(`?`)[1]
   const signheaderVal = JSON.stringify($request.headers)
    sy.log(`signurlVal:${signurlVal}`)
    sy.log(`signheaderVal:${signheaderVal}`)
