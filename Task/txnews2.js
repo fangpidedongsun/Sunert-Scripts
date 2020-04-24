@@ -188,8 +188,8 @@ function getTotal() {
     } else {
          const obj = JSON.parse(data)
            notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" + obj.data.wealth[1].title+'元'
-        Redpack()
-        //sy.log(cookieName+","+notb+ "\n" )
+          Redpack()
+          sy.log(cookieName+","+notb+ "\n" )
         }
       resolve()
       })

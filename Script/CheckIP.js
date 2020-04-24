@@ -26,26 +26,16 @@
    }
  }
  */
- function ISP_ValidCheck(para) {
-   if (/[^a-zA-Z]+$/.test(para)){
-    //console.log(para)
-      return para
+ function ISP_ValidCheck(para) { 
+   if(para) {
+   return para
    }
-  else  {
-    word = para.replace(/[^a-zA-Z]/g,`%20`)
-     const translationurl = {
-       url: `http://translate.google.cn/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q=`+word,
-}
-$task.fetch(translationurl).then(response => { 
-  if(/[a-zA-Z0-9]/.test(response.body)) {
-      const res = response.body.match(/[\u4e00-\u9fa5]+/g)[0]
-      para = res
-    //console.log(para)
-      return para
-      }
-    })
+   else
+   {
+   return isp0
+ //emojis[getRandomInt(emojis.length)]
    }
-}  
+ }
 
  function Area_check(para) {
    if(para=="中华民国"){
