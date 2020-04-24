@@ -31,7 +31,6 @@ const cookieKey = 'sy_cookie_txnews'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const cookieVal = sy.getdata(cookieKey)
-const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -92,6 +91,7 @@ function toRead() {
 
 //阅读文章统计
 function StepsTotal() {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
    headers: {
@@ -128,6 +128,7 @@ function StepsTotal() {
 }
 //阶梯红包到账
 function Redpack() {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
       headers: {

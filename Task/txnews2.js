@@ -34,7 +34,6 @@ const cookieKey = 'sy_cookie_txnews2'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const cookieVal = sy.getdata(cookieKey)
-const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -80,13 +79,12 @@ return new Promise((resolve, reject) => {
   })
 }
 
-
 //阅读阶梯
 function toRead() {
   const toreadUrl = {
     url: signurlVal,
-   headers: {Cookie:cookieVal},
-   body: 'event=article_read&extend={"article_id":"20200420A0KBMB00","channel_id":"1979"}'
+    headers: {Cookie:cookieVal},
+    body: 'event=article_read&extend={"article_id":"20200420A0KBMB00","channel_id":"1979"}'
   };
    sy.post(toreadUrl,(error, response, data) =>{
       if (error){
@@ -100,6 +98,7 @@ function toRead() {
 
 //阅读文章统计
 function StepsTotal() {
+   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
    headers: {
@@ -136,6 +135,7 @@ function StepsTotal() {
 }
 //阶梯红包到账
 function Redpack() {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
       headers: {
