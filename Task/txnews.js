@@ -1,7 +1,7 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包
 获取Cookie方法:
- 1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
+1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ 版，请删除tag标签
  [task_local]
 0 9 * * * txnews.js, tag=腾讯新闻
  [rewrite_local]
@@ -18,7 +18,7 @@ hostname = api.inews.qq.com
 
 6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
 
-7.此版本会频繁阅读通知，可注释180行关闭通知，或者使用本仓库 txnews2.js
+7.此版本会频繁阅读通知，可注释182行关闭通知，或者使用本仓库 txnews2.js
 ~~~~~~~~~~~~~~~~
 Cookie获取后，请注释掉Cookie地址。
 
@@ -63,7 +63,7 @@ function getsign() {
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
-       Dictum = '[每日一句]  '+tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author.replace(/[\<|\.|\>|br|图]/g,"")
+       Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+"----- "+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
        str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'
        toRead()} 
       else {
@@ -83,9 +83,8 @@ function toRead() {
       if (error){
       sy.msg(cookieName, '阅读:'+ error)
         }else{
-       sy.log(`${cookieName}阅读文章 - data: ${data}`)
-     StepsTotal()
-      }
+       sy.log(`${cookieName}阅读文章 - data: ${data}`)}
+       StepsTotal()
     })
   }
 
@@ -115,9 +114,8 @@ function StepsTotal() {
        articletotal = `\n今日已阅读` + getreadpack+ `篇，`+ `共领取`+  redpackgot +`个阶梯红包`
      }
         str += articletotal + `\n`+ Dictum
-        Redpack()
          }
-     else if (article.ret == 2013){
+     else if (article.ret == 2011){
        str += article.info + `\n`+ Dictum
          }
      else {
@@ -127,6 +125,7 @@ function StepsTotal() {
       catch (e) {
       sy.msg(cookieName, "",'阅读统计:失败'+ e)
      }
+   Redpack()
   })
 }
 //阶梯红包到账
@@ -179,10 +178,9 @@ function getTotal() {
      if (log) console.log("获取收益信息" + data)
     } else {
      const obj = JSON.parse(data)
-          
-           notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" +obj.data.wealth[1].title+'元'+ redpack;
+        notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" +obj.data.wealth[1].title+'元'+ redpack;
         sy.msg(cookieName, notb, str)
-        sy.log(cookieName+","+notb+ "\n" )
+        sy.log(cookieName +","+notb+ "\n" )
         }
      })
  }

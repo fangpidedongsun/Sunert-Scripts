@@ -1,7 +1,7 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包
 
-此脚本只开启红包通知和错误通知，其他通知一律关闭，可视喜好自行开启其他通知
+此脚本只开启红包通知和错误通知，其他通知一律关闭，如需开启请删除157行或者162行的"//"即可
 
 获取Cookie方法:
  1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
@@ -91,8 +91,8 @@ function toRead() {
       sy.msg(cookieName, '阅读:'+ error)
         }else{
        sy.log(`${cookieName}阅读文章 - data: ${data}`)
-     StepsTotal()
       }
+    StepsTotal()
     })
   }
 
@@ -101,9 +101,7 @@ function StepsTotal() {
    const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
-   headers: {
-      Cookie: cookieVal,
-    },
+   headers: {Cookie: cookieVal},
   };
     sy.get(StepsUrl, (error, response, data) => {
       try {
@@ -123,13 +121,13 @@ function StepsTotal() {
      }
         str += articletotal + `\n`+ Dictum
         }
-        else if (article.ret == 2013){
+        else if (article.ret == 2011){
          str += article.info + `\n`+ Dictum
-        getTotal()
         }
         else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
         }
+       getTotal()
        }
       catch (e) {
       sy.msg(cookieName, "",'阅读统计:失败'+ e)
@@ -141,10 +139,8 @@ function Redpack() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
-      headers: {
-      Cookie: cookieVal,
-    },
-    body: 'activity_id=stair_redpack_chajian'
+      headers: {Cookie: cookieVal},
+      body: 'activity_id=stair_redpack_chajian'
   };
     sy.post(cashUrl, (error, response, data) => {
       try {
