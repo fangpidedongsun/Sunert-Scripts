@@ -63,7 +63,7 @@ function getsign() {
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
-       Dictum = '[每日一句] '+tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
+       Dictum = '[每日一句]  '+tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author.replace(/[\<|\.|\>|br|图]/g,"")
        str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'
        toRead()} 
       else {
@@ -107,7 +107,7 @@ function StepsTotal() {
          redpackgot = article.data.extends.redpack_got
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
-        if (redpackgot < redpacktotal-1){
+      if (redpackgot < redpacktotal-1){
          articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可继续领取红包' }
       if (redpackgot == redpacktotal-1){
          articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可领取今日最后一次红包' }
@@ -116,10 +116,13 @@ function StepsTotal() {
      }
         str += articletotal + `\n`+ Dictum
         Redpack()
-        }
-        else {
+         }
+     else if (article.ret == 2013){
+       str += article.info + `\n`+ Dictum
+         }
+     else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
-        }
+         }
        }
       catch (e) {
       sy.msg(cookieName, "",'阅读统计:失败'+ e)

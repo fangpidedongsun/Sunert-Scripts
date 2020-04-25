@@ -122,6 +122,9 @@ function StepsTotal() {
        articletotal = `\n今日已阅读` + getreadpack+ `篇，`+ `共领取`+  redpackgot +`个阶梯红包`
      }
         str += articletotal + `\n`+ Dictum
+        }
+        else if (article.ret == 2013){
+         str += article.info + `\n`+ Dictum
         getTotal()
         }
         else {
