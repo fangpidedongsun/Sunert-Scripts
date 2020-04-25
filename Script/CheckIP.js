@@ -94,6 +94,28 @@
    else if(regionName=="Central"){
    return "中心"
    }
+   else if(regionName=="Sha Tin"){
+   return "沙田"
+   }
+  else if(regionName=="Tai Wai"){
+   return "大围村"
+   }
+   else if(regionName=="San Jose")
+   {
+   return "圣何塞"
+   }
+   else if(regionName=="Fremont")
+   {
+   return "弗里蒙特"
+   }
+   else if(regionName=="Heiwajima")
+   {
+   return "平和岛"
+   }
+   else if(regionName=="Tokyo")
+   {
+   return "东京"
+   }
    else 
    {
    return regionName
@@ -113,36 +135,51 @@
    return "香港电讯有限公司" 
    }
    else if(para=="DigitalOcean, LLC"){
-   return "数字海洋有限公司" 
+   return "数字海洋" 
    }
    else if(para=="AWS EC2 (us-west-2)"){
-   return "亚马逊云服务" 
+   return "亚马逊西部云服务" 
    }
    else if(para=="AWS EC2 (ap-northeast-2)"){
-   return "亚马逊EC2服务器" 
+   return "亚马逊东北亚服务器" 
+   }
+   else if(para=="AWS EC2 (ap-southeast-1)"){
+   return "亚马逊东南亚云服务"
    }
    else if(para=="Newmedia Express PTE LTD"){
-   return "新媒体快递有限公司" 
+   return "新媒体快递" 
    }
    else if(para=="Taiwan Fixed Network CO., LTD.")   {
-   return "台湾固网股份有限公司"
+   return "台湾固网股份"
    }
    else if(para=="Hostigation")   {
    return "大谷互联网" 
    }
-   else if(para=="CL Online network Technology Co., Ltd")   {
-   return "CL在线网络科技有限公司" 
+   else if(para=="CL Online network Technology Co., Ltd"){
+   return "中联在线网络科技" 
    }
    else if(para=="CodecCloud(HK)Limited"){
-   return "编解码器云(香港)有限公司" 
+   return "编码器云(香港)" 
    }
    else if(para=="RESNET INC DBA of RESIDENTIAL NETWORKING SOLUTIONS LLC")   
    {
-   return "RESNET住宅网络解决方案有限责任公司" 
+   return "RESNET住宅网络解决方案" 
    }
    else if(para=="Hong Kong Broadband Network Ltd")  
    {
-   return "香港宽频网络有限公司" 
+   return "香港宽频网络" 
+   }
+   else if(para=="ALICLOUD-HK")
+   {
+   return "香港阿里云"
+   }
+   else if(para=="HGC Global Communications Limited")
+   {
+   return "和记环球电讯"
+   }
+   else if(para=="Quicksilver Express Courier, Inc.")
+   {
+   return "快银快递"
    }
    else
    {

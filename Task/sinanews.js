@@ -92,8 +92,8 @@ function signinfo() {
      let result = JSON.parse(data)
      const nickName = `用户昵称: ${result.data.nickName}`  
      if (result.status == 0){
-         signcoin = `  金币总计: ${result.data.coins}💰`
-         detail = '已签到' + result.data.sign.hasSigned+"天 "+signcoin+'明日获取'+result.data.sign.timeline[1].name+": "
+         signcoin = `金币总计: ${result.data.coins}💰，`
+         detail = '已连续签到' + result.data.sign.conNum+"天，"+signcoin+'明日获取'+result.data.sign.timeline[1].name+": "
 + result.data.sign.timeline[1].num
          }  
       subTitle = nickName +" " +signres
