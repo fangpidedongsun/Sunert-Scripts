@@ -1,7 +1,7 @@
 /*
 新浪新闻标准版/极速版签到(二选一)
 
-1.打开app,点击"我的"=>"签到"，获取第一个Cookie，通知获取信息成功
+1.打开app,点击”我的“=>”签到“，获取第一个Cookie，通知获取信息成功
 2.在未签到情况下，先禁用第一条Cookie链接，然后再次进入签到，通知获取签到Cookie成功 surge极速版配置请自行更换
 Surge 4.0
 [Script]
@@ -10,7 +10,7 @@ Surge 4.0
 新浪 Cookie = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/sinanews.js,type=http-request,pattern=https:\/\/newsapi\.sina\.cn\/\?resource=userpoint\/signIn
 
 #新浪新闻
-cron ”58 7 * * *“ script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/sinanews.js
+cron "58 7 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/sinanews.js
 
 ------------------
 
@@ -82,7 +82,6 @@ infourlKey)
 //签到
 function getsign() {
   return new Promise((resolve, reject) =>{
- const liteVAL = signurlVal.split("")[1]
    let signurl =  {
       url:  signurlVal,
       headers: JSON.parse(signheaderVal)}
@@ -101,30 +100,6 @@ function getsign() {
          signres = `签到失败❌`
          detail = `说明: `+ result.msg
          }
- let liteurl =  {
-      url:  'http://lite.sina.cn/?'+liteVAL,
-      headers: JSON.parse(signheaderVal)}
-
-
-    liteurl.headers["Host"]=`lite.sina.cn`
-
-sy.log(signheaderVal)
-   sy.get(liteurl, (error, response, data) => {
-     sy.log(`${CookieName}, data: ${data}`)
-     let result = JSON.parse(data)
-     if (result.status == 0){
-         signres = `极速版签到成功🎉`
-         detail = `获得收益: ${result.data.message.title}💰`  
-         }  
-     else if (result.status == -1){
-         signres += `极速版重复签到‼️`
-         detail += `签到说明: `+ result.msg
-         }
-     else {
-         signres = `签到失败❌`
-         detail = `说明: `+ result.msg
-         }
-      })
     signinfo()
     },resolve)
   })
@@ -135,7 +110,7 @@ function signinfo() {
       url: infourlVal,
       headers: JSON.parse(infoheaderVal)}
    sy.get(infourl, (error, response, data) => {
-     //sy.log(`${CookieName}, data: ${data}`)
+     sy.log(`${CookieName}, data: ${data}`)
      let result = JSON.parse(data)
      const nickName = `用户昵称: ${result.data.nickName}`  
      if (result.status == 0){

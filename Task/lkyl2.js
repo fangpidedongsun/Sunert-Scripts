@@ -17,7 +17,7 @@ Surge 4.0 :
 lkyl.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,script-update-interval=0
 
 # 来客有礼 Cookie.
-lkyl.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\?
+lkyl.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/bean\/square\/silverBean\/task\/get\?
 
 ~~~~~~~~~~~~~~~~
 QX 1.0.5+ :
@@ -25,7 +25,7 @@ QX 1.0.5+ :
 0 9 * * * lkyl.js
 
 [rewrite_local]
-https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\? url script-request-header lkyl.js
+https:\/\/draw\.jdfcloud\.com\/\/api\/bean\/square\/silverBean\/task\/get\? url script-request-header lkyl.js
 ~~~~~~~~~~~~~~~~
 [MITM]
 hostname = draw.jdfcloud.com
@@ -33,11 +33,15 @@ hostname = draw.jdfcloud.com
 
 */
 const cookieName = '来客有礼小程序'
-const signurlKey = 'sy_signurl_lkyl'
-const signheaderKey = 'sy_signheader_lkyl'
+const signurlKey = 'sy_signurl_lkyl2'
+const signheaderKey = 'sy_signheader_lkyl2'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)
+const token = JSON.parse(sy.getdata(signheaderKey))
+const openid = token['openId']
+const appid = token['App-Id']
+
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -58,17 +62,14 @@ if ($request && $request.method != 'OPTIONS') {
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
-const token = JSON.parse(signheaderVal)
-const openid = token['openId']
-const appid = token['App-Id']
 function sign() {
   return new Promise((resolve, reject) =>{
 	  let signurl = {
-		url: signurlVal,
+		url: `https://draw.jdfcloud.com//api/turncard/sign?openId=${openid}&petSign=true&turnTableId=131&source=HOME&channelId=87&appId=${appid}`,
 		headers: JSON.parse(signheaderVal)
 	}
     sy.post(signurl, (error, response, data) => {
-      //sy.log(`${cookieName}, data: ${data}`)
+      sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {

@@ -3,7 +3,7 @@
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域
 下，
-2.微信搜索'来客有礼'小程序,登陆京东账号，点击'领京豆->翻牌',即可获取Cookie. 
+2.微信搜索'来客有礼'小程序,登陆京东账号，点击'发现',即可获取Cookie. 
 3.当日签过到需次日获取Cookie.
 4. 4月26日更新，每日视频运行一次增加一次银币，未加入银豆兑换京豆功能，需手动
 5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
@@ -17,7 +17,7 @@ Surge 4.0 :
 lkyl.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,script-update-interval=0
 
 # 来客有礼 Cookie.
-lkyl.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\?
+lkyl.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/bean\/square\/silverBean\/task\/get\?
 
 ~~~~~~~~~~~~~~~~
 QX 1.0.5+ :
@@ -25,7 +25,7 @@ QX 1.0.5+ :
 0 9 * * * lkyl.js
 
 [rewrite_local]
-https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\? url script-request-header lkyl.js
+https:\/\/draw\.jdfcloud\.com\/\/api\/bean\/square\/silverBean\/task\/get\? url script-request-header lkyl.js
 ~~~~~~~~~~~~~~~~
 [MITM]
 hostname = draw.jdfcloud.com
@@ -33,11 +33,15 @@ hostname = draw.jdfcloud.com
 
 */
 const cookieName = '来客有礼小程序'
-const signurlKey = 'sy_signurl_lkyl2'
-const signheaderKey = 'sy_signheader_lkyl2'
+const signurlKey = 'sy_signurl_lkyl'
+const signheaderKey = 'sy_signheader_lkyl'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const signheaderVal = sy.getdata(signheaderKey)
+const token = JSON.parse(sy.getdata(signheaderKey))
+const openid = token['openId']
+const appid = token['App-Id']
+
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -58,17 +62,14 @@ if ($request && $request.method != 'OPTIONS') {
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
-const token = JSON.parse(signheaderVal)
-const openid = token['openId']
-const appid = token['App-Id']
 function sign() {
   return new Promise((resolve, reject) =>{
 	  let signurl = {
-		url: signurlVal,
+		url: `https://draw.jdfcloud.com//api/turncard/sign?openId=${openid}&petSign=true&turnTableId=131&source=HOME&channelId=87&appId=${appid}`,
 		headers: JSON.parse(signheaderVal)
 	}
     sy.post(signurl, (error, response, data) => {
-      //sy.log(`${cookieName}, data: ${data}`)
+      sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {

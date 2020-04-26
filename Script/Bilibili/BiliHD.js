@@ -2,7 +2,7 @@
 bilibili fan drama open 1080P+
 
 QX:
-https:\/\/ap(p|i)\.bilibili\.com\/((pgc\/player\/api\/playurl)|(x\/v2\/account\/myinfo\?)|(x\/v2\/account/mine\?) url script-response-body BiliHD.js
+https:\/\/ap(p|i)\.bilibili\.com\/((pgc\/player\/api\/playurl)|(x\/v2\/account\/myinfo\?)|(x\/v2\/account/mine\?)) url script-response-body BiliHD.js
 
 QX MITM = api.bilibili.com
 */
