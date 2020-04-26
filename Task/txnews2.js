@@ -1,7 +1,7 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包
 
-此脚本只开启红包通知和错误通知，其他通知一律关闭，可视喜好自行开启其他通知
+此脚本只开启红包通知和错误通知，其他通知一律关闭，如需开启请删除157行或者162行的"//"即可
 
 获取Cookie方法:
  1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
@@ -34,7 +34,6 @@ const cookieKey = 'sy_cookie_txnews2'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const cookieVal = sy.getdata(cookieKey)
-const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -80,31 +79,29 @@ return new Promise((resolve, reject) => {
   })
 }
 
-
 //阅读阶梯
 function toRead() {
   const toreadUrl = {
     url: signurlVal,
-   headers: {Cookie:cookieVal},
-   body: 'event=article_read&extend={"article_id":"20200420A0KBMB00","channel_id":"1979"}'
+    headers: {Cookie:cookieVal},
+    body: 'event=article_read&extend={"article_id":"20200420A0KBMB00","channel_id":"1979"}'
   };
    sy.post(toreadUrl,(error, response, data) =>{
       if (error){
       sy.msg(cookieName, '阅读:'+ error)
         }else{
        sy.log(`${cookieName}阅读文章 - data: ${data}`)
-     StepsTotal()
       }
+    StepsTotal()
     })
   }
 
 //阅读文章统计
 function StepsTotal() {
+   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
-   headers: {
-      Cookie: cookieVal,
-    },
+   headers: {Cookie: cookieVal},
   };
     sy.get(StepsUrl, (error, response, data) => {
       try {
@@ -123,11 +120,14 @@ function StepsTotal() {
        articletotal = `\n今日已阅读` + getreadpack+ `篇，`+ `共领取`+  redpackgot +`个阶梯红包`
      }
         str += articletotal + `\n`+ Dictum
-        getTotal()
+        }
+        else if (article.ret == 2011){
+         str += article.info + `\n`+ Dictum
         }
         else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
         }
+       getTotal()
        }
       catch (e) {
       sy.msg(cookieName, "",'阅读统计:失败'+ e)
@@ -136,12 +136,11 @@ function StepsTotal() {
 }
 //阶梯红包到账
 function Redpack() {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
-      headers: {
-      Cookie: cookieVal,
-    },
-    body: 'activity_id=stair_redpack_chajian'
+      headers: {Cookie: cookieVal},
+      body: 'activity_id=stair_redpack_chajian'
   };
     sy.post(cashUrl, (error, response, data) => {
       try {
@@ -188,8 +187,8 @@ function getTotal() {
     } else {
          const obj = JSON.parse(data)
            notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" + obj.data.wealth[1].title+'元'
-        Redpack()
-        //sy.log(cookieName+","+notb+ "\n" )
+          Redpack()
+          sy.log(cookieName+","+notb+ "\n" )
         }
       resolve()
       })
