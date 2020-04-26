@@ -116,7 +116,7 @@ function StepsTotal() {
         str += articletotal + `\n`+ Dictum
          }
      else if (article.ret == 2011){
-       str += article.info + `\n`+ Dictum
+       str += `\n`+ Dictum
          }
      else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 

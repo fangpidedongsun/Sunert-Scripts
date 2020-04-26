@@ -67,7 +67,7 @@ return new Promise((resolve, reject) => {
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
-       Dictum = '[每日一句] '+tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
+       Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
        str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'
        toRead()} 
       else {
@@ -122,7 +122,7 @@ function StepsTotal() {
         str += articletotal + `\n`+ Dictum
         }
         else if (article.ret == 2011){
-         str += article.info + `\n`+ Dictum
+         str += `\n`+ Dictum
         }
         else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
