@@ -5,7 +5,8 @@
 下，
 2.微信搜索'来客有礼'小程序,登陆京东账号，点击'领京豆->翻牌',即可获取Cookie. 
 3.当日签过到需次日获取Cookie.
-4.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
+4. 4月26日更新，每日视频运行一次增加一次银币
+5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 
 仅测试Quantumult X
 by Macsuny
@@ -13,25 +14,25 @@ by Macsuny
 ~~~~~~~~~~~~~~~~
 Surge 4.0 :
 [Script]
-lkyl2.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,script-update-interval=0
+lkyl.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,script-update-interval=0
 
 # 来客有礼 Cookie.
-lkyl2.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl2.js,type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\?
+lkyl.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\?
 
 ~~~~~~~~~~~~~~~~
 QX 1.0.5+ :
 [task_local]
-0 9 * * * lkyl2.js
+0 9 * * * lkyl.js
 
 [rewrite_local]
-https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\? url script-request-header lkyl2.js
+https:\/\/draw\.jdfcloud\.com\/\/api\/turncard\/sign\? url script-request-header lkyl.js
 ~~~~~~~~~~~~~~~~
 [MITM]
 hostname = draw.jdfcloud.com
 ~~~~~~~~~~~~~~~~
 
 */
-const cookieName = '来客有礼2'
+const cookieName = '来客有礼'
 const signurlKey = 'sy_signurl_lkyl2'
 const signheaderKey = 'sy_signheader_lkyl2'
 const sy = init()
@@ -86,8 +87,6 @@ function sign() {
      })
    })
   }
-
-
 function lottery() {
    return new Promise((resolve, reject) =>{
 	  let daytaskurl = {
@@ -96,31 +95,49 @@ function lottery() {
 	}
      daytaskurl.headers['Content-Length'] = `0`;
     sy.get(daytaskurl, (error, response, data) => {
-      sy.log(`${cookieName}, data: ${data}`)
+      //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
-      const title = `${cookieName}`
       if (result.success == true) {
       //detail += `\n今日抽奖获取银豆: ${result.data.rewardAmount}`
+      }
+    status()
+    resolve()
+      })
+   })
+}
+function status() {
+   return new Promise((resolve, reject) =>{
+	  let statusurl = {
+		url: `https://draw.jdfcloud.com//api/bean/square/silverBean/task/get?openId=${openid}&appId=${appid}`,
+		headers: JSON.parse(signheaderVal),
+        }
+     statusurl.headers['Content-Length'] = `0`;
+    sy.get(statusurl, (error, response, data) => {
+      //sy.log(`${cookieName}, data: ${data}`)
+      let result = JSON.parse(data)
+      if (result.success == true) {
+      //detail += ``
       }
     video()
     resolve()
       })
    })
 }
-
+//每日视频
 function video() {
    return new Promise((resolve, reject) =>{
+    const bodyVal = '{"openId": '+'"'+openid+'","taskCode": "watch_video"}'
 	  let videourl = {
 		url: `https://draw.jdfcloud.com//api/bean/square/silverBean/task/join?appId=${appid}`,
 		headers: JSON.parse(signheaderVal),
-          body: `{"openId": "['openid']","taskCode": "watch_video"}`}
+          body: bodyVal,
+}
      videourl.headers['Content-Length'] = `0`;
     sy.post(videourl, (error, response, data) => {
-      sy.log(`${cookieName}, data: ${data}`)
+      //sy.log(`${cookieName}, 视频: ${data}`)
       let result = JSON.parse(data)
-      const title = `${cookieName}`
       if (result.success == true) {
-      //detail += `\n今日抽奖获取银豆: ${result.data.rewardAmount}`
+      //detail += `\n`
       }
      let videotaskurl = {
 		url: `https://draw.jdfcloud.com//api/bean/square/silverBean/taskReward/get?openId=${openid}&taskCode=watch_video&inviterOpenId=&appId=${appid}`,
@@ -130,18 +147,16 @@ function video() {
     sy.get(videotaskurl, (error, response, data) => {
       sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
-      const title = `${cookieName}`
       if (result.success == true) {
-      //detail += `\n今日抽奖获取银豆: ${result.data.rewardAmount}`
+      //detail += `\n`
       }
      })
-    award()
     resolve()
       })
+ award()
    })
 }
-
-
+//抽奖循环
 function award() {
    return new Promise((resolve, reject) =>{
 	 let weektaskurl = {
@@ -150,27 +165,26 @@ function award() {
 	}
      weektaskurl.headers['Content-Length'] = `0`;
     sy.get(weektaskurl, (error, response, data) => {
-      //sy.log(`${cookieName}, data: ${data}`)
+      sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
-      const title = `${cookieName}`
       if (result.success == true) {
-        detail += `  您已参与${result.data.homeActivities.length}个抽奖`
-     for (i=0;i < 3;i++)
-{   
-   lotteryId = result.data.homeActivities[i].activityId
-   let awardurl = {  
-        url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,
-	   headers: JSON.parse(signheaderVal)
-	}
-    sy.post(awardurl, (error, response, data) =>
-  {
-     //sy.log(`${cookieName}, data: ${data}`)
-       })
-      }
-     }
-    bean()
+       for (i=0;i < result.data.homeActivities.length;i++)
+{  
+     for
+(k=0;result.data.homeActivities[i].participated ==false;k++)
+  {  if (k<=3){
+       lotteryId = result.data.homeActivities[i].activityId
+     let awardurl = {  
+        url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,headers: JSON.parse(signheaderVal)}
+   sy.post(awardurl, (error, response, data) =>{
+     sy.log(`${cookieName}, data: ${data}`)
+      resolve()
+            });}
+          }}}
+   else{ }
     resolve()
    })
+  bean()
  })
 }
 function bean() {
@@ -198,7 +212,6 @@ function total() {
     sy.get(lotteryurl, (error, response, data) => {
       //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
-      const title = `${cookieName}`
       if (result.success == true) {
       SilverBean = `${result.data}`
       detail += `\n您共计${SilverBean}个银豆`
