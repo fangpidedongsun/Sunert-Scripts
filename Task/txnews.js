@@ -57,7 +57,7 @@ function getsign() {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
    sy.post(llUrl, (error, response, data) => {   
-     //sy.log(`${cookieName}签到 - data: ${data}`)
+     sy.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
