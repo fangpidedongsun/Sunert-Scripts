@@ -114,11 +114,32 @@ function video() {
     sy.get(videotaskurl, (error, response, data) => { 
      //sy.log(`${cookieName}, data: ${data}`)})
      })
-  award()
+  lottery()
    })
 resolve()
  })
 }
+function lottery() {
+   return new Promise((resolve, reject) =>{
+	  let daytaskurl = {
+		url: `https://draw.jdfcloud.com//api/bean/square/getTaskInfo?openId=${openid}&taskCode=lottery&appId=${appid}`,
+		headers: JSON.parse(signheaderVal)
+	}
+     daytaskurl.headers[`Content-Length`] = `0`;
+    sy.get(daytaskurl, (error, response, data) => {
+    sy.log(`${cookieName}, 今日0元抽奖 ${data}`)
+      let result = JSON.parse(data)
+      Incomplete = result.data.totalSteps - result.data.doneSteps
+      if (Incomplete == 0) {
+       detail += `今日已完成0元抽奖任务, 获取${result.data.rewardAmount}个银豆`}
+     else if (Incomplete > 0){
+       detail += `今日还有${Incomplete}次抽奖任务未完成`}
+    award()
+      })
+   resolve()
+   })
+}
+
 //抽奖循环
 function award() {
    return new Promise((resolve, reject) =>{
@@ -141,32 +162,13 @@ function award() {
              }
             }
           }
-      lottery()
+      bean()
        })
     resolve()
     })
   }
   
-function lottery() {
-   return new Promise((resolve, reject) =>{
-	  let daytaskurl = {
-		url: `https://draw.jdfcloud.com//api/bean/square/getTaskInfo?openId=${openid}&taskCode=lottery&appId=${appid}`,
-		headers: JSON.parse(signheaderVal)
-	}
-     daytaskurl.headers[’Content-Length‘] = `0`;
-    sy.get(daytaskurl, (error, response, data) => {
-    sy.log(`${cookieName}, 今日0元抽奖 ${data}`)
-      let result = JSON.parse(data)
-      Incomplete = result.data.totalSteps - result.data.doneSteps
-      if (Incomplete == 0) {
-       detail += `今日已完成0元抽奖任务, 获取${result.data.rewardAmount}个银豆`}
-     else if (Incomplete > 0){
-       detail += `今日还有${Incomplete}次抽奖任务未完成`}
-    bean()
-      })
-   resolve()
-   })
-}
+
   
   
 function bean() {
