@@ -1,5 +1,6 @@
 /*
-腾讯新闻签到修改版，可以自动阅读文章获取红包
+腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万阅读红包挑战赛，针对幸运用户参与
+
 获取Cookie方法:
 1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ 版，请删除tag标签;
 2.打开腾讯新闻app，阅读几篇文章，倒计时结束后即可获取阅读Cookie;
@@ -12,10 +13,10 @@
 ---------------------
 Surge 4.0
 [Script]
-腾讯新闻 = type=cron,cronexp=0 8 0 * * *,script-path=Script/txnews.js,script-update-interval=0
+腾讯新闻 = type=cron,cronexp=0 8 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js,script-update-interval=0
 
 腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js
-腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js
+腾讯新闻 = type=http-request,pattern=^https:\/\/api\.inews\.qq\.com\/activity\/v1\/redpack\/user\/list\?activity_id,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js
 
 ~~~~~~~~~~~~~~~~
 QX 1.0.5+ :
