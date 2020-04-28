@@ -1,6 +1,6 @@
 /*
 
-赞赏:中青邀请码`46308484`,农妇山泉 -> 有点咸
+赞赏:中青邀请码`46308484`,农妇山泉 -> 有点咸，万分感谢
 
 本脚本仅适用于中青看点签到
 获取Cookie方法:
@@ -23,7 +23,7 @@ Surge 4.0 :
 ~~~~~~~~~~~~~~~~
 QX 1.0. 7+ :
 [task_local]
-0 9 * * * lkyl.js
+0 9 * * * youth.js
 
 [rewrite_local]
 https:\/\/kd\.youth\.cn\/TaskCenter\/sign url script-request-header youth.js
