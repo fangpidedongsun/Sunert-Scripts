@@ -7,10 +7,14 @@
  [rewrite_local]
 https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews.js
 
+^https:\/\/api\.inews\.qq\.com\/activity\/v1\/redpack\/user\/list\?activity_id url script-request-header txnews.js
+
+
  [MITM]
 hostname = api.inews.qq.com
 
 3.打开腾讯新闻app，阅读一篇文章，倒计时结束后即可获取Cookie
+红包ID的Cookie，点击红包倒计时，或者点击活动页面的专属红包任务，有些账号可能无，
 
 4.现阶段每日共9个阶梯红包，具体阅读篇数视腾讯情况而变动
 
@@ -18,19 +22,25 @@ hostname = api.inews.qq.com
 
 6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
 
-7.此版本会频繁阅读通知，可注释182行关闭通知，或者使用本仓库 txnews2.js
+7.此版本会频繁阅读通知，可关闭通知，或者使用本仓库 txnews2.js
+
+8.4月27日修复该账户为非活动用户，增加获取红包ID的Cookie，点击红包倒计时，或者点击活动页面的专属红包任务
+
 ~~~~~~~~~~~~~~~~
 Cookie获取后，请注释掉Cookie地址。
 
 #腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
 */
+const notify = true; //开启通知为true，关闭为false
 const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews'
 const cookieKey = 'sy_cookie_txnews'
+const RedIDKey = 'sy_rd_txnews'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const cookieVal = sy.getdata(cookieKey)
+const RedID = sy.getdata(RedIDKey)
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -40,7 +50,7 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS') {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
   sy.log(`signurlVal:${signurlVal}`)
@@ -48,6 +58,12 @@ if ($request && $request.method != 'OPTIONS') {
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
   if (cookieVal) sy.setdata(cookieVal, cookieKey)
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
+  }
+
+if ($request && $request.method != 'OPTIONS'&& $request.url.match(/redpack\/user\/list\?activity/)) {
+  const RedID =  $request.url.split("=")[1].split("&")[0]
+  if (RedID) sy.setdata(RedID, RedIDKey)
+  sy.msg(cookieName, `获取红包ID: 成功🎉`, ``)
   }
  }
 
@@ -57,7 +73,7 @@ function getsign() {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
    sy.post(llUrl, (error, response, data) => {   
-     //sy.log(`${cookieName}签到 - data: ${data}`)
+     sy.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
@@ -73,11 +89,12 @@ function getsign() {
   })
 }
 
+
 //阅读阶梯
 function toRead() {
   const toreadUrl = {
     url: signurlVal, headers: {Cookie:cookieVal},
-    body: 'event=article_read&extend={"article_id":"20200420A0KBMB00","channel_id":"1979"}'
+    body: 'event=article_read&extend={"article_id":"20200424A08KNH00","channel_id":"17240460"}'
   };
    sy.post(toreadUrl,(error, response, data) =>{
       if (error){
@@ -88,11 +105,13 @@ function toRead() {
     })
   }
 
+
 //阅读文章统计
 function StepsTotal() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
+
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
    headers: {
       Cookie: cookieVal,
     },
@@ -116,7 +135,7 @@ function StepsTotal() {
         str += articletotal + `\n`+ Dictum
          }
      else if (article.ret == 2011){
-       str += article.info + `\n`+ Dictum
+       str += `\n`+ Dictum
          }
      else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
@@ -133,10 +152,8 @@ function Redpack() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
-      headers: {
-      Cookie: cookieVal,
-    },
-    body: 'activity_id=stair_redpack_chajian'
+      headers: {Cookie: cookieVal},
+    body: `activity_id=${RedID}`
   };
     sy.post(cashUrl, (error, response, data) => {
       try {
@@ -179,9 +196,11 @@ function getTotal() {
     } else {
      const obj = JSON.parse(data)
         notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" +obj.data.wealth[1].title+'元'+ redpack;
-        sy.msg(cookieName, notb, str)
-        sy.log(cookieName +","+notb+ "\n" )
         }
+       if (notify == true){
+        sy.msg(cookieName, notb, str)
+       }
+        sy.log(cookieName +","+notb+ "\n" )
      })
  }
 

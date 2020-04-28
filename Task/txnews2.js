@@ -1,7 +1,7 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包
 
-此脚本只开启红包通知和错误通知，其他通知一律关闭，如需开启请删除157行或者162行的"//"即可
+此脚本只开启红包通知和错误通知，其他通知一律关闭，如需开启请删除181行或者186行的"//"即可
 
 获取Cookie方法:
  1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
@@ -21,6 +21,7 @@ hostname = api.inews.qq.com
 
 6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
 
+7.4月27日修复该账户为非活动用户
 
 ~~~~~~~~~~~~~~~~
 Cookie获取后，请注释掉Cookie地址。
@@ -67,7 +68,7 @@ return new Promise((resolve, reject) => {
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
-       Dictum = '[每日一句] '+tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
+       Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
        str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'
        toRead()} 
       else {
@@ -84,7 +85,7 @@ function toRead() {
   const toreadUrl = {
     url: signurlVal,
     headers: {Cookie:cookieVal},
-    body: 'event=article_read&extend={"article_id":"20200420A0KBMB00","channel_id":"1979"}'
+    body: 'event=article_read&extend={"article_id":"20200424A08KNH00","channel_id":"17240460"}'
   };
    sy.post(toreadUrl,(error, response, data) =>{
       if (error){
@@ -92,15 +93,38 @@ function toRead() {
         }else{
        sy.log(`${cookieName}阅读文章 - data: ${data}`)
       }
-    StepsTotal()
+    Activity_id()
     })
   }
 
+function Activity_id() {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
+  const activityUrl = {
+    url: `https://api.inews.qq.com/activity/v1/user/activity/get?isJailbreak=0&appver=13.4.1_qqnews_6.1.01&${ID}`,
+    headers: {Cookie:cookieVal},
+  };
+
+   sy.get(activityUrl, (error, response, data) =>{
+    if (error){
+      sy.msg(cookieName, '获取阅读红包ID失败:'+ error)
+     }else{
+     sy.log(`${cookieName}阅读红包id - data: ${data}`)
+       reddata = JSON.parse(data)
+        if (reddata.data.activity != null){
+        redpackid = reddata.data.activity.id
+        //StepsTotal()
+       }
+        else {
+      sy.msg(cookieName, '获取阅读红包ID失败❌',`请检查该账号是否有阅读红包，或者该设备有其他账号已领取红包`)}
+      StepsTotal() 
+       }
+     })
+  }
 //阅读文章统计
 function StepsTotal() {
    const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=stair_redpack_chajian&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${redpackid}&${ID}`,
    headers: {Cookie: cookieVal},
   };
     sy.get(StepsUrl, (error, response, data) => {
@@ -122,7 +146,7 @@ function StepsTotal() {
         str += articletotal + `\n`+ Dictum
         }
         else if (article.ret == 2011){
-         str += article.info + `\n`+ Dictum
+         str += `\n`+ Dictum
         }
         else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
@@ -140,7 +164,7 @@ function Redpack() {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
       headers: {Cookie: cookieVal},
-      body: 'activity_id=stair_redpack_chajian'
+      body: `activity_id=${redpackid}`
   };
     sy.post(cashUrl, (error, response, data) => {
       try {

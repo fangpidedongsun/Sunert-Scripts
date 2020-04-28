@@ -9,7 +9,7 @@
  * 谷歌中英互译，适合简单的中英短语单词互译
  */
 
-const ENword = 'CL Online network Technology Co., Ltd'  //翻译内容填入引号内
+const ENword = 'CL Online network Technology Co.LTD'  //翻译内容填入引号内
 
 const word = encodeURI(ENword)
 const cnToenUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q="+word}
@@ -17,7 +17,7 @@ const enTocnUrl = {url: "http://translate.google.cn/translate_a/single?client=gt
 
 Translate(ENword)
 function Translate(ENword) {
-   if (/[^a-zA-Z]+$/.test(ENword))
+   if (/[^a-zA-Z.]+$/.test(ENword))
 {
     $task.fetch(cnToenUrl).then(response => { 
       if(/[\u4e00-\u9fa5]/.test(response.body)) {

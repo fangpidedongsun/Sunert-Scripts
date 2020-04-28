@@ -2,11 +2,12 @@
 本脚本仅适用于微博每日签到  
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域下
-2.打开微博App获取Cookie.获取后请注释或禁用Cookie
+2.打开微博App，刷微博视频，获取Cookie，获取后请注释或禁用Cookie
 3.打开微博钱包点击签到，获取Cookie，
 4.钱包签到时获取Cookie,已经签到无法获取
 5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 6.4月23日更新，更换微博签到Cookie,随时能获取，获取后请禁用
+
 仅测试Quantumult x，Surge、Loon自行测试
 by Macsuny
 
