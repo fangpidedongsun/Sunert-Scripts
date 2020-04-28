@@ -106,12 +106,12 @@ function video() {
           body: bodyVal}
     videourl.headers['Content-Length'] = `0`;
    sy.post(videourl, (error, response, data) =>{
-      //sy.log(`${cookieName}, 视频: ${data}`)
+      sy.log(`${cookieName}, 视频: ${data}`)
     let videotaskurl = {
 	 url: `https://draw.jdfcloud.com//api/bean/square/silverBean/taskReward/get?openId=${openid}&taskCode=watch_video&inviterOpenId=&appId=${appid}`,headers: JSON.parse(signheaderVal)}
     videotaskurl.headers['Content-Length'] = `0`;
     sy.get(videotaskurl, (error, response, data) => { 
-     //sy.log(`${cookieName}, data: ${data}`)})
+     sy.log(`${cookieName}, data: ${data}`)
      })
   lottery()
    })
@@ -150,26 +150,24 @@ function award() {
      sy.log(`${cookieName}, data: ${data}`)
       result = JSON.parse(data)
     if (result.success == true) {
-        if (Incomplete < 3){
-          for (k=0;k < result.data.homeActivities.length && Incomplete<=3;k++){
+        if (Incomplete >0 ){
+          var k = 0;
+          while (result.data.homeActivities[k].participated=false&& Incomplete<=3){
         lotteryId = result.data.homeActivities[k].activityId
     let awardurl = {  
-        url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,headers: JSON.parse(signheaderVal)}
+            url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,headers: JSON.parse(signheaderVal)}
    sy.post(awardurl, (error, response, data) =>{
-     //sy.log(`${cookieName}, 抽奖任务: ${data}`)
-              });
-             }
+       sy.log(`${cookieName}, 抽奖任务: ${data}`)
+               });
+             k++}
             }
           }
-      bean()
+       resolve()
        })
-    resolve()
+    bean()
     })
   }
-  
-
-  
-  
+// 领取银豆
 function bean() {
 return new Promise((resolve, reject) => {
  let beanurl = {
@@ -185,6 +183,7 @@ return new Promise((resolve, reject) => {
    resolve()
    })
 }
+//总计
 function total() {
    return new Promise((resolve, reject) =>{
 	 let lotteryurl = {
