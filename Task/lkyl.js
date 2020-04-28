@@ -19,7 +19,7 @@ lkyl.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubuserconte
 # 来客有礼 Cookie.
 lkyl.js = type=http-request,pattern=https:\/\/draw\.jdfcloud\.com\/\/api\/bean\/square\/silverBean\/task\/get\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/lkyl.js,
 ~~~~~~~~~~~~~~~~
-QX 1.0.5+ :
+QX 1.0. 7+ :
 [task_local]
 0 9 * * * lkyl.js
 

@@ -21,7 +21,7 @@ Surge 4.0 :
 # 获取京东到家 Cookie.
 京东到家 = type=http-request,pattern=https:\/\/daojia\.jd\.com\/client\?_jdrandom=\d{13}&functionId=%2Fsignin,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jddj.js,
 ~~~~~~~~~~~~~~~~
-QX 1.0.5+ :
+QX 1.0.7+ :
 [task_local]
 0 9 * * * jddj.js
 

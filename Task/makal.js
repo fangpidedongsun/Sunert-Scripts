@@ -22,7 +22,7 @@ cron ”0 9 * * *“ script-path=https://raw.githubusercontent.com/Sunert/Script
 # 马卡龙抠图神器 Cookie.
 http-request https:\/\/activity\.versa-ai\.com\/api\/community\/user\/sign\/days script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/makal.js
 ~~~~~~~~~~~~~~~~
-QX 1.0.5+ :
+QX 1.0.7+ :
 [task_local]
 0 9 * * * makal.js
 

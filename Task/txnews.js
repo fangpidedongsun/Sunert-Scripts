@@ -4,7 +4,7 @@
 获取Cookie方法:
 1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ 版，请删除tag标签;
 2.打开腾讯新闻app，阅读几篇文章，倒计时结束后即可获取阅读Cookie;
-3.获取红包ID的Cookie方法，点击红包倒计时，或者点击活动页面的专属红包任务，有些账号可能无，或者打开链接，大概率激活阅读红包，链接地址:https://news.qq.com/FERD/cjRedDown.htm
+3.获取红包ID的Cookie方法，点击红包倒计时，或者点击活动页面的专属红包任务，有些账号可能无，或者打开链接，可能激活阅读红包，链接地址:https://news.qq.com/FERD/cjRedDown.htm
 4.现阶段每日共9个阶梯红包，具体情况视腾讯而变动
 5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次，至少每2分钟一次
 6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
@@ -19,7 +19,7 @@ Surge 4.0
 腾讯新闻 = type=http-request,pattern=^https:\/\/api\.inews\.qq\.com\/activity\/v1\/redpack\/user\/list\?activity_id,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js
 
 ~~~~~~~~~~~~~~~~
-QX 1.0.5+ :
+QX 1.0.7+ :
  [task_local]
 0 9 * * * txnews.js, tag=腾讯新闻
  [rewrite_local]

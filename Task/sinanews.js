@@ -11,7 +11,7 @@ Surge 4.0:
 
 ------------------
 
-QX 1.0.5+ :
+#QX 1.0.7+ :
 [task_local]
 0 9 * * * sinanews.js
 [rewrite_local]
@@ -24,10 +24,10 @@ hostname = newsapi.sina.cn
 ＃新浪新闻极速版配置
 
 [rewrite_local]
-https?:\/\/lite\.sina\.cn\/\?resource=hbpage&newsId=HB-1-sina_gold_center - script-request-header sinanewslite.js
-https?:\/\/lite\.sina\.cn\/\?resource=userpoint\/signIn - script-request-header sinanewslite.js
+https?:\/\/lite\.sina\.cn\/\?resource=hbpage&newsId=HB-1-sina_gold_center - script-request-header sinanews.js
+https?:\/\/lite\.sina\.cn\/\?resource=userpoint\/signIn - script-request-header sinanews.js
 [task_local]
-0 9 * * * sinanewslite.js
+0 9 * * * sinanews.js
 
 ~~~~~~~~~~~~~~~~
 
