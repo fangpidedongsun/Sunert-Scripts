@@ -1,5 +1,5 @@
 /*
-本脚本仅适用于马卡龙抠图神器  测试
+本脚本仅适用于马卡龙抠图神器  测试无效
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域
 下，
@@ -22,7 +22,7 @@ cron ”0 9 * * *“ script-path=https://raw.githubusercontent.com/Sunert/Script
 # 马卡龙抠图神器 Cookie.
 http-request https:\/\/activity\.versa-ai\.com\/api\/community\/user\/sign\/days script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/makal.js
 ~~~~~~~~~~~~~~~~
-QX 1.0.5+ :
+QX 1.0.7+ :
 [task_local]
 0 9 * * * makal.js
 

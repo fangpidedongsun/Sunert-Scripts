@@ -1,27 +1,36 @@
 /*
-腾讯新闻签到修改版，可以自动阅读文章获取红包
+腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万阅读红包挑战赛，针对幸运用户参与
 
-此脚本只开启红包通知和错误通知，其他通知一律关闭，如需开启请删除181行或者186行的"//"即可
+此脚本默认关闭无红包通知阅读通知，如需全部开启请修改下面设置
 
 获取Cookie方法:
- 1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
+1. 把以下地址复制到响应配置下，非Quantumult X 1.0.8+ tf版，请删除tag标签
+2.打开腾讯新闻app，阅读几篇文章，倒计时结束后即可获取阅读Cookie;
+3.获取红包ID的Cookie方法，点击红包倒计时，或者点击活动页面的专属红包任务，有些账号可能无，或者打开链接，可能激活阅读红包，链接地址:https://news.qq.com/FERD/cjRedDown.htm
+4.现阶段每日共9个阶梯红包，具体阅读篇数视腾讯情况而变动
+5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次
+6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
+7.4月27日修复该账户为非活动用户
+
+----------------------------
+Surge 4.0
+[Script]
+腾讯新闻 = type=cron,cronexp=0 8 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js,script-update-interval=0
+
+腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js
+腾讯新闻 = type=http-request,pattern=^https:\/\/api\.inews\.qq\.com\/activity\/v1\/redpack\/user\/list\?activity_id,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js
+
+~~~~~~~~~~~~~~~~
+#  QX 1.0.7+
  [task_local]
-0 9 * * * txnews.js, tag=腾讯新闻
+0 9 * * * txnews2.js, tag=腾讯新闻
  [rewrite_local]
-https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews.js
+https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews2.js
+# 获取红包ID
+^https:\/\/api\.inews\.qq\.com\/activity\/v1\/redpack\/user\/list\?activity_id url script-request-header txnews2.js
 
  [MITM]
 hostname = api.inews.qq.com
-
-3.打开腾讯新闻app，阅读一篇文章，倒计时结束后即可获取Cookie
-
-4.现阶段每日共9个阶梯红包，具体阅读篇数视腾讯情况而变动
-
-5.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次
-
-6.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
-
-7.4月27日修复该账户为非活动用户
 
 ~~~~~~~~~~~~~~~~
 Cookie获取后，请注释掉Cookie地址。
@@ -29,12 +38,15 @@ Cookie获取后，请注释掉Cookie地址。
 #腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
 */
+const notify = false; //开启全部通知为true，关闭继续阅读为false
 const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews2'
 const cookieKey = 'sy_cookie_txnews2'
+const RedIDKey = 'sy_rd_txnews2'
 const sy = init()
 const signurlVal = sy.getdata(signurlKey)
 const cookieVal = sy.getdata(cookieKey)
+const RedID = sy.getdata(RedIDKey)
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -44,7 +56,7 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS') {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
   sy.log(`signurlVal:${signurlVal}`)
@@ -52,6 +64,12 @@ if ($request && $request.method != 'OPTIONS') {
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
   if (cookieVal) sy.setdata(cookieVal, cookieKey)
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
+  }
+
+if ($request && $request.method != 'OPTIONS'&& $request.url.match(/redpack\/user\/list\?activity/)) {
+  const RedID =  $request.url.split("=")[1].split("&")[0]
+  if (RedID) sy.setdata(RedID, RedIDKey)
+  sy.msg(cookieName, `获取红包ID: 成功🎉`, ``)
   }
  }
 
@@ -65,7 +83,7 @@ return new Promise((resolve, reject) => {
      sy.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
-       console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
+      //sy.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
@@ -91,42 +109,27 @@ function toRead() {
       if (error){
       sy.msg(cookieName, '阅读:'+ error)
         }else{
-       sy.log(`${cookieName}阅读文章 - data: ${data}`)
+       //sy.log(`${cookieName}阅读文章 - data: ${data}`)
       }
-    Activity_id()
+    redidCheck()
     })
   }
 
-function Activity_id() {
-  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
-  const activityUrl = {
-    url: `https://api.inews.qq.com/activity/v1/user/activity/get?isJailbreak=0&appver=13.4.1_qqnews_6.1.01&${ID}`,
-    headers: {Cookie:cookieVal},
-  };
-
-   sy.get(activityUrl, (error, response, data) =>{
-    if (error){
-      sy.msg(cookieName, '获取阅读红包ID失败:'+ error)
-     }else{
-     sy.log(`${cookieName}阅读红包id - data: ${data}`)
-       reddata = JSON.parse(data)
-        if (reddata.data.activity != null){
-        redpackid = reddata.data.activity.id
-        //StepsTotal()
-       }
-        else {
-      sy.msg(cookieName, '获取阅读红包ID失败❌',`请检查该账号是否有阅读红包，或者该设备有其他账号已领取红包`)}
-      StepsTotal() 
-       }
-     })
+function redidCheck() {
+   if(RedID !=null|undefined){
+      StepsTotal()
+    }else {
+      sy.msg(cookieName,str,"获取红包ID失败❌，请检查是否获取红包Cookie或者该用户为非活动用户")
   }
+}
+
 //阅读文章统计
 function StepsTotal() {
    const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${redpackid}&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
    headers: {Cookie: cookieVal},
-  };
+  }
     sy.get(StepsUrl, (error, response, data) => {
       try {
         sy.log(`${cookieName}阅读统计 - data: ${data}`)
@@ -164,7 +167,7 @@ function Redpack() {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
       headers: {Cookie: cookieVal},
-      body: `activity_id=${redpackid}`
+      body: `activity_id=${RedID}`
   };
     sy.post(cashUrl, (error, response, data) => {
       try {
@@ -178,13 +181,15 @@ function Redpack() {
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
            notb += " 继续阅读领取红包"
-           //sy.msg(cookieName, notb, str)
-           //sy.log(cookieName+` `+notb+`\n`+ str)
+         if (notify){
+           sy.msg(cookieName, notb, str)
+           sy.log(cookieName+` `+notb+`\n`+ str)
+                 }
                }
           else { 
             notb += " 今日阶梯红包已领完 💤"
-          //sy.msg(cookieName, notb, str)
-          //sy.log(cookieName+` `+notb+`\n`+ str)
+            sy.msg(cookieName, notb, str)
+            sy.log(cookieName+` `+notb+`\n`+ str)
                }
              }
         else {
