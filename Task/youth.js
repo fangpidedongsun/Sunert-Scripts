@@ -63,6 +63,7 @@ async function all()
   await sign();
   await signInfo();
   await Invitant();
+  await readcmp();
 }
 
 function sign() {      
@@ -109,7 +110,7 @@ function signInfo() {
           subTitle += `${signinfo.msg}`
           detail= ``
          }
-         sy.msg(CookieName,subTitle,detail)
+   sy.msg(CookieName,subTitle,detail)
        })
     resolve()
      })
@@ -118,15 +119,17 @@ function signInfo() {
 function Invitant() {      
   const time = new Date().getTime()
     const url = { 
-      url: `https://kandian.youth.cn/user/inviteCensus2?jsonpcallback=jQuery20308283175368764079_${time+4}&uid=46308484&_=${time}0`, 
+      url: `https://kandian.youth.cn/user/share10?jsonpcallback=jQuery20308283175368764079_${time+4}&uid=46308484&_=${time}0`, 
       headers: JSON.parse(signheaderVal),
 }
   url.headers['Host']='kandian.youth.cn'
    sy.get(url, (error, response, data) =>
  {
-   sy.log(`Invitdata:${data}`)
+   //sy.log(`Invitdata:${data}`)
  })
+ 
 }
+
 
 function init() {
   isSurge = () => {
