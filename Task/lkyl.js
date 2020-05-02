@@ -74,7 +74,7 @@ function sign() {
 	  url: `https://draw.jdfcloud.com//api/turncard/sign?openId=${openid}&petSign=true&turnTableId=131&source=HOME&channelId=87&appId=${appid}`,
        headers:JSON.parse(signheaderVal)}
     sy.post(signurl, (error, response, data) => {
-     //sy.log(`${cookieName}, data: ${data}`)
+     sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {
@@ -99,9 +99,8 @@ function status() {
        headers: JSON.parse(signheaderVal)}
      statusurl.headers['Content-Length'] = `0`;
    sy.get(statusurl, (error, response, data) =>{
-     //sy.log(`${cookieName}, data: ${data}`)
+     sy.log(`${cookieName}, data: ${data}`)
      taskstatus = JSON.parse(data)
-
       if(taskstatus.data.dailyTasks[0].status!='received'){
       award()
       }
@@ -161,7 +160,7 @@ function award() {
 		headers: JSON.parse(signheaderVal)}
      weektaskurl.headers['Content-Length'] = `0`;
     sy.get(weektaskurl, (error, response, data) => {
-     //sy.log(`${cookieName}, data: ${data}`)
+     sy.log(`${cookieName}, data: ${data}`)
       result = JSON.parse(data)
     if (result.success == true) {
      if (Incomplete >0 ){
@@ -208,7 +207,7 @@ function total() {
 	}
      lotteryurl.headers['Content-Length'] = `0`;
     sy.get(lotteryurl, (error, response, data) => {
-      //sy.log(`${cookieName}, data: ${data}`)
+      sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {
@@ -220,7 +219,7 @@ function total() {
 	 headers: JSON.parse(signheaderVal)}
     hinturl.headers['Content-Length'] = `0`;
     sy.get(hinturl, (error, response, data) => {
-      //sy.log(`${cookieName}, data: ${data}`)
+      sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (SilverBean >= result.datas[0].salePrice) {
