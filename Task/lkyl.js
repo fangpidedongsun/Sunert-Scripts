@@ -65,6 +65,7 @@ async function all()
   await status();
   await lottery();
   await bean();
+  await weetask();
   await total();
 }
 
@@ -148,8 +149,8 @@ function lottery() {
     sy.log(`${cookieName}, 今日0元抽奖 ${data}`)
       let lotteryres = JSON.parse(data)
       Incomplete = lotteryres.data.totalSteps - lotteryres.data.doneSteps
-   resolve()
    }) 
+resolve()
   })
 }
 //0元抽奖循环
@@ -166,7 +167,6 @@ function award() {
      if (Incomplete >0 ){
     detail += `您有${Incomplete}个0元抽奖任务未完成`
       for (k=0;result.data.homeActivities[k].participated==false&& k<3;k++){
-sy.log(k)
         lotteryId = result.data.homeActivities[k].activityId
     let awardurl = {  
          url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,headers: JSON.parse(signheaderVal),body: '{}'
@@ -183,21 +183,39 @@ resolve()
     })
   }
 
-//抽奖银豆
+//日常抽奖银豆
 function bean() {
 return new Promise((resolve, reject) => {
- let bean2url = {
+ let beanurl = {
 		url: `https://draw.jdfcloud.com//api/bean/square/silverBean/taskReward/get?openId=${openid}&taskCode=lottery&taskType=lottery&inviterOpenId=&appId=${appid}`,
 		headers: JSON.parse(signheaderVal)
 	}
-   bean2url.headers['Content-Length'] = `0`;
-    sy.get(bean2url, (error, response, data) =>
+   beanurl.headers['Content-Length'] = `0`;
+    sy.get(beanurl, (error, response, data) =>
   {
      //sy.log(`${cookieName}, data: ${data}`)
     })
    resolve()
    })
 }
+// 每周抽奖任务
+function weetask() {
+return new Promise((resolve, reject) => {
+ let bean2url = {
+      url: `https://draw.jdfcloud.com//api/bean/square/silverBean/taskReward/get?openId=${openid}&taskCode=lottery_multi&taskType=lottery_multi&inviterOpenId=&appId=${appid}`,
+      headers: JSON.parse(signheaderVal)
+	}
+   bean2url.headers['Content-Length'] = `0`;
+    sy.get(bean2url, (error, response, data) =>
+  {
+     sy.log(`${cookieName}, data: ${data}`)
+    })
+sy.log(signheaderVal)
+   resolve()
+   })
+}
+
+
 //总计
 function total() {
    return new Promise((resolve, reject) =>{
@@ -230,12 +248,12 @@ function total() {
     }
    } else if (SilverBean < result.datas[0].salePrice) 
     { 
-    subTitle += `  银豆不足以兑换京豆`
+       subTitle += `  银豆不足以兑换京豆`
     }
-    sy.msg(title+res, subTitle, detail)
+    sy.msg(cookieName+res, subTitle, detail)
     })
-   })
   resolve()
+   })
  })
 }
 function init() {
