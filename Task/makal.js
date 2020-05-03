@@ -154,11 +154,11 @@ return new Promise((resolve, reject) => {
     sy.log(`${cookieName}, data: ${data}`)
      let result = JSON.parse(data)
      if (n<=6&&n>0){
-        detail = `今日获取金币:${result.result.weeks[n].point}  `
+        detail = `今日获取蛋壳:${result.result.weeks[n].point}  `
         }
     else if(n==0) {
-        subTitle += ` ${result.result.keepSignItemName}`
-        detail = `今日获取金币:${result.result.weeks[7].point}`
+        subTitle += `  ${result.result.keepSignItemName}`
+        detail = `今日获取蛋壳:${result.result.weeks[7].point}`
           }
      resolve()
        })
@@ -174,7 +174,7 @@ return new Promise((resolve, reject) => {
     sy.log(`${cookieName}, data: ${data}`)
      let result = JSON.parse(data) 
    if (result.status == `success`){
-       detail += ` 金币总计: ${result.result.userPoint}`
+       detail += `  蛋壳总计: ${result.result.userPoint}`
        resolve()
             }
      sy.msg(cookieName, subTitle, detail)
