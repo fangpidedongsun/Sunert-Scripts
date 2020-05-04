@@ -97,7 +97,7 @@ function sign() {
     else if  (result.errCode == 4)
            {
             subTitle = ``
-            detail = `${result.msg}‼️`
+            detail = `${result.msg} `
            }       
     else if  (result.errCode == 6)
            {
@@ -207,7 +207,7 @@ function award() {
            }  
     resolve()
         }
-   sy.msg(cookieName, subTitle, detail)
+   sy.msg(cookieName+sleeping, subTitle, detail)
       })
     })
   })
@@ -246,7 +246,7 @@ function sleep() {
       detail += result.data.name+'已开始 '
       }
 else if (result.errCode==4006){
-      detail += '  睡觉中😴'
+      sleeping = '   睡觉中😴'
       }
     }
  catch (e) {
