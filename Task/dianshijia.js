@@ -91,7 +91,7 @@ function sign() {
           if (h>1){
             detail = `获取金币${result.data.reward[0].count}，获得奖励${result.data.reward[1].name}\n`
            }else
-             {detail = `已签到 ${result.data.conDay}天，获取金币${result.data.reward[0].count}`
+             {detail = `已签到 ${result.data.conDay}天，获取金币${result.data.reward[0].count}\n`
              }
            }
     else if  (result.errCode == 4)
@@ -115,7 +115,7 @@ function total() {
    sy.get(coinurl, (error, response, data) => {
      sy.log(`${cookieName}, data: ${data}`)
      const result = JSON.parse(data)
-     subTitle += ` 待兑换${result.data.coin}金币 ` 
+     subTitle += `待兑换${result.data.coin}金币 ` 
    try{
       for(tempCoin in data){
        for (i=0;i<result.data.tempCoin.length;i++) {  

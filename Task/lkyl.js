@@ -80,7 +80,7 @@ function sign() {
       const title = `${cookieName}`
       if (result.success == true) {
       res = `  签到成功🎉`
-      detail = `${result.data.topLine},${result.data.rewardName}， 获得${result.data.jdBeanQuantity}个京豆  `
+      detail = `${result.data.topLine},${result.data.rewardName}， 获得${result.data.jdBeanQuantity}个京豆\n`
       } else if (result.errorMessage == `今天已经签到过了哦`) {
       res = `  重复签到`
       detail = ``
