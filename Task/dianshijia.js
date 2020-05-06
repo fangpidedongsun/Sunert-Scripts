@@ -91,13 +91,13 @@ function sign() {
           if (h>1){
             detail = `获取金币${result.data.reward[0].count}，获得奖励${result.data.reward[1].name}\n`
            }else
-             {detail = `已签到 ${result.data.conDay}天，获取金币${result.data.reward[0].count}`
+             {detail = `已签到 ${result.data.conDay}天，获取金币${result.data.reward[0].count}\n`
              }
            }
     else if  (result.errCode == 4)
            {
             subTitle = ``
-            detail = `${result.msg}‼️`
+            detail = `${result.msg} `
            }       
     else if  (result.errCode == 6)
            {
@@ -115,7 +115,7 @@ function total() {
    sy.get(coinurl, (error, response, data) => {
      sy.log(`${cookieName}, data: ${data}`)
      const result = JSON.parse(data)
-     subTitle += ` 待兑换${result.data.coin}金币 ` 
+     subTitle += `待兑换${result.data.coin}金币 ` 
    try{
       for(tempCoin in data){
        for (i=0;i<result.data.tempCoin.length;i++) {  
@@ -207,7 +207,7 @@ function award() {
            }  
     resolve()
         }
-   sy.msg(cookieName, subTitle, detail)
+   sy.msg(cookieName+sleeping, subTitle, detail)
       })
     })
   })
@@ -243,11 +243,15 @@ function sleep() {
       sy.log(`data: ${data}`)
       const result = JSON.parse(data)
      if (result.errCode==0){
-      detail += result.data.name+'已开始 '
+      sleeping = result.data.name+'已开始 '
       }
 else if (result.errCode==4006){
-      detail += '  睡觉中😴'
+      sleeping = '   睡觉中😴'
       }
+else {
+      sleeping = ''
+    }
+
     }
  catch (e) {
         sy.msg(cookieName, `睡觉结果: 失败`, `说明: ${e}`)}
@@ -256,19 +260,7 @@ resolve()
  })
 }
 
-function wakeup() {
-  return new Promise((resolve, reject) => {
-      let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getCoin?code=sleep&coin=1500&ext=1`, headers: JSON.parse(signheaderVal)}
-      sy.get(url, (error, response, data) => {
-      sy.log(`data: ${data}`)
-      const result = JSON.parse(data)
-     if (result.errCode==0){
-      detail += `获取睡觉金币:`+result.data
-      }
-   })
-resolve()
- })
-}
+
 function wakeup() {
   return new Promise((resolve, reject) => {
       let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getCoin?code=sleep&coin=1500&ext=1`, headers: JSON.parse(signheaderVal)}
