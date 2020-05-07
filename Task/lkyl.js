@@ -106,7 +106,7 @@ function lottery() {
 	}
      daytaskurl.headers[`Content-Length`] = `0`;
     sy.get(daytaskurl, (error, response, data) => {
-    sy.log(`${cookieName}, 今日0元抽奖 ${data}`)
+    //sy.log(`${cookieName}, 今日0元抽奖 ${data}`)
       let lotteryres = JSON.parse(data)
       Incomplete = lotteryres.data.totalSteps - lotteryres.data.doneSteps
      if (Incomplete >0 ){
@@ -170,7 +170,7 @@ function award() {
 		headers: JSON.parse(signheaderVal)}
      weektaskurl.headers['Content-Length'] = `0`;
     sy.get(weektaskurl, (error, response, data) => {
-     sy.log(`${cookieName}, data: ${data}`)
+     //sy.log(`${cookieName}, data: ${data}`)
       result = JSON.parse(data)
     if (result.success == true) {
       for (k=0;result.data.homeActivities[k].participated==false&&k<Incomplete;k++){
@@ -199,7 +199,7 @@ return new Promise((resolve, reject) => {
    beanurl.headers['Content-Length'] = `0`;
     sy.get(beanurl, (error, response, data) =>
   {
-     //sy.log(`${cookieName}, data: ${data}`)
+     sy.log(`${cookieName}, data: ${data}`)
     })
    resolve()
    })
@@ -228,7 +228,7 @@ function total() {
 	}
      lotteryurl.headers['Content-Length'] = `0`;
     sy.get(lotteryurl, (error, response, data) => {
-    //sy.log(`${cookieName}, data: ${data}`)
+    sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
       if (result.success == true) {
@@ -243,15 +243,21 @@ function total() {
       //sy.log(`${cookieName}, data: ${data}`)
       let result = JSON.parse(data)
       const title = `${cookieName}`
-      if (SilverBean >= result.datas[0].salePrice) {
+
+   if (SilverBean >result.datas[0].salePrice) {
     for (k=0; k < result.datas.length;k++){
     if (result.datas[k].salePrice >= SilverBean && SilverBean > result.datas[k-1].salePrice)
      {
       subTitle += `${result.datas[k-1].memo}(手动兑换)`}
+
     }
    } else if (SilverBean < result.datas[0].salePrice) 
     { 
        subTitle += `  银豆不足以兑换京豆`
+    }
+else if (SilverBean = result.datas[0].salePrice) 
+    { 
+       subTitle +=`${result.datas[0].memo}(手动兑换)`
     }
     sy.msg(cookieName+res, subTitle, detail)
     })
