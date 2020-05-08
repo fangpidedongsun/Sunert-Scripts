@@ -57,8 +57,10 @@ if ($request && $request.method != 'OPTIONS') {
   sy.log(`signheaderVal:${signheaderVal}`)
   if (signurlVal) sy.setdata(signurlVal, signurlKey)
   if (signheaderVal) sy.setdata(signheaderVal, signheaderKey)
-     sy.setdata(openid,openkey);
-     sy.setdata(appid,appIdkey)
+  if (openid) sy.setdata(openid,openkey);
+  if (appid) sy.setdata(appid,appIdkey);
+    sy.log(`openid:${openid}`)
+    sy.log(`appid:${appid}`)
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
@@ -72,7 +74,6 @@ async function all()
   await weektask();
   await total()
 }
-
 function sign() {
   return new Promise((resolve, reject) =>{
 	let signurl = {
