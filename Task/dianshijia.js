@@ -26,6 +26,15 @@ Surge 4.0
 电视家 = type=http-request,pattern=http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
 ~~~~~~~~~~~~~~~~
+Loon 2.1.0+
+[Script]
+# 本地脚本
+cron "04 00 * * *" script-path=dianshijia.js, enabled=true, tag=电视家
+
+http-request http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
+
+---------------------
+
 
 QX 1.0.6+ :
 [task_local]
