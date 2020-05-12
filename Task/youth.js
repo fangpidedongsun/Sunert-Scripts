@@ -177,7 +177,7 @@ function getAdVideo() {
 }
   url.headers['Host']='kd.youth.cn'
    sy.post(url, (error, response, data) =>{
-   sy.log(`advideodata:${data}`)
+   sy.log(`视频广告:${data}`)
    adVideores = JSON.parse(data)
    if (adVideores.status==1){
   detail += `\n看视频获得${adVideores.score}个青豆 ` }
@@ -194,7 +194,7 @@ function gameVideo() {
 }
    sy.post(url, (error, response, data) =>
  {
-   sy.log(`gamedata:${data}`)
+   sy.log(`激励视频:${data}`)
    gameres = JSON.parse(data)
    if (gameres.success==true){
      detail += `\n点我激励视频奖励获得${gameres.items.score}`}
@@ -212,7 +212,7 @@ function readArticle() {
 }
    sy.post(url, (error, response, data) =>
  {
-   sy.log(`readdata:${data}`)
+   sy.log(`阅读奖励:${data}`)
    readres = JSON.parse(data)
    if (readres.items.read_score!=undefined){
      detail += ` 阅读奖励${readres.items.read_score}个青豆`
@@ -221,7 +221,7 @@ function readArticle() {
 resolve()
  })
 }
-//文章阅读
+//文章阅读附加
 function Articlered() {      
  return new Promise((resolve, reject) => {
     const url = { 
@@ -229,10 +229,10 @@ function Articlered() {
       body: articlebodyVal,
 }
   sy.post(url, (error, response, data) =>{
-   sy.log(`reddata:${data}`)
+   sy.log(`阅读附加:${data}`)
    redres = JSON.parse(data)
    if (redres.success==true){
-     detail += ` 阅读奖励${redres.items.read_score}个青豆`  
+     detail += ` 阅读附加奖励${redres.items.read_score}个青豆`  
      }
    })
   resolve()
@@ -250,13 +250,12 @@ function rotary() {
       body: rotarbody
 }
   sy.post(url, (error, response, data) =>{
-   sy.log(`reddata:${data}`)
+   sy.log(`转盘抽奖:${data}`)
    rotaryres = JSON.parse(data)
    if (rotaryres.status==1){
-    sy.log(rotaryres.data.score)
      detail += `\n转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次`  
      }
-   sy.msg(CookieName,subTitle,detail)
+   //sy.msg(CookieName,subTitle,detail)
    })
   resolve()
  })
