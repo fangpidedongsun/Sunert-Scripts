@@ -180,7 +180,7 @@ function getAdVideo() {
    sy.log(`advideodata:${data}`)
    adVideores = JSON.parse(data)
    if (adVideores.status==1){
-  detail += `看视频获得${adVideores.score}个青豆 ` }
+  detail += `\n看视频获得${adVideores.score}个青豆 ` }
   })
 resolve()
  })
