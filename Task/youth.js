@@ -214,8 +214,8 @@ function readArticle() {
  {
    sy.log(`readdata:${data}`)
    readres = JSON.parse(data)
-   if (readres.success==true){
-     detail += ` 阅读奖励${gameres.items.read_score}个青豆`
+   if (readres.items.read_score!=undefined){
+     detail += ` 阅读奖励${readres.items.read_score}个青豆`
      }
    })
 resolve()
