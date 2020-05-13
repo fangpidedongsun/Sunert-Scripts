@@ -249,7 +249,6 @@ function Articlered() {
       url: `https://ios.baertt.com/v5/article/red_packet.json`, 
       body: redpbodyVal,
 }
-sy.log(url)
   sy.post(url, (error, response, data) =>{
    sy.log(`阅读附加:${data}`)
    redres = JSON.parse(data)
