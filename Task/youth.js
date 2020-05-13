@@ -106,6 +106,9 @@ async function all()
   await readArticle();
   await Articlered();
   await rotary();
+  await rotary2();
+  await rotary3();
+  await rotary4();
 }
 
 function sign() {      
@@ -128,7 +131,7 @@ function sign() {
           detail= ``
          }
        })
-resolve()
+  resolve()
      })
   }
       
@@ -264,9 +267,73 @@ function rotary() {
    else if (rotaryres.code==10010){
 subTitle += ` 转盘${rotaryres.msg}🎉`
     }
-    sy.msg(CookieName,subTitle,detail)
    })
   resolve()
+ })
+}
+
+function rotary2() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'&num=2'
+ const time = new Date().getTime()
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/RotaryTable/chestReward?_=${time}`, 
+      headers: JSON.parse(signheaderVal),
+      body: rotarbody
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`转盘宝箱2抽奖:${data}`)
+   rotaryres2 = JSON.parse(data)
+   if (rotaryres2.status==1){
+     detail += `\n转盘宝箱2奖励${rotaryres2.data.score}个青豆 `  
+       }
+     })
+   },50)
+ resolve()
+ })
+}
+function rotary3() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'&num=3'
+ const time = new Date().getTime()
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/RotaryTable/chestReward?_=${time}`, 
+      headers: JSON.parse(signheaderVal),
+      body: rotarbody
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`转盘宝箱3抽奖:${data}`)
+   rotaryres3 = JSON.parse(data)
+   if (rotaryres3.status==1){
+     detail += `\n转盘宝箱3奖励${rotaryres3.data.score}个青豆 `  
+       }
+     })
+   },100)
+ resolve()
+ })
+}
+function rotary4() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'&num=4'
+ const time = new Date().getTime()
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/RotaryTable/chestReward?_=${time}`, 
+      headers: JSON.parse(signheaderVal),
+      body: rotarbody
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`转盘宝箱4抽奖:${data}`)
+   rotaryres4 = JSON.parse(data)
+   if (rotaryres4.status==1){
+     detail += `\n转盘宝箱4奖励${rotaryres4.data.score}个青豆 `  
+       }
+     })
+   },150)
+  sy.msg(CookieName,subTitle,detail)
+ resolve()
  })
 sy.done()
 }
