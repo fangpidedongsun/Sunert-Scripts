@@ -8,9 +8,8 @@
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域
 下，
 2.进入app，签到一次,即可获取Cookie. 阅读一篇文章，获取阅读请求body，激励视频还未找到入口，如找到入口，可私信我
-
 3.当日签过到需次日获取Cookie.
-
+4.增加转盘抽奖通知间隔，默认每十次转盘抽奖通知一次，可自行修改
 5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 
 仅测试Quantumult X
@@ -55,6 +54,8 @@ hostname = kd.youth.cn, ios.baertt.com
 
 */
 
+
+const notifyInterval = `10`  //通知间隔，默认抽奖每10次通知一次
 const CookieName = "中青看点"
 const signurlKey ='youthurl_zq'
 const signheaderKey = 'youthheader_zq'
@@ -255,10 +256,13 @@ function rotary() {
   sy.post(url, (error, response, data) =>{
    sy.log(`转盘抽奖:${data}`)
    rotaryres = JSON.parse(data)
-   if (rotaryres.status==1){
+   if (rotaryres.status==1&&rotaryres.data.remainTurn%notifyInterval==0){
      detail += `\n转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次`  
-     }
-   sy.msg(CookieName,subTitle,detail)
+    }
+   else if (rotaryres.code==10010){
+subTitle += ` 转盘${rotaryres.msg}🎉`
+    }
+    sy.msg(CookieName,subTitle,detail)
    })
   resolve()
  })
