@@ -122,6 +122,7 @@ async function all()
   await rotary3();
   await rotary4();
   await rotary();
+  await TurnDouble();
 }
 
 function sign() {      
@@ -160,7 +161,7 @@ function signInfo() {
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
          subTitle += ` 总计: ${signinfo.data.user.score}个青豆`
-         detail = `账户昵称: ${signinfo.data.user.nickname}  已签到: ${signinfo.data.total_day}天，签到获得${signinfo.data.sign_score}个青豆`
+         detail = `账户昵称: ${signinfo.data.user.nickname}  已签到: ${signinfo.data.total_day}天，签到获得${signinfo.data.sign_score}个青豆，`
            }
        else {
           subTitle += `${signinfo.msg}`
@@ -198,7 +199,7 @@ function getAdVideo() {
    sy.log(`视频广告:${data}`)
    adVideores = JSON.parse(data)
    if (adVideores.status==1){
-  detail += `\n看视频获得${adVideores.score}个青豆 ` }
+  detail += `看视频获得${adVideores.score}个青豆，` }
   })
 resolve()
  })
@@ -215,7 +216,7 @@ function gameVideo() {
    sy.log(`激励视频:${data}`)
    gameres = JSON.parse(data)
    if (gameres.success==true){
-     detail += `\n点我激励视频奖励获得${gameres.items.score}`}
+     detail += `点我激励视频奖励获得${gameres.items.score}，`}
     })
   resolve()
   })
@@ -233,10 +234,10 @@ function readArticle() {
    sy.log(`阅读奖励:${data}`)
    readres = JSON.parse(data)
     if (readres.items.max_notice == '\u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5'){
-     detail += `    \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5`
+     detail += ` \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5，`
      }
   else if (readres.items.read_score !== undefined){
-     detail += `  阅读奖励${readres.items.read_score}个青豆`
+     detail += `阅读奖励${readres.items.read_score}个青豆，`
      }
   resolve()
    })
@@ -253,7 +254,7 @@ function Articlered() {
    sy.log(`阅读附加:${data}`)
    redres = JSON.parse(data)
    if (redres.success==true){
-     detail += `  阅读惊喜红包奖励${redres.items.score}个青豆`  
+     detail += `阅读惊喜红包奖励${redres.items.score}个青豆，`  
      }
    })
   resolve()
@@ -274,7 +275,35 @@ function rotary() {
    sy.log(`转盘抽奖:${data}`)
    rotaryres = JSON.parse(data)
    if (rotaryres.status==1&&rotaryres.data.remainTurn%notifyInterval==0){
-     detail += `\n转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次`  
+     detail += `\n转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次，`  
+   //sy.msg(CookieName,subTitle,detail)
+    }
+   else if (rotaryres.code==10010){
+subTitle += ` 转盘${rotaryres.msg}🎉`
+   //sy.msg(CookieName,subTitle,detail)
+    }
+   })
+   resolve()
+  },200)
+ })
+}
+
+//转盘双倍奖励
+function TurnDouble() {      
+ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]
+ return new Promise((resolve, reject) => {
+    setTimeout(()=> {
+   const time = new Date().getTime()
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/RotaryTable/toTurnDouble?_=${time}`, 
+      headers: JSON.parse(signheaderVal),
+      body: rotarbody
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`转盘双倍奖励:${data}`)
+   Doubleres = JSON.parse(data)
+   if (Doubleres.status==1&&rotaryres.data.remainTurn%notifyInterval==0){
+     detail += `转盘双倍奖励${Doubleres.data.score1}个青豆`  
    sy.msg(CookieName,subTitle,detail)
     }
    else if (rotaryres.code==10010){
@@ -282,11 +311,12 @@ subTitle += ` 转盘${rotaryres.msg}🎉`
    sy.msg(CookieName,subTitle,detail)
     }
    })
-  },200)
+  },250)
   resolve()
  })
 sy.done()
 }
+
 
 function rotary2() {      
  return new Promise((resolve, reject) => {
@@ -302,7 +332,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    sy.log(`转盘宝箱2抽奖:${data}`)
    rotaryres2 = JSON.parse(data)
    if (rotaryres2.status==1){
-     detail += `\n转盘宝箱2奖励${rotaryres2.data.score}个青豆 `  
+     detail += `转盘宝箱2奖励${rotaryres2.data.score}个青豆，`  
        }
      })
    },50)
@@ -323,7 +353,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    sy.log(`转盘宝箱3抽奖:${data}`)
    rotaryres3 = JSON.parse(data)
    if (rotaryres3.status==1){
-     detail += `\n转盘宝箱3奖励${rotaryres3.data.score}个青豆 `  
+     detail += `转盘宝箱3奖励${rotaryres3.data.score}个青豆，`  
        }
      })
    },100)
@@ -344,7 +374,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    sy.log(`转盘宝箱4抽奖:${data}`)
    rotaryres4 = JSON.parse(data)
    if (rotaryres4.status==1){
-     detail += `\n转盘宝箱4奖励${rotaryres4.data.score}个青豆 `  
+     detail += `转盘宝箱4奖励${rotaryres4.data.score}个青豆，`  
        }
      })
    },150)
