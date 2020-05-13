@@ -137,7 +137,7 @@ function signInfo() {
 }
    sy.post(infourl, (error, response, data) =>
  {
-     sy.log(`${CookieName}, data: ${data}`)
+     //sy.log(`${CookieName}, data: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
 
@@ -214,11 +214,14 @@ function readArticle() {
  {
    sy.log(`阅读奖励:${data}`)
    readres = JSON.parse(data)
-   if (readres.items.read_score!=undefined){
-     detail += ` 阅读奖励${readres.items.read_score}个青豆`
+    if (readres.items.max_notice == '\u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5'){
+     detail += `    \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5`
      }
+  else if (readres.items.read_score !== undefined){
+     detail += `  阅读奖励${readres.items.read_score}个青豆`
+     }
+  resolve()
    })
-resolve()
  })
 }
 //文章阅读附加
@@ -255,7 +258,7 @@ function rotary() {
    if (rotaryres.status==1){
      detail += `\n转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次`  
      }
-   //sy.msg(CookieName,subTitle,detail)
+   sy.msg(CookieName,subTitle,detail)
    })
   resolve()
  })
