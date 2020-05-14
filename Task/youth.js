@@ -275,7 +275,7 @@ function rotary() {
    sy.log(`转盘抽奖:${data}`)
    rotaryres = JSON.parse(data)
    if (rotaryres.status==1&&rotaryres.data.remainTurn%notifyInterval==0){
-     detail += `\n转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次，`  
+     detail += `转盘奖励${rotaryres.data.score}个青豆，剩余${rotaryres.data.remainTurn}次，`  
    //sy.msg(CookieName,subTitle,detail)
     }
    else if (rotaryres.code==10010){
