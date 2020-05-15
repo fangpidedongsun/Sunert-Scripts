@@ -17,8 +17,7 @@ const tostation = '广州'   //目的地
 const seattypes= 'MO' // 普通列车为A1A3， 高铁动车为MO
 const purpose = 'ADULT'  //乘客类型，'ADULT'是成人，'0X00'是学生
 const leftdate = '2020-05-18' //出发日期
-const K = '2'  //车次序号!!
-
+const K = '3'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -294,7 +293,7 @@ const arrivetime = result.data.data[0].arrive_time
    stationname = result.data.data[0].station_name
    startstation = result.data.data[0].start_station_name
    endstation = result.data.data[0].end_station_name
-  detail = '一等座: '+setyideng+'  二等座: '+seterdeng+'\n硬卧: '+setyingwo+'  硬座: '+setyingzuo+'  无座: '+setwuzuo+'\n'+leftstation+'到达目的地'+tostation+'需用'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
+  detail = '一等座: '+setyideng+'  二等座: '+seterdeng+'\n硬卧: '+setyingwo+'  硬座: '+setyingzuo+'  无座: '+setwuzuo+'\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
 }

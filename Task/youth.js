@@ -128,6 +128,7 @@ async function all()
   await punchCard();
   await endCard();
   await Cardshare();
+  await share();
   await TurnDouble();
 }
 
@@ -412,8 +413,6 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
 function punchCard() {      
  return new Promise((resolve, reject) => {
   setTimeout(() =>  {
-const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'&num=4'
- const time = new Date().getTime()
     const url = { 
       url: `https://kd.youth.cn/WebApi/PunchCard/signUp?`, 
       headers: JSON.parse(signheaderVal),
@@ -423,7 +422,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    sy.log(`每日开启打卡:${data}`)
    punchcardstart = JSON.parse(data)
    if (punchcardstart.code==1){
-     detail += `开启打卡${punchcardstart.data.msg}，`  
+     detail += `开启打卡${punchcardstart.msg}，`  
        }
     else if(punchcardstart.code==0){
      //detail += `${punchcardstart.msg}`
@@ -478,6 +477,53 @@ function Cardshare() {
  resolve()
  })
 }
+
+function openbox() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/invite/openHourRed`, 
+      headers: JSON.parse(signheaderVal),
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`时段开启宝箱:${data}`)
+   boxres = JSON.parse(data)
+   if (boxres.code==1){
+     detail += `开启宝箱${boxres.msg}，获得: ${boxres.data.score}个青豆，${boxres.data.time/60}分钟后领取下次奖励，`  
+       }
+    else if(boxres.code==0){
+     //detail += `${boxres.msg}，`
+       }
+     })
+   })
+ resolve()
+ })
+}
+
+
+function share() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/invite/shareEnd`, 
+      headers: JSON.parse(signheaderVal),
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`宝箱分享:${data}`)
+   shareres = JSON.parse(data)
+   if (shareres.code==1){
+     detail += `${shareres.msg}，获得: ${shareres.data.score}个青豆，`  
+       }
+    else if(shareres.code==0){
+     //detail += `${shareres.msg}，`
+       }
+     })
+   })
+ resolve()
+ })
+}
+
+
 
 function init() {
   isSurge = () => {
