@@ -505,7 +505,7 @@ function share() {
      //detail += `${shareres.msg}，`
        };
     //sy.log(rotaryres.data.doubleNum)
-    if (rotaryres.data.doubleNum==0){
+    if (rotaryres.data.doubleNum==0&&rotaryres.data.remainTurn%notifyInterval==0){
       sy.msg(CookieName,subTitle,detail)
       sy.done()
       }
