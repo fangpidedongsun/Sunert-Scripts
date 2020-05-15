@@ -290,19 +290,19 @@ function rotary() {
 }
 
 //转盘宝箱判断
-function rotaryCheck() {  
+function rotaryCheck() { 
  if (rotaryres.code==10010){
   }
-  else if (rotaryres.data.remainTurn==rotaryres.data.chestOpen[0].times){
+  else if (100-rotaryres.data.remainTurn==rotaryres.data.chestOpen[0].times){
     rotary1() 
   }  
-  else if(rotaryres.data.remainTurn==rotaryres.data.chestOpen[1].times){
+  else if(100-rotaryres.data.remainTurn==rotaryres.data.chestOpen[1].times){
     rotary2() 
   }
-  else if(rotaryres.data.remainTurn==rotaryres.data.chestOpen[2].times){
+  else if(100-rotaryres.data.remainTurn==rotaryres.data.chestOpen[2].times){
     rotary3() 
   }
-  else if(rotaryres.data.remainTurn==rotaryres.data.chestOpen[3].times){
+  else if(100-rotaryres.data.remainTurn==rotaryres.data.chestOpen[3].times){
     rotary4() 
   }
   else {
