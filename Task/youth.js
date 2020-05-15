@@ -162,7 +162,7 @@ function signInfo() {
 }
    sy.post(infourl, (error, response, data) =>
  {
-     //sy.log(`${CookieName}, data: ${data}`)
+     sy.log(`${CookieName}, 签到信息: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
          subTitle += ` 总计: ${signinfo.data.user.score}个青豆`
