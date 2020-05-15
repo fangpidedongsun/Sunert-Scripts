@@ -4,12 +4,14 @@
 
 本脚本仅适用于中青看点极速版领取青豆
 
+增加每日打卡，打卡时间每日5:00-8:00❗️
+
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域
 下，
 2.进入app，签到一次,即可获取Cookie. 阅读一篇文章，获取阅读请求body，在阅读文章最下面有个惊喜红包，点击获取惊喜红包请求，激励视频获取方法: 关闭vpn，进入任务中心=>抽奖赚点击下面第一个宝箱，出现视频广告页面，然后打开vpn，等待视频播放完毕，点击点我继续领青豆，再重复一次上面操作，获取激励视频请求的body，
 3.当日签过到需次日获取Cookie.
-4.增加转盘抽奖通知间隔，为了照顾新用户，默认每1次转盘抽奖通知一次，可自行修改❗️
+4.增加转盘抽奖通知间隔，为了照顾新用户，默认每1次转盘抽奖通知一次，可自行修改❗️，无双倍奖励时无通知
 5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 
 阅读奖励和看视频得奖励一个请求只能运行三次‼️，请不要询问为什么，次日可以继续
@@ -118,10 +120,14 @@ async function all()
   await gameVideo();
   await readArticle();
   await Articlered();
+  await rotary1();
   await rotary2();
   await rotary3();
   await rotary4();
   await rotary();
+  await punchCard();
+  await endCard();
+  await Cardshare();
   await TurnDouble();
 }
 
@@ -302,7 +308,8 @@ function TurnDouble() {
   sy.post(url, (error, response, data) =>{
    sy.log(`转盘双倍奖励:${data}`)
    Doubleres = JSON.parse(data)
-   if (Doubleres.status==1&&rotaryres.data.remainTurn%notifyInterval==0){
+   if
+(Doubleres.status==1&&rotaryres.data.remainTurn%notifyInterval==0){
      detail += `转盘双倍奖励${Doubleres.data.score1}个青豆`  
    sy.msg(CookieName,subTitle,detail)
     }
@@ -317,7 +324,27 @@ subTitle += ` 转盘${rotaryres.msg}🎉`
 sy.done()
 }
 
-
+function rotary1() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'&num=1'
+ const time = new Date().getTime()
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/RotaryTable/chestReward?_=${time}`, 
+      headers: JSON.parse(signheaderVal),
+      body: rotarbody
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`转盘宝箱1抽奖:${data}`)
+   rotaryres1 = JSON.parse(data)
+   if (rotaryres1.status==1){
+     detail += `转盘宝箱1奖励${rotaryres1.data.score}个青豆，`  
+       }
+     })
+   },50)
+ resolve()
+ })
+}
 function rotary2() {      
  return new Promise((resolve, reject) => {
   setTimeout(() =>  {
@@ -381,7 +408,76 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
  resolve()
  })
 }
+//开启打卡
+function punchCard() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'&num=4'
+ const time = new Date().getTime()
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/PunchCard/signUp?`, 
+      headers: JSON.parse(signheaderVal),
+      //body: rotarbody
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`每日开启打卡:${data}`)
+   punchcardstart = JSON.parse(data)
+   if (punchcardstart.code==1){
+     detail += `开启打卡${punchcardstart.data.msg}，`  
+       }
+    else if(punchcardstart.code==0){
+     //detail += `${punchcardstart.msg}`
+       }
+     })
+   })
+ resolve()
+ })
+}
 
+//结束打卡
+function endCard() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/PunchCard/doCard?`, 
+      headers: JSON.parse(signheaderVal),
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`打卡结果:${data}`)
+   punchcardend = JSON.parse(data)
+   if (punchcardend.code==1){
+     detail += `打卡${punchcardend.msg}，打卡时间: ${punchcardend.card_time}`  
+       }
+    else if(punchcardend.code==0){
+     //detail += `${punchcardend.msg}`
+       }
+     })
+   })
+ resolve()
+ })
+}
+
+function Cardshare() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+    const url = { 
+      url: `https://kd.youth.cn/WebApi/PunchCard/shareEnd?`, 
+      headers: JSON.parse(signheaderVal),
+}
+  sy.post(url, (error, response, data) =>{
+   sy.log(`打卡分享:${data}`)
+   shareres = JSON.parse(data)
+   if (shareres.code==1){
+     detail += `${shareres.msg}，获得: ${shareres.data.score}个青豆，`  
+       }
+    else if(shareres.code==0){
+     //detail += `${shareres.msg}，`
+       }
+     })
+   })
+ resolve()
+ })
+}
 
 function init() {
   isSurge = () => {
