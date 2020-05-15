@@ -13,10 +13,11 @@
  */
 
 
-const leftstation ='深圳'  //出发地
+const leftstation ='北京'  //出发地
 const tostation = '上海'   //目的地
+const purpose = 'ADULT'  //乘客类型，'ADULT'是成人，'0X00'是学生
 const leftdate = '2020-05-18' //出发日期
-const K = '1'  //车次序号!!
+const K = '2'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -153,6 +154,7 @@ async function all()
 { 
   await namecheck();
   await trainscheck();
+  await prize();
   await traintime();
 }
 
@@ -167,9 +169,7 @@ $task.fetch(stationnocheck).then(response => {
     //console.log(response.statusCode + "\n\n" + response.body);
    //let result = JSON.parse(response.body)
     statno = response.body.split(`${leftstation}`)[1].split("|")[1]
-
     tostat = response.body.split(`${tostation}`)[1].split("|")[1]
-
 resolve()
    })
   })
@@ -180,7 +180,7 @@ function trainscheck() {
  return new Promise((resolve, reject) =>{
    setTimeout(() => {
    const myRequest = {
-    url: `https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=${leftdate}&leftTicketDTO.from_station=${statno}&leftTicketDTO.to_station=${tostat}&purpose_codes=ADULT`,
+    url: `https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=${leftdate}&leftTicketDTO.from_station=${statno}&leftTicketDTO.to_station=${tostat}&purpose_codes=${purpose}`,
     method: 'GET',
     headers: {'Cookie' : 'JSESSIONID=1B1CEADF1B9F831C25E71D7F2D996294'}
 };
@@ -191,34 +191,43 @@ $task.fetch(myRequest).then(response => {
       starttime = ress.data.result[0].split("|")[8]
       arrivetime = ress.data.result[0].split("|")[9]
       total = ress.data.result[0].split("|")[10].split(":")[0]+'小时'+ress.data.result[0].split("|")[10].split(":")[1]+'分钟'
+   //console.log(ress.data.result[0].split("|"))
+   //trainno = ress.data.result[0].split("|")[2]
+    ruanwopro = ress.data.result[0].split("|")[21]
+    dongwo = ress.data.result[0].split("|")[33]
     yingzuo = ress.data.result[0].split("|")[29]
     yingwo = ress.data.result[0].split("|")[28]
-    ruanwo = ress.data.result[0].split("|")[26]
-    //trainno = ress.data.result[0].split("|")[2]
+    ruanwo = ress.data.result[0].split("|")[23]
+    shangwu = ress.data.result[0].split("|")[32]
     yideng = ress.data.result[0].split("|")[31]
     erdeng = ress.data.result[0].split("|")[30]
-    trainlist =  '[1] 车次:'+train+" "+ starttime + '--' + arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo
-
+    trainlist =  '[1] 车次:'+train+" "+ starttime + '--' + arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo+'\n'
   for (i=1;i<ress.data.result.length;i++){
       train =ress.data.result[i].split("|")[3]
       starttime = ress.data.result[i].split("|")[8]
       arrivetime = ress.data.result[i].split("|")[9]
       total = ress.data.result[i].split("|")[10].split(":")[0]+'小时'+ress.data.result[i].split("|")[10].split(":")[1]+'分钟'
+
     yingzuo = ress.data.result[i].split("|")[29]
-  yingwo = ress.data.result[i].split("|")[28]
-  ruanwo = ress.data.result[i].split("|")[26]
-  yideng = ress.data.result[i].split("|")[31]
-  erdeng = ress.data.result[i].split("|")[30]
-    trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo
+    yingwo = ress.data.result[i].split("|")[28]
+    ruanwopro = ress.data.result[i].split("|")[26]
+    yideng = ress.data.result[i].split("|")[31]
+    erdeng = ress.data.result[i].split("|")[30]
+    trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo+'\n'
    //trainno += ress.data.result[i].split("|")[2]
    }
    console.log(trainlist)
 if (K<=ress.data.result.length){
-  //console.log(ress.data.result[K-1])
   traincode = ress.data.result[K-1].split("|")[3]
   trainno = ress.data.result[K-1].split("|")[2]
+  fromstationno = ress.data.result[K-1].split("|")[16]
+  tostationno = ress.data.result[K-1].split("|")[17]
   fromstation = ress.data.result[K-1].split("|")[4]
   endstation = ress.data.result[K-1].split("|")[5]
+  setyingzuo = ress.data.result[K-1].split("|")[29]
+  setyingwo = ress.data.result[K-1].split("|")[28]
+  setyideng = ress.data.result[K-1].split("|")[31]
+  seterdeng = ress.data.result[K-1].split("|")[30]
   totaltime  = ress.data.result[K-1].split("|")[10].split(":")[0]+'小时'+ress.data.result[K-1].split("|")[10].split(":")[1]+'分钟'
 }
 else {
@@ -229,6 +238,38 @@ else {
   })
  })
 }
+
+function prize() {
+ return new Promise((resolve, reject) =>{
+   const myRequest = {
+    url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=MOA1A3A6&train_date=${leftdate}`,
+    method: 'GET',
+}
+$task.fetch(myRequest).then(response => {
+ try {
+   console.log('票价信息' + response.body);
+   let result = JSON.parse(response.body)
+   if (result.data.M){
+   setyideng += `(${result.data.M})`
+   }
+   if (result.data.O){
+   seterdeng += `(${result.data.O})`
+   }
+   if (result.data.A3){
+   setyingwo += `(${result.data.A3})`
+   }
+   if (result.data.A1){
+   setyingzuo += `(${result.data.A1})`
+   }
+}
+catch (e){
+  $notify('列车票价查询失败‼️', '无'+traincode+'列车票价信息', e)
+   }
+resolve()
+  })
+ })
+}
+
 function traintime() {
  return new Promise((resolve, reject) =>{
    const myRequest = {
@@ -247,14 +288,14 @@ const arrivetime = result.data.data[0].arrive_time
    startstation = result.data.data[0].start_station_name
    endstation = result.data.data[0].end_station_name
 
-  detail = '到达目的地'+tostation+'需用'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
+  detail = '一等座: '+setyideng+'  二等座: '+seterdeng+'  硬卧: '+setyingwo+'  硬座: '+setyingzuo+'\n'+leftstation+'到达目的地'+tostation+'需用'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
 }
-const title = traincode+ "次列车时刻表"
+const title = traincode+ "次列车时刻表🚄"
 const subTitle = '始发站: '+startstation+ ' -- 终点站: '+endstation
  $notify(title, subTitle, detail)
-console.log(detail)
+  console.log(traincode+'次列车  \n'+detail)
   }
 } catch (e){
    console.log(traincode)
