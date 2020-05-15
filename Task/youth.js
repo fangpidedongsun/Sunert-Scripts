@@ -128,6 +128,7 @@ async function all()
   await punchCard();
   await endCard();
   await Cardshare();
+  await openbox();
   await share();
   await TurnDouble();
 }
@@ -416,7 +417,6 @@ function punchCard() {
     const url = { 
       url: `https://kd.youth.cn/WebApi/PunchCard/signUp?`, 
       headers: JSON.parse(signheaderVal),
-      //body: rotarbody
 }
   sy.post(url, (error, response, data) =>{
    sy.log(`每日开启打卡:${data}`)
