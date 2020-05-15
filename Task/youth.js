@@ -11,7 +11,7 @@
 下，
 2.进入app，签到一次,即可获取Cookie. 阅读一篇文章，获取阅读请求body，在阅读文章最下面有个惊喜红包，点击获取惊喜红包请求，激励视频获取方法: 关闭vpn，进入任务中心=>抽奖赚点击下面第一个宝箱，出现视频广告页面，然后打开vpn，等待视频播放完毕，点击点我继续领青豆，再重复一次上面操作，获取激励视频请求的body，
 3.当日签过到需次日获取Cookie.
-4.增加转盘抽奖通知间隔，为了照顾新用户，前三次会有通知，以后默认每10次转盘抽奖通知一次，可自行修改❗️ 转盘完成后通知会一直开启
+4.增加转盘抽奖通知间隔，为了照顾新用户，前五次会有通知，以后默认每10次转盘抽奖通知一次，可自行修改❗️ 转盘完成后通知会一直开启
 5.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 
 阅读奖励和看视频得奖励一个请求只能运行三次‼️，请不要询问为什么，次日可以继续
@@ -118,7 +118,6 @@ async function all()
   await Invitant();
   await getAdVideo();
   await gameVideo();
-  await readArticle();
   await Articlered();
   await rotary();
   await rotaryCheck();
@@ -127,7 +126,8 @@ async function all()
   await Cardshare();
   await openbox();
   await share();
-  await TurnDouble();
+  await readArticle();
+  //await TurnDouble();
 }
 
 function sign() {      
@@ -503,7 +503,15 @@ function share() {
        }
     else if(shareres.code==0){
      //detail += `${shareres.msg}，`
-       }
+       };
+    //sy.log(rotaryres.data.doubleNum)
+    if (rotaryres.data.doubleNum==0){
+      sy.msg(CookieName,subTitle,detail)
+      sy.done()
+      }
+   else {
+      TurnDouble()
+      }
      })
    })
  resolve()
@@ -526,7 +534,7 @@ function TurnDouble() {
    Doubleres = JSON.parse(data)
    if(Doubleres.status==1){
      detail += `转盘双倍奖励${Doubleres.data.score1}个青豆` };
-     if (rotaryres.status==1&&rotaryres.data.remainTurn<=3){
+     if (rotaryres.status==1&&rotaryres.data.remainTurn>=95){
      sy.msg(CookieName,subTitle,detail)
      }
     else if (rotaryres.status==1&&rotaryres.data.remainTurn%notifyInterval==0)    {
@@ -539,7 +547,6 @@ subTitle += ` 转盘${rotaryres.msg}🎉`
     })
    resolve()
   })
-sy.done()
  })
 }
 
