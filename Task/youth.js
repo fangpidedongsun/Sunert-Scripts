@@ -446,20 +446,32 @@ function endCard() {
 function Cardshare() {      
  return new Promise((resolve, reject) => {
   setTimeout(() =>  {
-    const url = { 
-      url: `https://kd.youth.cn/WebApi/PunchCard/shareEnd?`, 
+
+const starturl = { 
+      url: `https://kd.youth.cn/WebApi/PunchCard/shareStart?`, 
       headers: JSON.parse(signheaderVal),
 }
-  sy.post(url, (error, response, data) =>{
+  sy.post(starturl, (error, response, data) =>{
+   sy.log(`打卡分享开启:${data}`)
+   sharestart = JSON.parse(data)
+   if (sharestart.code==1){
+     //detail += `分享${shareres.msg}`  
+       }
+    let endurl = { 
+      url: `https://kd.youth.cn/WebApi/PunchCard/shareEnd?`, 
+      headers: JSON.parse(signheaderVal),
+     }
+  sy.post(endurl, (error, response, data) =>{
    sy.log(`打卡分享:${data}`)
    shareres = JSON.parse(data)
    if (shareres.code==1){
-     detail += `${shareres.msg}，获得: ${shareres.data.score}个青豆，`  
+     detail += `分享${shareres.msg}，获得: ${shareres.data.score}个青豆，`  
        }
     else if(shareres.code==0){
      //detail += `${shareres.msg}，`
        }
      })
+   })
   resolve()
    })
  })
