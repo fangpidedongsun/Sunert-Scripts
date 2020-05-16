@@ -4,7 +4,7 @@
 
 本脚本仅适用于中青看点极速版领取青豆
 
-增加每日打卡，打卡时间每日5:00-8:00❗️，请不要忘记设置运行时间，共4条Cookie，请全部获取
+增加每日打卡，打卡时间每日5:00-8:00❗️，请不要忘记设置运行时间，共4条Cookie，请全部获取，获取请注释掉
 
 获取Cookie方法:
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域
@@ -24,7 +24,7 @@ Surge 4.0 :
 [Script]
 中青看点 = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js,script-update-interval=0
 
-中青看点 = type=http-request,pattern=https:\/\/kd\.youth\.cn\/TaskCenter\/(sign|getSign),script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
+中青看点 = type=http-request,pattern=https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign),script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
 
 中青看点 = type=http-request,pattern=https:\/\/ios\.baertt\.com\/v5\/Game\/GameVideoReward,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 
@@ -38,7 +38,7 @@ Loon 2.1.0+
 # 本地脚本
 cron "04 00 * * *" script-path=youth.js, enabled=true, tag=中青看点
 
-http-request https:\/\/kd\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=youth.js
+http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=youth.js
 http-request https:\/\/ios\.baertt\.com\/v5\/Game\/GameVideoReward script-path=youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/complete script-path=youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/red_packet script-path=youth.js, requires-body=true
@@ -48,7 +48,7 @@ QX 1.0. 7+ :
 0 9 * * * youth.js
 
 [rewrite_local]
-https:\/\/kd\.youth\.cn\/TaskCenter\/(sign|getSign) url script-request-header youth.js
+https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) url script-request-header youth.js
 
 https?:\/\/ios\.baertt\.com\/v5\/article\/complete url script-request-body youth.js
 
@@ -58,7 +58,7 @@ https:\/\/ios\.baertt\.com\/v5\/article\/red_packet url script-request-body yout
 
 ~~~~~~~~~~~~~~~~
 [MITM]
-hostname = kd.youth.cn, ios.baertt.com
+hostname = *.youth.cn, ios.baertt.com 
 ~~~~~~~~~~~~~~~~
 
 */
@@ -239,7 +239,7 @@ function readArticle() {
    sy.log(`阅读奖励:${data}`)
    readres = JSON.parse(data)
     if (readres.items.max_notice == '\u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5'){
-     detail += ` \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5，`
+     //detail += ` \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5，`
      }
   else if (readres.items.read_score !== undefined){
      detail += `阅读奖励${readres.items.read_score}个青豆，`
