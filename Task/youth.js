@@ -509,7 +509,7 @@ function share() {
       sy.msg(CookieName,subTitle,detail)
       sy.done()
       }
-   else {
+   else if (rotaryres.data.doubleNum!=0){
       TurnDouble()
       }
      })
@@ -547,6 +547,7 @@ subTitle += ` 转盘${rotaryres.msg}🎉`
     })
    resolve()
   })
+sy.done()
  })
 }
 
