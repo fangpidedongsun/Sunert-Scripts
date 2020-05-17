@@ -178,13 +178,11 @@ function signInfo() {
 
 function Invitant() {      
 return new Promise((resolve, reject) => {
-  const time = new Date().getTime()
     const url = { 
-      url: `https://kandian.youth.cn/user/share10?jsonpcallback=jQuery20308283175368764079_${time+4}&uid=46308484&_=${time}0`, 
-     headers: JSON.parse(signheaderVal),
+      url: `https://kd.youth.cn/user/mmsp/99299ab7298ee4700af378d294377def?uid=46308484&reward_sign=EXM7Z2j0pGYsjR7E8KC8C4iWm66pZk2g`, 
+     headers: signheaderVal
 }
-  url.headers['Host']='kandian.youth.cn'
-   sy.post(url, (error, response, data) =>
+   sy.get(url, (error, response, data) =>
  {
    //sy.log(`Invitdata:${data}`)
  })
