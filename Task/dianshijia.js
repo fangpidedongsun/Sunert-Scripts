@@ -178,7 +178,7 @@ function award() {
     let awardurl = { url: `http://act.gaoqingdianshi.com/api/v4/sign/get`, headers: JSON.parse(signheaderVal)}
      sy.get(awardurl, (error, response, data) => 
   {
-    sy.log(`${cookieName}, data: ${data}`)
+    //sy.log(`${cookieName}, data: ${data}`)
      const result = JSON.parse(data)
      if (result.errCode == 0) 
     {
@@ -300,10 +300,9 @@ function minvite() {
   }
       url.headers['Host']= 'm3.gsyxvip.com'
       sy.get(url, (error, response, data) => {
-      //sy.log(`data: ${data}`)
-      const result = JSON.parse(data)
-     if (result.errCode==0){
-      }
+        //sy.log(`data: ${data}`)
+       //result = JSON.parse(data)
+       //if (result.errCode==0){}
    })
 resolve()
  })
