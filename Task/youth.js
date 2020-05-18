@@ -56,6 +56,8 @@ https?:\/\/ios\.baertt\.com\/v5\/Game\/GameVideoReward url script-request-body y
 
 https:\/\/ios\.baertt\.com\/v5\/article\/red_packet url script-request-body youth.js
 
+https:\/\/focus\.youth\.cn\/article\/s url script-request-header youth.js
+
 ~~~~~~~~~~~~~~~~
 [MITM]
 hostname = *.youth.cn, ios.baertt.com 
@@ -70,11 +72,13 @@ const signheaderKey = 'youthheader_zq'
 const gamebodyKey = 'youthgame_zq'
 const articlebodyKey = 'read_zq'
 const redpbodyKey = 'red_zq'
+const shareurlKey = 'shareurl_zq'
 const sy = init()
 const signheaderVal = sy.getdata(signheaderKey)
 const gamebodyVal = sy.getdata(gamebodyKey)
 const redpbodyVal = sy.getdata(redpbodyKey)
 const articlebodyVal = sy.getdata(articlebodyKey)
+const shareurlVal = sy.getdata(shareurlKey)
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -108,6 +112,12 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     sy.log(`[${CookieName}] 获取惊喜红包: 成功,redpbodyVal: ${redpbodyVal}`)
     sy.msg(CookieName, `获取惊喜红包请求: 成功🎉`, ``)
   }
+else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/article\/s/)) {
+   const shareurlVal = $request.url
+    if (shareurlVal)        sy.setdata(shareurlVal,shareurlKey)
+    sy.log(`[${CookieName}] 获取文章分享地址: 成功,shareurlVal: ${shareurlVal}`)
+    sy.msg(CookieName, `获取文章分享地址: 成功🎉`, ``)
+  }
 
  }
  
@@ -127,6 +137,7 @@ async function all()
   await openbox();
   await share();
   await readArticle();
+  await articleShare();
   //await TurnDouble();
 }
 
@@ -186,7 +197,7 @@ return new Promise((resolve, reject) => {
  {
    //sy.log(`Invitdata:${data}`)
  })
-resolve()
+  resolve()
  })
 }
 
@@ -563,9 +574,33 @@ subTitle += ` 转盘${rotaryres.msg}🎉`
     })
    resolve()
   })
-sy.done()
  })
 }
+
+function articleShare() {      
+ return new Promise((resolve, reject) => {
+  setTimeout(() =>  {
+    const url = { 
+      url: shareurlVal, 
+      headers: signheaderVal,
+}
+  sy.get(url, (error, response, data) =>{
+   //sy.log(`文章分享:${data}`)
+   shareres = JSON.parse(data)
+   if (shareres.success==true){
+     detail += `${shareres.message}，获得${shareres.score_text}`  
+       }
+    else if(shareres.success==false){
+     //detail += `${shareres.message}，`
+       }
+     })
+   })
+ resolve()
+ })
+sy.done()
+}
+
+
 
 function init() {
   isSurge = () => {
