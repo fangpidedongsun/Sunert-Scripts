@@ -172,10 +172,10 @@ function signInfo() {
 }
    sy.post(infourl, (error, response, data) =>
  {
-     //sy.log(`${CookieName}, 签到信息: ${data}`)
+     sy.log(`${CookieName}, 签到信息: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
-         subTitle += ` 总计: ${signinfo.data.user.score}个青豆`
+         subTitle += ` 总计: ${signinfo.data.user.score}个青豆，现金约${signinfo.data.user.money}元`
          detail = `账户昵称: ${signinfo.data.user.nickname}  已签到: ${signinfo.data.sign_day}天，签到获得${signinfo.data.sign_score}个青豆，`
            }
        else {
