@@ -65,7 +65,7 @@ hostname = *.youth.cn, ios.baertt.com
 
 */
 
-const notifyInterval = `1`  //通知间隔，默认抽奖每10次通知一次
+const notifyInterval = `10`  //通知间隔，默认抽奖每10次通知一次
 const CookieName = "中青看点"
 const signurlKey ='youthurl_zq'
 const signheaderKey = 'youthheader_zq'
