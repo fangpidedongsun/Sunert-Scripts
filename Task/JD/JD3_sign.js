@@ -180,7 +180,7 @@ function notify() {
       var three = "【账号总计】:  " + beans + Steel + Cash + bsc
       var four = "【左滑 '查看' 以显示签到详情】\n"
       var DName = merge.JDShake.nickname ? merge.JDShake.nickname : "获取失败"
-      var Name = add ? DualAccount ? "【签到号一】:  " + DName + "\n" : "【签到号二】:  " + DName + "\n" : ""
+      var Name = add ? DualAccount ? "【签到号三】:  " + DName + "\n" : "【签到号四】:  " + DName + "\n" : ""
       console.log("\n" + Name + one + two + three + four + notify)
       if ($nobyda.isJSBox) {
         if (add && DualAccount) {
@@ -210,17 +210,17 @@ function ReadCookie() {
   DualAccount = true;
   if (DeleteCookie) {
     if ($nobyda.isJSBox) {
-      if ($file.exists("shared://JD_Cookie.txt")) {
-        if ($file.exists("shared://JD_Cookie2.txt")) {
-          $file.delete("shared://JD_Cookie2.txt")
+      if ($file.exists("shared://JD_Cookie3.txt")) {
+        if ($file.exists("shared://JD_Cookie4.txt")) {
+          $file.delete("shared://JD_Cookie4.txt")
         }
-        $file.delete("shared://JD_Cookie.txt")
+        $file.delete("shared://JD_Cookie3.txt")
         $nobyda.notify("京东Cookie清除成功 !", "", '请手动关闭脚本内"DeleteCookie"选项')
         return
       }
-    } else if ($nobyda.read("CookieJD")) {
-      $nobyda.write("", "CookieJD")
-      $nobyda.write("", "CookieJD2")
+    } else if ($nobyda.read("CookieJD3")) {
+      $nobyda.write("", "CookieJD3")
+      $nobyda.write("", "CookieJD4")
       $nobyda.notify("京东Cookie清除成功 !", "", '请手动关闭脚本内"DeleteCookie"选项')
       $nobyda.done()
       return
@@ -233,13 +233,13 @@ function ReadCookie() {
     return
   }
   if ($nobyda.isJSBox) {
-    add = DualKey || $file.exists("shared://JD_Cookie2.txt") ? true : false
+    add = DualKey || $file.exists("shared://JD_Cookie3.txt") ? true : false
     if (DualKey) {
       $file.write({
         data: $data({
           string: DualKey
         }),
-        path: "shared://JD_Cookie2.txt"
+        path: "shared://JD_Cookie4.txt"
       })
     }
     if (Key) {
@@ -247,19 +247,19 @@ function ReadCookie() {
         data: $data({
           string: Key
         }),
-        path: "shared://JD_Cookie.txt"
+        path: "shared://JD_Cookie3.txt"
       })
       KEY = Key
       all()
-    } else if ($file.exists("shared://JD_Cookie.txt")) {
-      KEY = $file.read("shared://JD_Cookie.txt").string
+    } else if ($file.exists("shared://JD_Cookie3.txt")) {
+      KEY = $file.read("shared://JD_Cookie3.txt").string
       all()
     } else {
       $nobyda.notify("京东签到", "", "脚本终止, 未填写Cookie ‼️")
     }
-  } else if (Key || $nobyda.read("CookieJD")) {
-    add = DualKey || $nobyda.read("CookieJD2") ? true : false
-    KEY = Key ? Key : $nobyda.read("CookieJD")
+  } else if (Key || $nobyda.read("CookieJD3")) {
+    add = DualKey || $nobyda.read("CookieJD4") ? true : false
+    KEY = Key ? Key : $nobyda.read("CookieJD3")
     all()
   } else {
     $nobyda.notify("京东签到", "", "脚本终止, 未获取Cookie ‼️")
@@ -272,12 +272,12 @@ function double() {
   add = true
   DualAccount = false
   if ($nobyda.isJSBox) {
-    if (DualKey || $file.exists("shared://JD_Cookie2.txt")) {
-      KEY = DualKey ? DualKey : $file.read("shared://JD_Cookie2.txt").string
+    if (DualKey || $file.exists("shared://JD_Cookie4.txt")) {
+      KEY = DualKey ? DualKey : $file.read("shared://JD_Cookie4.txt").string
       all()
     }
-  } else if (DualKey || $nobyda.read("CookieJD2")) {
-    KEY = DualKey ? DualKey : $nobyda.read("CookieJD2")
+  } else if (DualKey || $nobyda.read("CookieJD4")) {
+    KEY = DualKey ? DualKey : $nobyda.read("CookieJD4")
     all()
   } else {
     $nobyda.done();
@@ -2604,16 +2604,16 @@ function GetCookie() {
       var CV = $request.headers['Cookie']
       if (CV.match(/(pt_key=.+?pt_pin=|pt_pin=.+?pt_key=)/)) {
         var CookieValue = CV.match(/pt_key=.+?;/) + CV.match(/pt_pin=.+?;/)
-        var AccountOne = $nobyda.read("CookieJD") ? $nobyda.read("CookieJD").match(/pin=(.+?);/)[1] : null
-        var AccountTwo = $nobyda.read("CookieJD2") ? $nobyda.read("CookieJD2").match(/pt_pin=(.+?);/)[1] : null
+        var AccountOne = $nobyda.read("CookieJD3") ? $nobyda.read("CookieJD3").match(/pin=(.+?);/)[1] : null
+        var AccountTwo = $nobyda.read("CookieJD4") ? $nobyda.read("CookieJD4").match(/pt_pin=(.+?);/)[1] : null
         var UserName = CookieValue.match(/pt_pin=(.+?);/)[1]
         var DecodeName = decodeURIComponent(UserName)
         if (!AccountOne || UserName == AccountOne) {
-          var CookieName = " [账号一] ";
-          var CookieKey = "CookieJD";
+          var CookieName = " [账号三] ";
+          var CookieKey = "CookieJD3";
         } else if (!AccountTwo || UserName == AccountTwo) {
-          var CookieName = " [账号二] ";
-          var CookieKey = "CookieJD2";
+          var CookieName = " [账号四] ";
+          var CookieKey = "CookieJD4";
         } else {
           $nobyda.notify("更新京东Cookie失败", "非历史写入账号 ‼️", '请开启脚本内"DeleteCookie"以清空Cookie ‼️')
           $nobyda.done()
