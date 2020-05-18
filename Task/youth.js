@@ -149,14 +149,14 @@ function sign() {
       headers: JSON.parse(signheaderVal),
 }
      sy.post(signurl, (error, response, data) =>{
-      sy.log(`${CookieName}, data: ${data}`)
-       signresult =JSON.parse(data)
-       if (signresult.status == 1){
-          subTitle = `签到成功🎉`
-          detail= `获取金币: ${signresult.score}，明日金币:${signresult.nextScore}\n`
+      //sy.log(`${CookieName}, data: ${data}`)
+       signres =JSON.parse(data)
+       if (signres.status == 1){
+          signresult = `签到成功🎉`
+          detail= `获取金币: ${signres.score}，明日金币:${signres.nextScore}\n`
            }
-       else if(signresult.status == 0){
-          subTitle = `重复签到`
+       else if(signres.status == 0){
+          signresult = `重复签到`
           detail= ``
          }
        })
@@ -175,11 +175,12 @@ function signInfo() {
      sy.log(`${CookieName}, 签到信息: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
-         subTitle += ` 总计: ${signinfo.data.user.score}个青豆，现金约为${signinfo.data.user.money}元`
-         detail = `账户昵称: ${signinfo.data.user.nickname}  已签到: ${signinfo.data.sign_day}天，签到获得${signinfo.data.sign_score}个青豆，`
+         subTitle = `总计: ${signinfo.data.user.score}个青豆，可兑换现金约${signinfo.data.user.money}元`
+         nick =`  账号: ${signinfo.data.user.nickname}`
+         detail = signresult+ `，已签到: ${signinfo.data.sign_day}天，签到获得${signinfo.data.sign_score}个青豆  `
            }
        else {
-          subTitle += `${signinfo.msg}`
+          subTitle = `${signinfo.msg}`
           detail= ``
          }
     resolve()
@@ -528,7 +529,7 @@ function share() {
        };
     if(rotaryres.code!=10010){
       if (rotaryres.data.doubleNum==0&&rotaryres.data.remainTurn%notifyInterval==0){
-      sy.msg(CookieName,subTitle,detail)
+      sy.msg(CookieName+" "+nick,subTitle,detail)
       sy.done()
       }
     else if (rotaryres.data.doubleNum!=0){
@@ -537,7 +538,7 @@ function share() {
     }
   else if (rotaryres.code==10010){
     rotarynum += ` 转盘${rotaryres.msg}🎉`
-   sy.msg(CookieName+"  "+rotarynum,subTitle,detail)
+   sy.msg(CookieName+" "+nick+"  "+rotarynum,subTitle,detail)
       }
      })
    })
@@ -562,10 +563,10 @@ function TurnDouble() {
    if(Doubleres.status==1){
      detail += `转盘双倍奖励${Doubleres.data.score1}个青豆` };
      if (rotaryres.status==1&&rotaryres.data.remainTurn>=95){
-     sy.msg(CookieName,subTitle,detail)
+     sy.msg(CookieName+" "+nick,subTitle,detail)
      }
     else if (rotaryres.status==1&&rotaryres.data.remainTurn%notifyInterval==0)    {
-   sy.msg(CookieName,subTitle,detail)
+   sy.msg(CookieName+" "+nick,subTitle,detail)
       }
     })
    resolve()
