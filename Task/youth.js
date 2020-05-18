@@ -65,7 +65,7 @@ hostname = *.youth.cn, ios.baertt.com
 
 */
 
-const notifyInterval = `10`  //通知间隔，默认抽奖每10次通知一次
+const notifyInterval = `1`  //通知间隔，默认抽奖每10次通知一次
 const CookieName = "中青看点"
 const signurlKey ='youthurl_zq'
 const signheaderKey = 'youthheader_zq'
@@ -175,7 +175,7 @@ function signInfo() {
      sy.log(`${CookieName}, 签到信息: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
-         subTitle += ` 总计: ${signinfo.data.user.score}个青豆，现金约${signinfo.data.user.money}元`
+         subTitle += ` 总计: ${signinfo.data.user.score}个青豆，现金约为${signinfo.data.user.money}元`
          detail = `账户昵称: ${signinfo.data.user.nickname}  已签到: ${signinfo.data.sign_day}天，签到获得${signinfo.data.sign_score}个青豆，`
            }
        else {
@@ -536,8 +536,8 @@ function share() {
       }
     }
   else if (rotaryres.code==10010){
-    subTitle += ` 转盘${rotaryres.msg}🎉`
-   sy.msg(CookieName,subTitle,detail)
+    rotarynum += ` 转盘${rotaryres.msg}🎉`
+   sy.msg(CookieName+"  "+rotarynum,subTitle,detail)
       }
      })
    })
@@ -565,10 +565,6 @@ function TurnDouble() {
      sy.msg(CookieName,subTitle,detail)
      }
     else if (rotaryres.status==1&&rotaryres.data.remainTurn%notifyInterval==0)    {
-   sy.msg(CookieName,subTitle,detail)
-      }
-   else if (rotaryres.code==10010){
-subTitle += ` 转盘${rotaryres.msg}🎉`
    sy.msg(CookieName,subTitle,detail)
       }
     })
