@@ -137,7 +137,7 @@ async function all()
   await openbox();
   await share();
   await readArticle();
-  await articleShare();
+  //await articleShare();
   //await TurnDouble();
 }
 
@@ -574,6 +574,7 @@ subTitle += ` 转盘${rotaryres.msg}🎉`
     })
    resolve()
   })
+sy.done()
  })
 }
 
@@ -597,7 +598,6 @@ function articleShare() {
    })
  resolve()
  })
-sy.done()
 }
 
 
