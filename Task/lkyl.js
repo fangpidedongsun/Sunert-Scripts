@@ -296,7 +296,7 @@ function exChange() {
   sy.post(changeurl, (error, response,data) =>{
     sy.log(`${cookieName}, 兑换京豆: ${data}`)
     let result = JSON.parse(data)
-    if (result.errorCode== success){
+    if (result.errorCode== "success"){
       detail += '成功兑换'+result.data+'个京豆'
      }
     })
