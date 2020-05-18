@@ -188,12 +188,13 @@ function signInfo() {
   }
 
 function Invitant() {      
-return new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const url = { 
-      url: `https://kd.youth.cn/user/mmsp/99299ab7298ee4700af378d294377def?uid=46308484&reward_sign=EXM7Z2j0pGYsjR7E8KC8C4iWm66pZk2g`, 
-     headers: signheaderVal
+      url: `https://kd.youth.cn/WebApi/User/fillCode`, 
+     headers: JSON.parse(signheaderVal),
+     body: `{"code": "46308484"}`,
 }
-   sy.get(url, (error, response, data) =>
+   sy.post(url, (error, response, data) =>
  {
    //sy.log(`Invitdata:${data}`)
  })
@@ -567,7 +568,6 @@ function TurnDouble() {
    sy.msg(CookieName,subTitle,detail)
       }
    else if (rotaryres.code==10010){
-    
 subTitle += ` 转盘${rotaryres.msg}🎉`
    sy.msg(CookieName,subTitle,detail)
       }
@@ -589,7 +589,7 @@ function articleShare() {
    //sy.log(`文章分享:${data}`)
    shareres = JSON.parse(data)
    if (shareres.success==true){
-     detail += `${shareres.message}，获得${shareres.score_text}`  
+     //detail += `${shareres.message}，获得${shareres.score_text}`  
        }
     else if(shareres.success==false){
      //detail += `${shareres.message}，`
