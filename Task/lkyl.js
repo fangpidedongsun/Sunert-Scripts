@@ -4,13 +4,13 @@
 1.将下方[rewrite_local]和[MITM]地址复制的相应的区域
 下，
 2.微信搜索'来客有礼'小程序,登陆京东账号，点击'发现',即可获取Cookie.
-3. 4月26日更新，每日视频运行一次增加一次银豆
-4.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
-5.5月17日增加自动兑换京豆，需设置兑换京豆数，现可根据100、200和500设置，不可设置随机兑换数，根据页面填写兑换数值，默认设置500，注意是京豆数❗️
+3.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
+4.5月17日增加自动兑换京豆，需设置兑换京豆数，现可根据100、200和500设置，不可设置随机兑换数，根据页面填写兑换数值，默认设置500，注意是京豆数❗️
+5.版本更新日志:
+05-19 v1.0: 变更通知方式
 
-仅测试Quantumult X
+
 by Macsuny
-
 ~~~~~~~~~~~~~~~~
 Surge 4.0 :
 [Script]
@@ -78,16 +78,14 @@ if ($request && $request.method != 'OPTIONS') {
 
 async function all() 
 { 
-  await sign();
-  await info();
-  await award();
-  await total();
-  await lottery();
-  await status();
-  await exChange()
-  await Daily();
-  await weektask();
-  await exChange();
+  await sign();     // 签到
+  await info();     // 账号信息
+  await tasklist(); // 任务列表
+  await total();    // 总计
+  await lottery();  // o元抽奖
+  await status();   // 视频抽奖
+  await Daily();    // 日常任务
+  await exChange(); // 银豆兑换
  
 }
 function sign() {
@@ -106,7 +104,7 @@ function sign() {
       subTitle = `  重复签到 🔁`
       detail = ``
       } else  {
-      subTitle = `  签到失败`
+      subTitle = `  签到失败❌`
       detail = `说明: ${result.errorMessage}`
       }
     resolve()
@@ -114,7 +112,6 @@ function sign() {
    })
  }
 
-// 0元抽奖统计
 function lottery() {
  return new Promise((resolve, reject) =>{
 	  let daytaskurl = {
@@ -135,13 +132,12 @@ function lottery() {
      resolve()
       }
      if (Incomplete == 0 ){
-detail += `\n[抽奖任务]: ✅ 获得${lotteryres.data.rewardAmount}个银豆` 
+detail += `\n【抽奖任务】: ✅ 获得${lotteryres.data.rewardAmount}个银豆` 
     resolve()
    }
    }) 
   })
 }
-//视频任务次数
 function status() {
  return new Promise((resolve, reject) =>{
    setTimeout(() => {
@@ -159,7 +155,9 @@ function status() {
    detail += `\n【视频任务】: ✅ 获得${taskstatus.data.dailyTasks[1].taskReward}个银豆` } 
    weekresult = taskstatus.data.weeklyTasks[0].inviteAmount-taskstatus.data.weeklyTasks[0].finishedCount
   if (weekresult >0){
-      detail += `\n【每周任务】: 🔕 ${weekresult}个未完成`}
+      detail += `\n【每周任务】: 🔕 ${weekresult}个未完成`
+      weektask()
+    }
   else {
      detail += `\n【每周任务】: ✅ 获得${taskstatus.data.weeklyTasks[0].taskReward}个银豆`
       }
@@ -169,7 +167,6 @@ function status() {
     })
   })
 }
-//每日视频
 function video() {
    return new Promise((resolve, reject) =>{
     const bodyVal = '{"openId": '+'"'+openid+'","taskCode": "watch_video"}'
@@ -191,7 +188,6 @@ resolve()
  })
 }
 
-// 获取用户昵称
 function info() {
    return new Promise((resolve, reject) =>{
 	 let infourl = {
@@ -205,8 +201,8 @@ function info() {
   })
  })
 }
-// 抽奖列表
-function award() {
+
+function tasklist() {
    return new Promise((resolve, reject) =>{
 	 let taskurl = {
 		url: `https://draw.jdfcloud.com//api/lottery/home/v2?openId=${openid}&appId=${appid}`,
@@ -232,7 +228,7 @@ function cycleLucky() {
     })
   }
 
-//日常抽奖银豆
+//领取抽奖银豆
 function Daily() {
 return new Promise((resolve, reject) => {
  let beanurl = {
@@ -263,7 +259,6 @@ return new Promise((resolve, reject) => {
    })
 }
 
-//总计
 function total() {
  return new Promise((resolve, reject) =>{
   setTimeout(() => {
@@ -309,7 +304,6 @@ else if (SilverBean = result.datas[0].salePrice)
    })
  })
 }
-//兑换京豆
 function exChange() {
   return new Promise((resolve, reject) => {
   let changeurl = {
