@@ -72,7 +72,7 @@ https:\/\/api\.m\.jd\.com\/client\.action.*functionId=signBean url script-reques
 [mitm]
 hostname = api.m.jd.com
 
-*************************/
+*************************
 
 var LogDetails = false; //是否开启响应日志, true则开启
 
@@ -180,7 +180,9 @@ function notify() {
       var three = "【账号总计】:  " + beans + Steel + Cash + bsc
       var four = "【左滑 '查看' 以显示签到详情】\n"
       var DName = merge.JDShake.nickname ? merge.JDShake.nickname : "获取失败"
-      var Name = add ? DualAccount ? "【签到号三】:  " + DName + "\n" : "【签到号四】:  " + DName + "\n" : ""
+  
+      //var Name = add ? DualAccount ? "【签到号三】:  " + DName + "\n" : "【签到号四】:  " + DName + "\n" : ""
+      var Name = "【签到号三】:  " + DName + "\n" 
       console.log("\n" + Name + one + two + three + four + notify)
       if ($nobyda.isJSBox) {
         if (add && DualAccount) {
@@ -192,6 +194,7 @@ function notify() {
         }
       }
       if (!$nobyda.isNode) $nobyda.notify("", "", Name + one + two + three + four + notify);
+    
       if (DualAccount) {
         double();
       } else {
@@ -207,7 +210,7 @@ function notify() {
 
 function ReadCookie() {
   initial()
-  DualAccount = true;
+  DualAccount = false; 
   if (DeleteCookie) {
     if ($nobyda.isJSBox) {
       if ($file.exists("shared://JD_Cookie3.txt")) {
