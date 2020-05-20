@@ -1,6 +1,6 @@
 
 /**
-本脚本可查询实时货币汇率及换算
+本任务脚本可查询实时货币汇率及换算
 注意澳门元为澳门帕塔卡，香港元为港币，台湾为新台币
 ～～～～～～～～～～～～～～～～
 QX 1.0.6+ :
@@ -18,14 +18,14 @@ Surge 4.0 :
 Loon 2.1.0+
 [Script]
 # 本地脚本
-cron "04 00 * * *" script-path=exchangeRate.js, enabled=true, tag=实时汇率
+cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/exchangeRate.js, enabled=true, tag=实时汇率
 
 -----------------
 
  */
 const frommoney ='美元'          //使用币
 const exchangemoney = '人民币'   //换算币
-const moneynumb = '1'        //兑换金额
+const moneynumb = '1'           //兑换金额
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -207,7 +207,7 @@ function rate() {
         $notify('货币实时汇率 💶 ', subTitle, detail)
       }
       catch (erro){
-        $notify('货币实时汇率换算失败', '未知错误', erro)
+         $notify('货币实时汇率换算失败', '请检查币种，币种详情请查看日志', erro)
         console.log(erro)
         resolve()
          }
