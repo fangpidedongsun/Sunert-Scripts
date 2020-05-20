@@ -201,9 +201,10 @@ function rate() {
      let result = JSON.parse(response.body)
   try{
       if (result.msg=="ok"){
+        const rated = moneynumb*result.result.list[`${exchangecode}`].rate
          subTitle = frommoney+'兑'+exchangemoney+'汇率: '+ result.result.list[`${exchangecode}`].rate+'元'
-         detail = fromsymbol+""+moneynumb+" "+fromcode+' = '+ exchangesymbol+ moneynumb*result.result.list[`${exchangecode}`].rate+" "+ exchangecode+'\n最后更新: '+result.result.list[`${exchangecode}`].updatetime
-         }
+         detail = fromsymbol+""+moneynumb+" "+fromcode+' = '+ exchangesymbol+ rated.toFixed(3)+" "+ exchangecode+'\n最后更新: '+result.result.list[`${exchangecode}`].updatetime
+       }
         $notify('货币实时汇率 💶 ', subTitle, detail)
       }
       catch (erro){
