@@ -16,10 +16,10 @@
  */
 const stop = "500" //票价报错时调整延迟时间,默认50为0.5秒
 const leftstation ='北京'  //出发地
-const tostation = '武汉'   //目的地
+const tostation = '上海'   //目的地
 const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
 const leftdate = '2020-05-30' //出发日期
-const K = '12'  //车次序号!!
+const K = '28'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -194,7 +194,7 @@ try{
       starttime = ress.data.result[0].split("|")[8]
       arrivetime = ress.data.result[0].split("|")[9]
       total = ress.data.result[0].split("|")[10].split(":")[0]+'小时'+ress.data.result[0].split("|")[10].split(":")[1]+'分钟'
-   //console.log(ress.data.result[0].split("|"))
+   console.log(ress.data.result[1].split("|"))
    //trainno = ress.data.result[0].split("|")[2]
     ruanwopro = ress.data.result[0].split("|")[21]
     dongwo = ress.data.result[0].split("|")[33]
@@ -236,9 +236,10 @@ if (K<=ress.data.result.length){
   seterdeng = ress.data.result[K-1].split("|")[30]
  //setruanzuo = ress.data.result[K-1].split("|")[30]
   setwuzuo = ress.data.result[K-1].split("|")[26]
-  //setdongwo = ress.data.result[K-1].split("|")[30]
+  setdongwo = ress.data.result[K-1].split("|")[33]
   setshangwu = ress.data.result[K-1].split("|")[32]
   setruanwo = ress.data.result[K-1].split("|")[23]
+  seattypes = ress.data.result[K-1].split("|")[35]
   totaltime  = ress.data.result[K-1].split("|")[10].split(":")[0]+'小时'+ress.data.result[K-1].split("|")[10].split(":")[1]+'分钟'
 }
 else {
@@ -254,15 +255,6 @@ else {
 function prize() {
  return new Promise((resolve, reject) =>{
  setTimeout(() => {
-  if (traincode.match(/^[C|G]/g)){
-     seattypes="OM9"
-   }
-  else if(traincode.match(/^D/g)){
-     seattypes="OIJ"
-   }
-   else {
-     seattypes="3411"
-   }
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
     method: 'GET',
@@ -279,6 +271,9 @@ $task.fetch(myRequest).then(response => {
    }
    if (result.data.A3){
    setyingwo += `(${result.data.A3})`
+   }
+   if (result.data.F){
+   setdongwo += `(${result.data.F})`
    }
    if (result.data.A1){
    setyingzuo += `(${result.data.A1})`
@@ -347,11 +342,9 @@ if (setruanwo){
 if (setyingwo){
    detail += '    硬卧: '+setyingwo
   }
-
-//if (setdongwo){
-   //detail += '  动卧: '+setdongwo
-  //}
-
+if (setdongwo){
+  detail += '  动卧: '+setdongwo
+  }
 //if (setruanzuo){
    //detail += '   软座: '+setruanzuo
   //}
