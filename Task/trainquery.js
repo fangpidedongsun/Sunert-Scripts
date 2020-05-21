@@ -4,10 +4,10 @@
 1.可更改出发地、目的地及列车车次
 2.K值为列车车次所对应的序号，请不要填错，详情请看日志
 3.部分列车无法查到列车时刻信息，部分列车总计时间有误，以时刻表为准，部分座席可能无票价，第一次运行会报错，请重新运行
-4.仅提供硬座、硬卧、软卧、一等座和二等座等余票信息，测试阶段，请仔细核对
+4.提供所有席别余票信息，测试阶段，仅供参考
 5.借鉴sazs34大佬的smart脚本
 更新日志:
-5月22日: 取消手动座席选择，增加硬卧，软卧，商务座等票价信息，优化通知
+5月22日: 取消手动座席选择，增加硬卧，软卧，商务座等所有票价信息，优化通知
 
 [task_local]
 0 * * * * trainquery.js
@@ -16,10 +16,10 @@
  */
 const stop = "500" //票价报错时调整延迟时间,默认50为0.5秒
 const leftstation ='北京'  //出发地
-const tostation = '珠海'   //目的地
+const tostation = '上海'   //目的地
 const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
-const leftdate = '2020-05-30' //出发日期
-const K = '2'  //车次序号!!
+const leftdate = '2020-05-27' //出发日期
+const K = '30'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -191,7 +191,6 @@ $task.fetch(myRequest).then(response => {
   let ress = JSON.parse(response.body)
 try{
     train0 = ress.data.result[0].split("|")
-  //console.log(ress.data.result[1].split("|"))
       train =train0[3]
       starttime = train0[8]
       arrivetime = train0[9]
@@ -225,6 +224,7 @@ try{
    console.log(trainlist)
 if (K<=ress.data.result.length){
 const info=ress.data.result[K-1].split("|")
+      //console.log(info)
       traincode = info[3]
       trainno = info[2]
       fromstationno = info[16]
@@ -237,10 +237,11 @@ const info=ress.data.result[K-1].split("|")
       setyingwo = info[28]
       setyideng = info[31]
       seterdeng = info[30]
-    //setruanzuo = info[30]
+      setruanzuo = info[24]
       setwuzuo = info[26]
       setdongwo = info[33]
       setshangwu = info[32]
+      setruanwopro = info[21]
       setruanwo = info[23]
       seattypes = info[35]
       totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟'
@@ -281,6 +282,9 @@ $task.fetch(myRequest).then(response => {
    if (result.data.A1){
    setyingzuo += `(${result.data.A1})`
    }
+   if (result.data.A2){
+   setruanzuo += `(${result.data.A2})`
+   }
    if (result.data.WZ){
    setwuzuo += `(${result.data.WZ})`
    }
@@ -292,6 +296,9 @@ $task.fetch(myRequest).then(response => {
    }
    if (result.data.A4){
    setruanwo += `(${result.data.A4})`
+   }
+   if (result.data.A6){
+   setruanwopro += `(${result.data.A6})`
    }
    if (result.data.AJ){
    setyingwo += `(${result.data.AJ})`
@@ -336,6 +343,9 @@ if (setshangwu){
 if (setyingzuo){
    detail += '硬座: '+setyingzuo
   }
+if (setruanzuo){
+   detail += '   软座: '+setruanzuo
+  }
 if (setwuzuo){
    detail += '   无座: '+setwuzuo
   }
@@ -343,20 +353,20 @@ if (setruanwo){
    detail += '\n软卧: '+setruanwo
   }
 if (setyingwo){
-   detail += '    硬卧: '+setyingwo
+   detail += '  硬卧: '+setyingwo
+  }
+if (setruanwopro){
+   detail += '  高级软卧: '+setruanwopro
   }
 if (setdongwo){
   detail += '  动卧: '+setdongwo
   }
-//if (setruanzuo){
-   //detail += '   软座: '+setruanzuo
-  //}
   detail +='\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
 }
 const title = traincode+ "次列车时刻表🚄"
-const subTitle = '始发站: '+startstation+ ' -- 终点站: '+endstation+ " " +leftdate
+const subTitle = '始发站: '+startstation+ '--终点站: '+endstation+ " / 出行日期 " +leftdate
  $notify(title, subTitle, detail)
   console.log(traincode+'次列车  \n'+detail)
   }
