@@ -19,7 +19,7 @@ const leftstation ='北京'  //出发地
 const tostation = '上海'   //目的地
 const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
 const leftdate = '2020-05-30' //出发日期
-const K = '28'  //车次序号!!
+const K = '1'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -190,57 +190,60 @@ $task.fetch(myRequest).then(response => {
   //console.log('余票信息' + "\n\n" + response.body);
   let ress = JSON.parse(response.body)
 try{
-    train =ress.data.result[0].split("|")[3]
-      starttime = ress.data.result[0].split("|")[8]
-      arrivetime = ress.data.result[0].split("|")[9]
-      total = ress.data.result[0].split("|")[10].split(":")[0]+'小时'+ress.data.result[0].split("|")[10].split(":")[1]+'分钟'
-   console.log(ress.data.result[1].split("|"))
-   //trainno = ress.data.result[0].split("|")[2]
-    ruanwopro = ress.data.result[0].split("|")[21]
-    dongwo = ress.data.result[0].split("|")[33]
-    yingzuo = ress.data.result[0].split("|")[29]
-    yingwo = ress.data.result[0].split("|")[28]
-    ruanwo = ress.data.result[0].split("|")[23]
-    shangwu = ress.data.result[0].split("|")[32]
-    yideng = ress.data.result[0].split("|")[31]
-    erdeng = ress.data.result[0].split("|")[30]
-    wuzuo = ress.data.result[0].split("|")[26]
+    train0 = ress.data.result[0].split("|")
+  //console.log(ress.data.result[1].split("|"))
+      train =train0[3]
+      starttime = train0[8]
+      arrivetime = train0[9]
+      total = train0[10].split(":")[0]+'小时'+train0[10].split(":")[1]+'分钟'
+    //trainno = train0[2]
+      ruanwopro = train0[21]
+      dongwo = train0[33]
+      yingzuo = train0[29]
+      yingwo = train0[28]
+      ruanwo = train0[23]
+      shangwu = train0[32]
+      yideng = train0[31]
+      erdeng = train0[30]
+      wuzuo = train0[26]
     trainlist =  '[1] 车次:'+train+" "+ starttime + '--' + arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
   for (i=1;i<ress.data.result.length;i++){
-      train =ress.data.result[i].split("|")[3]
-      starttime = ress.data.result[i].split("|")[8]
-      arrivetime = ress.data.result[i].split("|")[9]
-      total = ress.data.result[i].split("|")[10].split(":")[0]+'小时'+ress.data.result[i].split("|")[10].split(":")[1]+'分钟'
-    yingzuo = ress.data.result[i].split("|")[29]
-    yingwo = ress.data.result[i].split("|")[28]
-    ruanwo = ress.data.result[i].split("|")[23]
-    yideng = ress.data.result[i].split("|")[31]
-    erdeng = ress.data.result[i].split("|")[30]
-    wuzuo = ress.data.result[i].split("|")[26]
-    trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
+      yupiaoinfo = ress.data.result[i].split("|")
+      train =yupiaoinfo[3]
+      starttime = yupiaoinfo[8]
+      arrivetime = yupiaoinfo[9]
+      total = yupiaoinfo[10].split(":")[0]+'小时'+yupiaoinfo[10].split(":")[1]+'分钟'
+      yingzuo = yupiaoinfo[29]
+      yingwo = yupiaoinfo[28]
+      ruanwo = yupiaoinfo[23]
+      yideng = yupiaoinfo[31]
+      erdeng = yupiaoinfo[30]
+      wuzuo = yupiaoinfo[26]
+      trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
    //trainno += ress.data.result[i].split("|")[2]
    }
    console.log(trainlist)
+const info=ress.data.result[K-1].split("|")
 if (K<=ress.data.result.length){
-  traincode = ress.data.result[K-1].split("|")[3]
-  trainno = ress.data.result[K-1].split("|")[2]
-  fromstationno = ress.data.result[K-1].split("|")[16]
-  tostationno = ress.data.result[K-1].split("|")[17]
-  fromstation = ress.data.result[K-1].split("|")[4]
-  endstation = ress.data.result[K-1].split("|")[5]
-  leftstationcode = ress.data.result[K-1].split("|")[6]
-  tostationcode = ress.data.result[K-1].split("|")[7]
-  setyingzuo = ress.data.result[K-1].split("|")[29]
-  setyingwo = ress.data.result[K-1].split("|")[28]
-  setyideng = ress.data.result[K-1].split("|")[31]
-  seterdeng = ress.data.result[K-1].split("|")[30]
- //setruanzuo = ress.data.result[K-1].split("|")[30]
-  setwuzuo = ress.data.result[K-1].split("|")[26]
-  setdongwo = ress.data.result[K-1].split("|")[33]
-  setshangwu = ress.data.result[K-1].split("|")[32]
-  setruanwo = ress.data.result[K-1].split("|")[23]
-  seattypes = ress.data.result[K-1].split("|")[35]
-  totaltime  = ress.data.result[K-1].split("|")[10].split(":")[0]+'小时'+ress.data.result[K-1].split("|")[10].split(":")[1]+'分钟'
+      traincode = info[3]
+      trainno = info[2]
+      fromstationno = info[16]
+      tostationno = info[17]
+      fromstation = info[4]
+      endstation = info[5]
+      leftstationcode = info[6]
+      tostationcode = info[7]
+      setyingzuo = info[29]
+      setyingwo = info[28]
+      setyideng = info[31]
+      seterdeng = info[30]
+    //setruanzuo = info[30]
+      setwuzuo = info[26]
+      setdongwo = info[33]
+      setshangwu = info[32]
+      setruanwo = info[23]
+      seattypes = info[35]
+      totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟'
 }
 else {
     $notify(`火车车次错误❌`,"共"+ress.data.result.length+"列火车经过", '请检查后重试')
