@@ -16,10 +16,10 @@
  */
 const stop = "500" //票价报错时调整延迟时间,默认50为0.5秒
 const leftstation ='北京'  //出发地
-const tostation = '上海'   //目的地
+const tostation = '珠海'   //目的地
 const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
 const leftdate = '2020-05-30' //出发日期
-const K = '1'  //车次序号!!
+const K = '2'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -223,8 +223,8 @@ try{
    //trainno += ress.data.result[i].split("|")[2]
    }
    console.log(trainlist)
-const info=ress.data.result[K-1].split("|")
 if (K<=ress.data.result.length){
+const info=ress.data.result[K-1].split("|")
       traincode = info[3]
       trainno = info[2]
       fromstationno = info[16]
@@ -249,7 +249,7 @@ else {
     $notify(`火车车次错误❌`,"共"+ress.data.result.length+"列火车经过", '请检查后重试')
 }
 }catch(e){
- $notify(`火车查询错误❌`,"无此方向直达列车经过,请检查后重试","")}
+ $notify(`火车查询错误❌`,"无此方向直达列车经过,请检查后重试",e)}
    resolve()
    })
   })
