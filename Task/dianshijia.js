@@ -244,7 +244,7 @@ function sleep() {
       sy.log(`data: ${data}`)
       const result = JSON.parse(data)
      if (result.errCode==0){
-      sleeping = result.data.name+'已开始 '
+      sleeping = result.data.name+'报名成功🛌 '
       }
 else if (result.errCode==4006){
       sleeping = '   睡觉中😴'

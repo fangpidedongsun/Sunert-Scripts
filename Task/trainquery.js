@@ -3,22 +3,23 @@
 本脚本可查询火车余票及列车时刻表
 1.可更改出发地、目的地及列车车次
 2.K值为列车车次所对应的序号，请不要填错，详情请看日志
-3.部分列车无法查到列车时刻信息，部分列车总计时间有误，以时刻表为准
-4.仅提供硬座、硬卧、软卧、一等座和二等座余票信息，测试阶段，请仔细核对
+3.部分列车无法查到列车时刻信息，部分列车总计时间有误，以时刻表为准，部分座席可能无票价，第一次运行会报错，请重新运行
+4.仅提供硬座、硬卧、软卧、一等座和二等座等余票信息，测试阶段，请仔细核对
 5.借鉴sazs34大佬的smart脚本
+更新日志:
+5月22日: 取消手动座席选择，增加硬卧，软卧，商务座等票价信息，优化通知
 
 [task_local]
 0 * * * * trainquery.js
 # Remote 远程
 0 10 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js, tag=列车时刻表
  */
-const stop = "500" //票价报错时调整延迟时间,默认500为0.5秒
+const stop = "500" //票价报错时调整延迟时间,默认50为0.5秒
 const leftstation ='北京'  //出发地
-const tostation = '广州'   //目的地
-const seattypes= 'A1A3' // 普通列车为A1A3， 高铁动车为MO
-const purpose = 'ADULT'  //乘客类型，'ADULT'是成人，'0X00'是学生
-const leftdate = '2020-05-22' //出发日期
-const K = '1'  //车次序号!!
+const tostation = '武汉'   //目的地
+const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
+const leftdate = '2020-05-30' //出发日期
+const K = '12'  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
@@ -186,8 +187,9 @@ function trainscheck() {
     headers: {'Cookie' : 'JSESSIONID=1B1CEADF1B9F831C25E71D7F2D996294'}
 };
 $task.fetch(myRequest).then(response => {
-    //console.log('余票信息' + "\n\n" + response.body);
+  //console.log('余票信息' + "\n\n" + response.body);
   let ress = JSON.parse(response.body)
+try{
     train =ress.data.result[0].split("|")[3]
       starttime = ress.data.result[0].split("|")[8]
       arrivetime = ress.data.result[0].split("|")[9]
@@ -215,7 +217,7 @@ $task.fetch(myRequest).then(response => {
     yideng = ress.data.result[i].split("|")[31]
     erdeng = ress.data.result[i].split("|")[30]
     wuzuo = ress.data.result[i].split("|")[26]
-    trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
+    trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
    //trainno += ress.data.result[i].split("|")[2]
    }
    console.log(trainlist)
@@ -232,27 +234,42 @@ if (K<=ress.data.result.length){
   setyingwo = ress.data.result[K-1].split("|")[28]
   setyideng = ress.data.result[K-1].split("|")[31]
   seterdeng = ress.data.result[K-1].split("|")[30]
+ //setruanzuo = ress.data.result[K-1].split("|")[30]
   setwuzuo = ress.data.result[K-1].split("|")[26]
+  //setdongwo = ress.data.result[K-1].split("|")[30]
+  setshangwu = ress.data.result[K-1].split("|")[32]
+  setruanwo = ress.data.result[K-1].split("|")[23]
   totaltime  = ress.data.result[K-1].split("|")[10].split(":")[0]+'小时'+ress.data.result[K-1].split("|")[10].split(":")[1]+'分钟'
 }
 else {
     $notify(`火车车次错误❌`,"共"+ress.data.result.length+"列火车经过", '请检查后重试')
 }
+}catch(e){
+ $notify(`火车查询错误❌`,"无此方向直达列车经过,请检查后重试","")}
    resolve()
-  })
+   })
   })
  })
 }
 function prize() {
  return new Promise((resolve, reject) =>{
  setTimeout(() => {
+  if (traincode.match(/^[C|G]/g)){
+     seattypes="OM9"
+   }
+  else if(traincode.match(/^D/g)){
+     seattypes="OIJ"
+   }
+   else {
+     seattypes="3411"
+   }
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
     method: 'GET',
 }
 $task.fetch(myRequest).then(response => {
  try {
-   console.log('票价信息: ' + response.body+'\n');
+    console.log('票价信息: ' + response.body+'\n');
    let result = JSON.parse(response.body)
    if (result.data.M){
    setyideng += `(${result.data.M})`
@@ -268,6 +285,18 @@ $task.fetch(myRequest).then(response => {
    }
    if (result.data.WZ){
    setwuzuo += `(${result.data.WZ})`
+   }
+   if (result.data.A9){
+   setshangwu += `(${result.data.A9})`
+   }
+   if (result.data.AI){
+   setruanwo += `(${result.data.AI})`
+   }
+   if (result.data.A4){
+   setruanwo += `(${result.data.A4})`
+   }
+   if (result.data.AJ){
+   setyingwo += `(${result.data.AJ})`
    }
 }
 catch (e){
@@ -289,6 +318,7 @@ $task.fetch(myRequest).then(response => {
  try {
     //console.log(response.statusCode + "\n\n" + response.body);
    let result = JSON.parse(response.body)
+  var detail = ""
    if (result.status == true) {
 const traincode = result.data.data[0].station_train_code
 const arrivetime = result.data.data[0].arrive_time
@@ -296,7 +326,36 @@ const arrivetime = result.data.data[0].arrive_time
    stationname = result.data.data[0].station_name
    startstation = result.data.data[0].start_station_name
    endstation = result.data.data[0].end_station_name
-  detail = '一等座: '+setyideng+'  二等座: '+seterdeng+'\n硬卧: '+setyingwo+'  硬座: '+setyingzuo+'  无座: '+setwuzuo+'\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
+if (setyideng){
+   detail += '一等座: '+setyideng
+  }
+if (seterdeng){
+   detail += '  二等座: '+seterdeng
+  }
+if (setshangwu){
+   detail += '\n商务座: '+setshangwu
+  }
+if (setyingzuo){
+   detail += '硬座: '+setyingzuo
+  }
+if (setwuzuo){
+   detail += '   无座: '+setwuzuo
+  }
+if (setruanwo){
+   detail += '\n软卧: '+setruanwo
+  }
+if (setyingwo){
+   detail += '    硬卧: '+setyingwo
+  }
+
+//if (setdongwo){
+   //detail += '  动卧: '+setdongwo
+  //}
+
+//if (setruanzuo){
+   //detail += '   软座: '+setruanzuo
+  //}
+  detail +='\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
 }
