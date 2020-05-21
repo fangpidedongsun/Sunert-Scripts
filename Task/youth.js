@@ -172,7 +172,7 @@ function signInfo() {
 }
    sy.post(infourl, (error, response, data) =>
  {
-     sy.log(`${CookieName}, 签到信息: ${data}`)
+     //sy.log(`${CookieName}, 签到信息: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
          subTitle = `总计: ${signinfo.data.user.score}个青豆，可兑换现金约${signinfo.data.user.money}元`
@@ -537,7 +537,7 @@ function share() {
       }
     }
   else if (rotaryres.code==10010){
-    rotarynum += ` 转盘${rotaryres.msg}🎉`
+    rotarynum = ` 转盘${rotaryres.msg}🎉`
    sy.msg(CookieName+" "+nick+"  "+rotarynum,subTitle,detail)
       }
      })

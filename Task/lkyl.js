@@ -118,7 +118,6 @@ function lottery() {
 		url: `https://draw.jdfcloud.com//api/bean/square/getTaskInfo?openId=${openid}&taskCode=lottery&appId=${appid}`,
 		headers: JSON.parse(signheaderVal)
 	}
-     //daytaskurl.headers[`Content-Length`] = `0`;
     sy.get(daytaskurl, (error, response, data) => {
     sy.log(`${cookieName}, 今日0元抽奖 ${data}`)
     let lotteryres = JSON.parse(data)
@@ -146,7 +145,7 @@ function status() {
      headers: JSON.parse(signheaderVal)}
      statusurl.headers['Content-Length'] = `0`;
    sy.get(statusurl, (error, response, data) =>{
-  sy.log(`${cookieName}, data: ${data}`)
+  //sy.log(`${cookieName}, data: ${data}`)
      taskstatus = JSON.parse(data)
       if (taskstatus.data.dailyTasks[1].status!='received'){
     for (i=0;i<3;i++){
@@ -194,7 +193,7 @@ function info() {
 		url: `https://draw.jdfcloud.com//api/user/user/detail?openId=${openid}&appId=${appid}`,
 		headers: JSON.parse(signheaderVal)}
     sy.get(infourl, (error, response, data) => {
-     sy.log(`${cookieName}, 账号信息: ${data}`)
+     //sy.log(`${cookieName}, 账号信息: ${data}`)
    let info = JSON.parse(data)  
     uesername = `${info.data.nickName}`
     resolve()
