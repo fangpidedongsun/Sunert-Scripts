@@ -442,7 +442,7 @@ function endCard() {
    sy.log(`打卡结果:${data}`)
    punchcardend = JSON.parse(data)
    if (punchcardend.code==1){
-     detail += `打卡${punchcardend.msg}，打卡时间: ${punchcardend.card_time}`  
+     detail += `打卡${punchcardend.msg}，打卡时间: ${punchcardend.data.card_time}`  
        }
     else if(punchcardend.code==0){
      //detail += `${punchcardend.msg}`
