@@ -59,7 +59,7 @@ function GetCookie() {
         }
       }
     } else {
-      var cookie = sy.setdata(CookieValue, CookieKey);
+      var cookie = sy.setdata(CookieValue, cookieKey);
       if (!cookie) {
         sy.msg("首次写入" + CookieName + "Cookie失败‼️", "", "");
       } else {
@@ -71,6 +71,7 @@ function GetCookie() {
   }
 sy.done()
 }
+
 
 function sign() {
    return new Promise((resolve, reject) => {
@@ -99,7 +100,7 @@ function earn() {
       sy.log(`${CookieName}, data: ${data}`)
       let result = JSON.parse(data)
      if (result.data.nebulaSignInPopup.button == '立即签到'){ 
-       subTitle = `签到成功: ${result.data.nebulaSignInPopup.subTitle}, ${result.data.nebulaSignInPopup.title}`
+       detail = `签到成功: ${result.data.nebulaSignInPopup.subTitle}, ${result.data.nebulaSignInPopup.title}`
       resolve()
       } else if (result.data.nebulaSignInPopup.button == '好的'){ 
        detail = `重复签到: ${result.data.nebulaSignInPopup.subTitle}, ${result.data.nebulaSignInPopup.title}`
