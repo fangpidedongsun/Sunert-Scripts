@@ -28,8 +28,8 @@ Surge 4.0
 ~~~~~~~~~~~~~~~~
 Loon 2.1.0+
 [Script]
-# 本地脚本
-cron "04 00 * * *" script-path=dianshijia.js, enabled=true, tag=电视家
+
+cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js, enabled=true, tag=电视家
 
 http-request http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
@@ -123,7 +123,7 @@ function sign() {
 
 function total() {
  return new Promise((resolve, reject) => {
-   const coinurl = { url: `http://api.gaoqingdianshi.com/api/coin/info`, headers: JSON.parse(signheaderVal)}
+   const coinurl = { url: `http://api.gaoqingdianshi.com/api/coin/info`, headers: signheaderVal}
    sy.get(coinurl, (error, response, data) => {
      sy.log(`${cookieName}, 金币总计: ${data}`)
      const coinresult = JSON.parse(data)
@@ -263,7 +263,7 @@ resolve()
 
 function wakeup() {
   return new Promise((resolve, reject) => {
-      let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getCoin?code=sleep&coin=1500&ext=1`, headers: JSON.parse(signheaderVal)}
+      let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getCoin?code=sleep&coin=1500&ext=1`, headers: signheaderVal}
       sy.get(url, (error, response, data) => {
       sy.log(`睡觉打卡: ${data}`)
       const result = JSON.parse(data)

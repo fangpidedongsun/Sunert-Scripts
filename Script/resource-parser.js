@@ -1,5 +1,5 @@
 /** 
-# Quantumult X 资源解析器 (2020-05-21: 12:59 )
+# Quantumult X 资源解析器 (2020-05-23: 12:59 )
 
 本资源解析器作者: Shawn(请勿私聊问怎么用)，有bug请反馈: @Shawn_KOP_bot
 更新请关注tg频道: https://t.me/QuanX_API
@@ -10,6 +10,7 @@
 
 0️⃣ 请在“订阅链接”后加入 "#" 后再加参数, 不同参数间请使用 "&" 来连接, 如: 
 "https://mysub.com#in=香港+台湾&emoji=1&tfo=1"
+(如是本地资源引用,请将参数"#in=xxx"填入资源文件第一行)
 
 1️⃣ "节点" 订阅--参数说明:
 - in, out, 分别为 保留/排除, 多参数用 "+" 连接(逻辑"或"), 逻辑"与"请用"."连接，可直接用中文, 空格用"%20"代替 (如 "in=香港.IPLC.04+台湾&out=香港%20BGP" );
@@ -45,23 +46,25 @@ https://Advertising.list#policy=MineGroup&out=aweme, tag=🚦去广告，update-
 ⚠️⚠️ 由于 rewrite/filter 的 UI 中暂时没有提供解析器开关，想使用的请自行去配置文件中的相关行，添加参数"opt-parser=true"以开启，如：
 https://Advertising.list#policy=Shawn&out=aweme, tag=🚦去广告，update-interval=86400, opt-parser=true, enabled=true
  */
-
+//$notify("test",$resource.link)
 var content0=$resource.content;
-var para=decodeURIComponent($resource.link);
+var link0=$resource.link;
+var para=(link0.indexOf("http")!=-1 && link0.indexOf("://")!=-1)?decodeURIComponent(link0):content0.split("\n")[0];
+var mark0=para.indexOf("#")!=-1? true:false;
 var type0=Type_Check(content0);
-var Pin0=para.indexOf("in=")!=-1? para.split("#")[1].split("in=")[1].split("&")[0].split("+"):null;
-var Pout0=para.indexOf("out=")!=-1? para.split("#")[1].split("out=")[1].split("&")[0].split("+"):null;
-var Pemoji=para.indexOf("emoji=")!=-1? para.split("#")[1].split("emoji=")[1].split("&")[0].split("+"):null;
-var Pudp0=para.indexOf("udp=")!=-1? para.split("#")[1].split("udp=")[1].split("&")[0].split("+"):0;
-var Ptfo0=para.indexOf("tfo=")!=-1? para.split("#")[1].split("tfo=")[1].split("&")[0].split("+"):0;
-var Pinfo=para.indexOf("info=")!=-1? para.split("#")[1].split("info=")[1].split("&")[0].split("+"):0;
-var Prname=para.indexOf("rename=")!=-1? para.split("#")[1].split("rename=")[1].split("&")[0].split("+"):null;
-var Ppolicy=para.indexOf("policy=")!=-1? para.split("#")[1].split("policy=")[1].split("&")[0].split("+"):"Shawn";
-var Pcert0=para.indexOf("cert=")!=-1? para.split("#")[1].split("cert=")[1].split("&")[0].split("+"):1;
-var Psort0=para.indexOf("sort=")!=-1? para.split("#")[1].split("sort=")[1].split("&")[0].split("+"):0;
-var PTls13=para.indexOf("tls13=")!=-1? para.split("#")[1].split("tls13=")[1].split("&")[0].split("+"):0;
-var Pntf0= para.indexOf("ntf=")!=-1? para.split("#")[1].split("ntf=")[1].split("&")[0].split("+"):0;
-//$notify(type0)
+var Pin0=mark0 && para.indexOf("in=")!=-1? para.split("#")[1].split("in=")[1].split("&")[0].split("+"):null;
+var Pout0=mark0 && para.indexOf("out=")!=-1? para.split("#")[1].split("out=")[1].split("&")[0].split("+"):null;
+var Pemoji=mark0 && para.indexOf("emoji=")!=-1? para.split("#")[1].split("emoji=")[1].split("&")[0].split("+"):null;
+var Pudp0=mark0 && para.indexOf("udp=")!=-1? para.split("#")[1].split("udp=")[1].split("&")[0].split("+"):0;
+var Ptfo0=mark0 && para.indexOf("tfo=")!=-1? para.split("#")[1].split("tfo=")[1].split("&")[0].split("+"):0;
+var Pinfo=mark0 && para.indexOf("info=")!=-1? para.split("#")[1].split("info=")[1].split("&")[0].split("+"):0;
+var Prname=mark0 && para.indexOf("rename=")!=-1? para.split("#")[1].split("rename=")[1].split("&")[0].split("+"):null;
+var Ppolicy=mark0 && para.indexOf("policy=")!=-1? para.split("#")[1].split("policy=")[1].split("&")[0].split("+"):"Shawn";
+var Pcert0=mark0 && para.indexOf("cert=")!=-1? para.split("#")[1].split("cert=")[1].split("&")[0].split("+"):1;
+var Psort0=mark0 && para.indexOf("sort=")!=-1? para.split("#")[1].split("sort=")[1].split("&")[0].split("+"):0;
+var PTls13=mark0 && para.indexOf("tls13=")!=-1? para.split("#")[1].split("tls13=")[1].split("&")[0].split("+"):0;
+var Pntf0= mark0 && para.indexOf("ntf=")!=-1? para.split("#")[1].split("ntf=")[1].split("&")[0].split("+"):0;
+//$notify(type0,"tt",content0)
 
 //响应头流量处理部分
 var subinfo=$resource.info;
@@ -104,10 +107,15 @@ if(type0=="Subs-B64Encode"){
 	flag=3;
 	total=content0.split("\n");
 	total=Rule_Handle(total,Pout0);
-}else {
-	$notify("😭 太难写了", "👻 本解析器 暂未支持 或 未能识别 该订阅格式", "☠️ 已尝试直接导入Quantumult X");
+}else if(content0.trim()==""){
+	$notify("‼️链接返回內容为空","⁉️请自行复制原始链接到浏览器, 确认链接是否失效",para.split("#")[0]);
 	flag=0;
-}
+	$done({content : ""})
+}else if(type0=="unknown"){
+	$notify("😭 太难写了", "👻 本解析器 暂未支持/未能识别 该订阅格式", "☠️ 已尝试直接导入Quantumult X");
+	$done({content : content0});
+	flag=-1;
+}else { flag=0 }
 
 if(flag==3){
 	$done({content : total.join("\n")});
@@ -137,20 +145,22 @@ if(flag==3){
 		total=QXSort(total,Psort0);
 	}
 	total=TagCheck_QX(total)
+	if(total.length==0){
+		$notify("‼️无有效节点","⁉️请自行检查原始链接以及过滤参数",para)
+		};
 	$done({content : total.join("\n")});	
-}else {
-	$done({content : content0});
 }
 
 
 //判断订阅类型
 function Type_Check(subs){
-	var type=""
+	var type="unknown"
 	var RuleK=["host","domain","ip-cidr","geoip","user-agent","ip6-cidr"];
 	var QuanXK=["shadowsocks=","trojan=","vmess=","http="];
 	var SurgeK=["=ss","=vmess","=trojan","=http","=custom"];
 	var SubK=["dm1lc3M6Ly","c3NyOi8v","dHJvamFu","c3M6Ly"];
 	var SubK2=["ss://","vmess://","ssr://","trojan://"];
+	var html="<!DOCTYPE html>"
 	var subi=subs.replace(/ /g,"")
 	const RuleCheck = (item) => subs.toLowerCase().indexOf(item)!=-1;
 	const QuanXCheck = (item) => subi.toLowerCase().indexOf(item)!=-1;
@@ -159,7 +169,7 @@ function Type_Check(subs){
 	var subsn=subs.split("\n")
 	if(SubK.some(SubCheck)){  //b64加密的订阅类型
 		type="Subs-B64Encode"
-	} else if(subsn.length>1 && SubK2.some(SubCheck)){ //未b64加密的多行URI 组合订阅
+	} else if(subsn.length>=1 && SubK2.some(SubCheck)){ //未b64加密的多行URI 组合订阅
 		type="Subs"
 	} else if(subi.indexOf("tag=")!=-1 && QuanXK.some(QuanXCheck)){
 		type="QuanX"
@@ -169,8 +179,11 @@ function Type_Check(subs){
 		type="Surge"
 	} else if(subs.indexOf("hostname")!=-1){
 		type="rewrite"
-	} else if(RuleK.some(RuleCheck)){
+	} else if(RuleK.some(RuleCheck) && subs.indexOf(html)==-1){
 		type="Rule";
+	} else if(subs.indexOf(html)!=-1){
+		$notify("‼️链接返回内容有误","⁉️请自行复制原始链接到浏览器, 确认链接是否失效",para.split("#")[0]);
+       type="web"
 	}
 	return type
 }
@@ -307,7 +320,8 @@ function SubsEd2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 			node = Surge2QX(list0[i])
 		}
 		//$notify("Final","results",node)
-		QXlist.push(node)
+		if(node!=""){
+        QXlist.push(node)}
 	}
 	}
 	return QXlist
@@ -322,6 +336,7 @@ function Subs2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 	var QXlist=[];
 	var node=""
 	for(i=0;i<list0.length;i++){
+		if(list0[i].trim().length>3){
 		var type=list0[i].split("://")[0].trim()
 		var listi=list0[i].replace(/ /g,"")
 		const QuanXCheck = (item) => listi.toLowerCase().indexOf(item)!=-1;
@@ -339,8 +354,11 @@ function Subs2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 		}else if(SurgeK.some(SurgeCheck)){
 			node = Surge2QX(list0[i])
 		}
-		QXlist.push(node)
+		if(node!=""){
+	QXlist.push(node)}
 	}
+	}
+	//$notify("final", "list", QXlist)
 	return QXlist
 }
 

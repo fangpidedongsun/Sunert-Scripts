@@ -36,12 +36,12 @@ Surge 4.0 :
 Loon 2.1.0+
 [Script]
 # 本地脚本
-cron "04 00 * * *" script-path=youth.js, enabled=true, tag=中青看点
+cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, enabled=true, tag=中青看点
 
-http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=youth.js
-http-request https:\/\/ios\.baertt\.com\/v5\/Game\/GameVideoReward script-path=youth.js, requires-body=true
-http-request https:\/\/ios\.baertt\.com\/v5\/article\/complete script-path=youth.js, requires-body=true
-http-request https:\/\/ios\.baertt\.com\/v5\/article\/red_packet script-path=youth.js, requires-body=true
+http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
+http-request https:\/\/ios\.baertt\.com\/v5\/Game\/GameVideoReward script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
+http-request https:\/\/ios\.baertt\.com\/v5\/article\/complete script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
+http-request https:\/\/ios\.baertt\.com\/v5\/article\/red_packet script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 -----------------
 QX 1.0. 7+ :
 [task_local]
