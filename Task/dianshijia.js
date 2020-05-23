@@ -123,7 +123,9 @@ function sign() {
 
 function total() {
  return new Promise((resolve, reject) => {
-   const coinurl = { url: `http://api.gaoqingdianshi.com/api/coin/info`, headers: signheaderVal}
+   const coinurl = { url: `http://api.gaoqingdianshi.com/api/coin/info`, 
+      headers: JSON.parse(signheaderVal)
+    }
    sy.get(coinurl, (error, response, data) => {
      sy.log(`${cookieName}, 金币总计: ${data}`)
      const coinresult = JSON.parse(data)
