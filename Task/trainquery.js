@@ -1,6 +1,6 @@
 
 /**
-本脚本可查询火车余票及列车时刻表
+本脚本可查询火车余票及列车时刻查询
 1.可更改出发地、目的地及列车车次
 2.K值为列车车次所对应的序号，请不要填错，详情请看日志
 3.部分列车无法查到列车时刻信息，部分列车总计时间有误，以时刻表为准，部分座席可能无票价，第一次运行会报错，请重新运行
@@ -9,17 +9,32 @@
 更新日志:
 5月22日: 取消手动座席选择，增加硬卧，软卧，商务座等所有票价信息，优化通知
 
+～～～～～～～～～～～～～～～～
+QX 1.0.6+ :
 [task_local]
 0 * * * * trainquery.js
 # Remote 远程
-0 10 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js, tag=列车时刻表
+0 10 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js, tag=火车票及列车时刻
+～～～～～～～～～～～～～～～～
+Surge 4.0 :  
+[Script]
+火车票及列车时刻 = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js,script-update-interval=0
+
+～～～～～～～～～～～～～～～～～
+Loon 2.1.0+
+[Script]
+cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js, enabled=true, tag=火车票及列车时刻
+
+-----------------
+
+
  */
 const stop = "500" //票价报错时调整延迟时间,默认50为0.5秒
-const leftstation ='北京'  //出发地
-const tostation = '上海'   //目的地
+const leftstation ='深圳'  //出发地
+const tostation = '菏泽'   //目的地
 const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
 const leftdate = '2020-05-27' //出发日期
-const K = '30'  //车次序号!!
+const K = ' 5 '  //车次序号!!
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
