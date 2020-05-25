@@ -113,7 +113,6 @@ async function cron() {
     await parseData(detail, balance, info, bill)
 }
 
-
 async function httpRequest(resq, delay = 0, statusCode = 200) {
     return new Promise(resolve => {
         $tool.timeout(() => {
@@ -161,8 +160,8 @@ function parseData(detail, balance, info, bill) {
             return
         }
         if (bill.paraFieldResult == "no sum charge data"||"消息格式错误-账期错误"){
-            bill = `上月账单未生成`
-            //resolve("done")
+            bill = `无`
+            resolve("done")
             //return
         }
         var balanceAvailable = Number(balance.totalBalanceAvailable)
@@ -182,24 +181,43 @@ function notify(data, balance, exdata, bldata) {
     if (typeof data.items[0].productOFFName != "undefined") {
         productname = data.items[0].productOFFName
     }
-    var Resourcename = "流量套餐"
-    if (typeof data.items[0].items[1].ratableResourcename != "undefined") {
-        Resourcename = data.items[0].items[1].ratableResourcename
+    var Resourcename = " "
+    if (data.items[0].items[1]?.ratableResourcename) {       Resourcename = data.items[0].items[1].ratableResourcename
     }
-
     var message = "[套餐] " + productname + "\n" + "[话费] 剩余: " + (balance / 100).toFixed(2) + "元"
-if (bldata != '上月账单未生成'){message +=  '  上月消费合计: '+ bldata.items[0].sumCharge/100+'元'}
-    if (typeof data.voiceAmount != "undefined") {
-        var voice = "[通话] 已用: " + data.voiceUsage + "分, 剩余: " + data.voiceBalance + "分,  合计: " + data.voiceAmount + "分"
+if (bldata != '无'){message +=  '  上月消费合计: '+ bldata.items[0].sumCharge/100+'元'}
+var voiceAmount = " "
+var voiceUsage = " "
+var voiceBalance = " "
+if (data.items[0].items[0]?.ratableAmount){
+   voiceAmount = data.items[0].items[0]?.ratableAmount
+}
+if (data.items[0].items[0]?.balanceAmount){
+   voiceBalance = data.items[0].items[0]?.balanceAmount
+}
+if (data.items[0].items[0]?.usageAmount){
+   voiceUsage = data.items[0].items[0]?.usageAmount
+}
+//$tool.log.info(data.items[0].items[0])
+    if (voiceUsage) {
+        var voice = "[通话] 已用: " + voiceUsage + "分钟  剩余: " + voiceBalance + "分钟  合计: " + voiceAmount + "分钟"
         message = message + "\n" + voice
     }
     if (typeof data.totalCommon != "undefined" ) {
-      var flow =  '[流量套餐] ' + Resourcename + '  已用: ' + formatFlow(data.usageCommon/1024) 
-    //  var flow = "[流量] 已用: " + formatFlow(data.usedCommon/1024) + ", 剩余: " + formatFlow(data.balanceCommon/1024) + ", 合计: " + formatFlow(data.totalCommon/1024)
+   var balanceCommon = " "
+   var totalCommon = " "
+if(data.balanceCommon){
+balanceCommon = formatFlow(data.balanceCommon/1024)
+}
+if(data.totalCommon){
+totalCommon = formatFlow(data.totalCommon/1024)
+}
+     var usagedCommon =formatFlow(data.usageCommon/1024) 
+       var flow = "[流量] 已用: " + usagedCommon + "   剩余: " + balanceCommon + "  合计: " + totalCommon
     message = message + "\n" + flow
     }
- if (bldata == '上月账单未生成'){
-message = message + "\n" + bldata
+ if (bldata == '无'){
+message = message + "\n" + "[上月账单] "+ bldata
 } else if (typeof bldata.items[0].acctName != "undefined" && bldata.serviceResultCode == 0) {
   var bills = '[上月话费账单]' + "\n"+ bldata.items[0].items[0].chargetypeName + ':      '+
 bldata.items[0].items[0].charge/100+'元'+ "\n"+ bldata.items[0].items[1].chargetypeName + ':    '+
