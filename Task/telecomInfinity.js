@@ -44,7 +44,8 @@ let config = {
 const $tool = Tool()
      d = new Date();
      Y = d.getFullYear(),
-     M = ("0" + (d.getMonth())).slice(-2)
+     m =  d.getMonth()  //上月
+     M = ("0" + m).slice(-2)
    let AUTHTOKEN = $tool.read(config.authTokenKey)
    let COOKIE = $tool.read(config.CookieKey)
 var requests = {
@@ -190,14 +191,13 @@ function notify(data, balance, exdata, bldata) {
     var Resourcename = " "
     if (data.items[0].items[1]?.ratableResourcename) {       Resourcename = data.items[0].items[1].ratableResourcename
     }
-    var message = "【套餐】 " + productname + "\n" + "【话费】 剩余: " + (balance / 100).toFixed(2) + "元"
-if (bldata != '无'){message +=  '  上月消费合计: '+ bldata.items[0].sumCharge/100+'元'}
-var voiceAmount = " "
-var voiceUsage = " "
-var voiceBalance = " "
-var msgUsage = ""
-var msgBalance = ""
-var msgAmount = ""
+    var message = "【套餐】 " + productname
+    var voiceAmount = " "
+    var voiceUsage = " "
+    var voiceBalance = " "
+    var msgUsage = ""
+    var msgBalance = ""
+    var msgAmount = ""
 for (i=0;i<data.items.length;i++){
 if(data.items[i].items[0]?.nameType == 131100){
    voiceAmount = data.items[i].items[0]?.ratableAmount
@@ -210,7 +210,7 @@ if(data.items[i].items[0]?.nameType == 431100){
    msgBalance = data.items[i].items[0]?.balanceAmount
   }
 }
-//$tool.log.info(data.items)
+  //$tool.log.info(data.items)
     if (voiceUsage) {
         var voice = "【通话】 已用: " + voiceUsage + "分钟  剩余: " + voiceBalance + "分钟  合计: " + voiceAmount + "分钟"
         message = message + "\n" + voice
@@ -232,13 +232,16 @@ totalCommon = formatFlow(data.totalCommon/1024)
        var flow = "【流量】 已用: " + usagedCommon + "   剩余: " + balanceCommon + "  合计: " + totalCommon
     message = message + "\n" + flow
     }
+    var cost = "【话费】 剩余: " + (balance / 100).toFixed(2) + "元"
+message = message + "\n" + cost
+    if (bldata != '无'){message +=  `  ${m}月消费合计: `+ bldata.items[0].sumCharge/100+'元'}
+
  if (bldata == '无'){
-message = message + "\n" + `【${M}月账单】   `+ bldata
+message = message + "\n" + `【${m}月账单】   `+ bldata
 } else if (typeof bldata.items[0].acctName != "undefined" && bldata.serviceResultCode == 0) {
-  var bills = `【${M}月话费账单】` + "\n"+ bldata.items[0].items[0].chargetypeName + ':      '+
-bldata.items[0].items[0].charge/100+'元'+ "\n"+ bldata.items[0].items[1].chargetypeName + ':    '+
-bldata.items[0].items[1].charge/100+'元'+ "\n"+ bldata.items[0].items[2].chargetypeName + ':  '+
-bldata.items[0].items[2].charge/100+'元'
+    bills = `【${m}月话费账单】` + "\n   " + bldata.items[0].items[1].chargetypeName + ':    '+
+bldata.items[0].items[1].charge/100+'元'+ "\n   "+ bldata.items[0].items[2].chargetypeName + ':  '+
+bldata.items[0].items[2].charge/100+'元'+ "\n   "+ bldata.items[0].items[0].chargetypeName + '合计:  '+ bldata.items[0].items[0].charge/100+'元'
     message = message + "\n" + bills
     }
     $tool.notify(config.name, subtitle, message)
