@@ -124,8 +124,10 @@ function lottery() {
       Incomplete = lotteryres.data.totalSteps - lotteryres.data.doneSteps
      if (Incomplete >0 ){
     for (k=0;task.data.homeActivities[k].participated==false&&k<Incomplete;k++){
+     if (k>=2){
        lotteryId = task.data.homeActivities[k].activityId
        cycleLucky()
+        }
        };
     detail +=  `\n【抽奖任务】: 🔕 ${Incomplete}个未完成`
      resolve()
