@@ -199,18 +199,21 @@ function notify(data, balance, exdata, bldata) {
     var msgBalance = ""
     var msgAmount = ""
 for (i=0;i<data.items.length;i++){
-if(data.items[i].items[0]?.nameType == 131100){
-   voiceAmount = data.items[i].items[0]?.ratableAmount
-   voiceBalance = data.items[i].items[0]?.balanceAmount
-   voiceUsage = data.items[i].items[0]?.usageAmount
+for (k=0;k<data.items[i].items.length;k++){
+if(data.items[i].items[k].nameType == 131100){
+   voiceAmount = data.items[i].items[k].ratableAmount
+   voiceBalance = data.items[i].items[k].balanceAmount
+   voiceUsage = data.items[i].items[k].usageAmount
   }
-if(data.items[i].items[0]?.nameType == 431100){
-   msgUsage = data.items[i].items[0]?.usageAmount
-   msgAmount = data.items[i].items[0]?.ratableAmount
-   msgBalance = data.items[i].items[0]?.balanceAmount
+//$tool.log.info(data.items[i].items[k].nameType)
+if(data.items[i].items[k].nameType == 401100||data.items[i].items[k].nameType == 431100){
+   msgUsage = data.items[i].items[k].usageAmount
+   msgAmount = data.items[i].items[k].ratableAmount
+   msgBalance = data.items[i].items[k].balanceAmount
   }
+ }
 }
-  //$tool.log.info(data.items)
+ //$tool.log.info(data.items)
     if (voiceUsage) {
         var voice = "【通话】 已用: " + voiceUsage + "分钟  剩余: " + voiceBalance + "分钟  合计: " + voiceAmount + "分钟"
         message = message + "\n" + voice
