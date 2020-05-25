@@ -283,18 +283,23 @@ function total() {
       let result = JSON.parse(data)
       const title = `${cookieName}`
    if (SilverBean >result.datas[0].salePrice) {
-    for (k=0; k < result.datas.length;k++){
-    if (result.datas[k].salePrice >= SilverBean && SilverBean > result.datas[k-1].salePrice)
-     {
-      detail += beantotal+ `${result.datas[k-1].salePrice}银豆兑换${result.datas[k-1].productName}`}
+  for (k=0; k < result.datas.length;k++){
+    if (SilverBean < result.datas[k].salePrice && SilverBean > result.datas[k-1].salePrice)
+     { 
+     detail += beantotal+ `${result.datas[k-1].salePrice}银豆兑换${result.datas[k-1].productName}`
+    }
+    else if (result.datas[k].salePrice == SilverBean)
+     { 
+      detail += beantotal+ `${result.datas[k].salePrice}银豆兑换${result.datas[k].productName}`
+     }
     }
    } else if (SilverBean < result.datas[0].salePrice) 
     { 
        detail+= beantotal+ `银豆不足以兑换京豆`
     }
-else if (SilverBean = result.datas[0].salePrice) 
+else if (SilverBean == result.datas[0].salePrice) 
     { 
-       detail+= beantotal+ `${result.datas[k-1].salePrice}银豆兑换${result.datas[k-1].productName}`
+       detail+= beantotal+ `${result.datas[0].salePrice}银豆兑换${result.datas[0].productName}`
        }
     resolve()
      })
