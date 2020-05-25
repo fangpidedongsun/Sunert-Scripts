@@ -1,32 +1,38 @@
 /**
- 1.根据原版脚本修改，增加上月账单信息，需重新获取Cookie
- 2.适合流量畅享套餐使用，如非畅享套餐，可将187行前加//注释，并取消188行注释，此项仅供测试 已失效❌
- 3.因地区不同可能获取不到Cookie,可自行复制cookie至65行下覆盖"COOKIE"，
+ 1.根据原版脚本修改，增加上月账单信息，需重新获取Cookie，打开app即可
+ 2.适合流量畅享套餐使用，其他套餐，自行测试，此项仅供测试 
+ 3.可能因地区不同，脚本不一定适用
  By Macsuny 修改
- 
  感谢原版作者提供脚本
-
  * 下载安装 天翼账号中心 登陆 获取authToken
- * quantumultx
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# quantumultx
  [rewrite_local]
  ^https?:\/\/e\.189\.cn\/store\/user\/package_detail\.do url script-request-header telecomInfinity.js
  # MITM = e.189.cn
  [task_local]
  10 8 * * * telecomInfinity.js
 
- [Loon]
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# [Loon]
+cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js, enabled=true, tag=电信套餐查询
+
 http-request ^https?:\/\/e\.189\.cn\/store\/user\/package_detail\.do script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
  
- Surge 4.0 :
+# Surge 4.0 :
 [Script]
-telecomInfinity.js = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js,script-update-interval=0
+电信套餐查询 = type=cron,cronexp=35 5 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js,script-update-interval=0
 
-#  Cookie.
-telecomInfinity.js = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js,type=http-request,pattern=https?:\/\/e\.189\.cn\/store\/user\/package_detail\.do
- 
- # MITM = e.189.cn
+电信套餐查询 = script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js,type=http-request,pattern=https?:\/\/e\.189\.cn\/store\/user\/package_detail\.do
+
+~~~~~~~~~~~~~~~~~~~~~
+ # MITM
+hostname = e.189.cn
+
  */
-
 // 配置信息
 let config = {
     name: "中国电信 世界触手可及🤝",
@@ -159,7 +165,7 @@ function parseData(detail, balance, info, bill) {
             resolve("done")
             return
         }
-        if (bill.paraFieldResult == "no sum charge data"||"消息格式错误-账期错误"){
+        if (bill.paraFieldResult !=null){
             bill = `无`
             resolve("done")
             //return
@@ -189,35 +195,45 @@ if (bldata != '无'){message +=  '  上月消费合计: '+ bldata.items[0].sumCh
 var voiceAmount = " "
 var voiceUsage = " "
 var voiceBalance = " "
-if (data.items[0].items[0]?.ratableAmount){
-   voiceAmount = data.items[0].items[0]?.ratableAmount
+var msgUsage = ""
+var msgBalance = ""
+var msgAmount = ""
+for (i=0;i<data.items.length;i++){
+if(data.items[i].items[0]?.nameType == 131100){
+   voiceAmount = data.items[i].items[0]?.ratableAmount
+   voiceBalance = data.items[i].items[0]?.balanceAmount
+   voiceUsage = data.items[i].items[0]?.usageAmount
+  }
+if(data.items[i].items[0]?.nameType == 431100){
+   msgUsage = data.items[i].items[0]?.usageAmount
+   msgAmount = data.items[i].items[0]?.ratableAmount
+   msgBalance = data.items[i].items[0]?.balanceAmount
+  }
 }
-if (data.items[0].items[0]?.balanceAmount){
-   voiceBalance = data.items[0].items[0]?.balanceAmount
-}
-if (data.items[0].items[0]?.usageAmount){
-   voiceUsage = data.items[0].items[0]?.usageAmount
-}
-//$tool.log.info(data.items[0].items[0])
+//$tool.log.info(data.items)
     if (voiceUsage) {
         var voice = "[通话] 已用: " + voiceUsage + "分钟  剩余: " + voiceBalance + "分钟  合计: " + voiceAmount + "分钟"
         message = message + "\n" + voice
     }
+    if (msgUsage) {
+        msginfo = "[短信] 已用: " + msgUsage + "条  剩余: " + msgBalance + "条  合计: " + msgAmount + "条"
+        message = message + "\n" + msginfo
+    }
     if (typeof data.totalCommon != "undefined" ) {
-   var balanceCommon = " "
-   var totalCommon = " "
-if(data.balanceCommon){
-balanceCommon = formatFlow(data.balanceCommon/1024)
+     var balanceCommon = " "
+     var totalCommon = " "
+     var usagedCommon =formatFlow(data.usageCommon/1024) 
+     if(data.balanceCommon){
+         balanceCommon = formatFlow(data.balanceCommon/1024)
 }
-if(data.totalCommon){
+     if(data.totalCommon){
 totalCommon = formatFlow(data.totalCommon/1024)
 }
-     var usagedCommon =formatFlow(data.usageCommon/1024) 
        var flow = "[流量] 已用: " + usagedCommon + "   剩余: " + balanceCommon + "  合计: " + totalCommon
     message = message + "\n" + flow
     }
  if (bldata == '无'){
-message = message + "\n" + "[上月账单] "+ bldata
+message = message + "\n" + "[上月账单]   "+ bldata
 } else if (typeof bldata.items[0].acctName != "undefined" && bldata.serviceResultCode == 0) {
   var bills = '[上月话费账单]' + "\n"+ bldata.items[0].items[0].chargetypeName + ':      '+
 bldata.items[0].items[0].charge/100+'元'+ "\n"+ bldata.items[0].items[1].chargetypeName + ':    '+
@@ -305,12 +321,9 @@ function Tool() {
         _logLevels.forEach((item) => {
             logFunc[item] = _setLogFunction(item)
         })
-
         return logFunc
     })
-
     const log = _log()
-
     // setTimeout
     const timeout = (() => {
         if (typeof setTimeout != "undefined") {
