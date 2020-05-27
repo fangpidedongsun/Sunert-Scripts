@@ -264,7 +264,7 @@ function wakeup() {
       //detail += `【睡觉打卡】 `+result.data
       }
      if (result.errCode==4019){
-      detail += `【睡觉任务】❎  `+result.msg+'\n'
+      detail += `【睡觉任务】❎ `+result.msg+'\n'
       }
    })
 resolve()
