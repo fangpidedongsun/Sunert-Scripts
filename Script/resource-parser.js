@@ -1,7 +1,8 @@
 /** 
-# Quantumult X 资源解析器 (2020-05-23: 12:59 )
+# Quantumult X 资源解析器 (2020-05-25: 17:59 )
 
-本资源解析器作者: Shawn(请勿私聊问怎么用)，有bug请反馈: @Shawn_KOP_bot
+解析器作者: Shawn(请勿私聊问怎么用)
+有bug请反馈: @Shawn_KOP_bot
 更新请关注tg频道: https://t.me/QuanX_API
 
 主要功能: 将各类服务器订阅解析成 QuantumultX 格式引用(支持 V2RayN/SSR/SS/Trojan/QuanX(conf&list)/Surge(conf&list)格式)，并提供 1⃣️ 中的可选参数；
@@ -20,7 +21,8 @@
 - cert=0，跳过证书验证(vmess/trojan)，即强制"tls-verification=false";
 - tls13=1, 开启 "tls13=true"(vmess/trojan), 请自行确认服务端是否支持;
 - sort=1 或 sort=-1, 排序参数，分别根据节点名 正序/逆序 排列;
-- info=1, 开启通知提示流量信息(前提：原订阅链接有返回该信息)，默认关闭
+- info=1, 开启通知提示流量信息(前提：原订阅链接有返回该信息)，默认关闭;
+- b64=1, 由于QuanX的特性，整体 base64-encode 后导入时，QuanX 会自动解码检查并忽略错误节点(所以可在解析提示"内容无效/invalid..."时，尝试使用此参数)
 
 2⃣️ "rewrite(重写)/filter(分流)" 引用--参数说明:
 - 参数为 "out=xxx", 多个参数用 "+" 连接;
@@ -64,11 +66,13 @@ var Pcert0=mark0 && para.indexOf("cert=")!=-1? para.split("#")[1].split("cert=")
 var Psort0=mark0 && para.indexOf("sort=")!=-1? para.split("#")[1].split("sort=")[1].split("&")[0].split("+"):0;
 var PTls13=mark0 && para.indexOf("tls13=")!=-1? para.split("#")[1].split("tls13=")[1].split("&")[0].split("+"):0;
 var Pntf0= mark0 && para.indexOf("ntf=")!=-1? para.split("#")[1].split("ntf=")[1].split("&")[0].split("+"):0;
-//$notify(type0,"tt",content0)
+var Pb64= mark0 && para.indexOf("b64=")!=-1? para.split("#")[1].split("b64=")[1].split("&")[0].split("+"):0;
+const subinfo=$resource.info;
+const subtag=$resource.tag;
+//$notify(type0,"tt",subtag)
+const Base64=new Base64Code();
 
 //响应头流量处理部分
-var subinfo=$resource.info;
-var subtag=$resource.tag;
 if(Pinfo==1 && subinfo){
 	var sinfo=subinfo.replace(/ /g,"").toLowerCase();
 	var total="总流量: "+(parseFloat(sinfo.split("total=")[1].split(",")[0])/(1024**3)).toFixed(2)+"GB";
@@ -108,11 +112,11 @@ if(type0=="Subs-B64Encode"){
 	total=content0.split("\n");
 	total=Rule_Handle(total,Pout0);
 }else if(content0.trim()==""){
-	$notify("‼️链接返回內容为空","⁉️请自行复制原始链接到浏览器, 确认链接是否失效",para.split("#")[0]);
+	$notify("‼️ "+"["+subtag+"]"+" 链接返回內容为空","⁉️请自行复制原始链接到浏览器, 确认链接是否失效",para.split("#")[0]);
 	flag=0;
 	$done({content : ""})
 }else if(type0=="unknown"){
-	$notify("😭 太难写了", "👻 本解析器 暂未支持/未能识别 该订阅格式", "☠️ 已尝试直接导入Quantumult X");
+	$notify("😭 太难写了 "+"["+subtag+"]", "👻 本解析器 暂未支持/未能识别 该订阅格式", "☠️ 已尝试直接导入Quantumult X");
 	$done({content : content0});
 	flag=-1;
 }else { flag=0 }
@@ -124,20 +128,20 @@ if(flag==3){
 }else if(flag==1){
 	if(Pin0||Pout0){
 		if(Pntf0!=0){
-		$notify("👥 开始转换节点订阅：","🐶 您已添加节点筛选参数，如下","👍️ 保留的关键字："+Pin0+"\n👎️ 排除的关键字："+Pout0);}
+		$notify("👥 "+"["+subtag+"]"+" 开始转换节点订阅","🐶 您已添加节点筛选参数，如下","👍️ 保留的关键字："+Pin0+"\n👎️ 排除的关键字："+Pout0);}
 		total=filter(total,Pin0,Pout0)
 		} else {
 			if(Pntf0!=0){
-		$notify("🐷 开始转换节点订阅","🐼️ 如需筛选节点请使用in/out及其他参数，可参考此示范:","👉 https://t.me/QuanXNews/110");}
+		$notify("🐷 "+"["+subtag+"]"+" 开始转换节点订阅","🐼️ 如需筛选节点请使用in/out及其他参数，可参考此示范:","👉 https://t.me/QuanXNews/110");}
 	}
 	if(Pemoji){
 			if(Pntf0!=0){
-			$notify("🏳️‍🌈 开始更改旗帜 emoji","清除emoji请用参数 -1, 国行设备添加emoji请使用参数 2","你当前所用的参数为 emoji="+Pemoji)};
+			$notify("🏳️‍🌈 "+"["+subtag+"]"+" 开始更改旗帜 emoji","清除emoji请用参数 -1, 国行设备添加emoji请使用参数 2","你当前所用的参数为 emoji="+Pemoji)};
 			total=emoji_handle(total,Pemoji);
 		}
 	if(Prname){
 		if(Pntf0!=0){ 
-		$notify("🏳️‍🌈 开始节点重命名","格式为 \"旧名字@新名字\"","你当前所用的参数为"+Prname);}
+		$notify("🏳️‍🌈 "+"["+subtag+"]"+" 开始节点重命名","格式为 \"旧名字@新名字\"","你当前所用的参数为"+Prname);}
 		var Prn=Prname;
 		total=total.map(Rename);
 	}
@@ -146,18 +150,21 @@ if(flag==3){
 	}
 	total=TagCheck_QX(total)
 	if(total.length==0){
-		$notify("‼️无有效节点","⁉️请自行检查原始链接以及过滤参数",para)
+		$notify("‼️ "+"["+subtag+"]"+"无有效节点","⁉️请自行检查原始链接以及过滤参数",para)
 		};
-	$done({content : total.join("\n")});	
+	//$notify("Final","List",total)
+    total=total.join("\n");
+	if(flag==1 && Pb64==1){
+		total=Base64.encode(total)}
+	$done({content : total});
 }
-
 
 //判断订阅类型
 function Type_Check(subs){
 	var type="unknown"
 	var RuleK=["host","domain","ip-cidr","geoip","user-agent","ip6-cidr"];
 	var QuanXK=["shadowsocks=","trojan=","vmess=","http="];
-	var SurgeK=["=ss","=vmess","=trojan","=http","=custom"];
+	var SurgeK=["=ss,","=vmess,","=trojan,","=http,","=custom,","=https,"];
 	var SubK=["dm1lc3M6Ly","c3NyOi8v","dHJvamFu","c3M6Ly"];
 	var SubK2=["ss://","vmess://","ssr://","trojan://"];
 	var html="<!DOCTYPE html>"
@@ -182,7 +189,7 @@ function Type_Check(subs){
 	} else if(RuleK.some(RuleCheck) && subs.indexOf(html)==-1){
 		type="Rule";
 	} else if(subs.indexOf(html)!=-1){
-		$notify("‼️链接返回内容有误","⁉️请自行复制原始链接到浏览器, 确认链接是否失效",para.split("#")[0]);
+		$notify("‼️ "+"["+subtag+"]"+" 链接返回内容有误","⁉️ 请自行复制原始链接到浏览器, 确认链接是否失效",para.split("#")[0]);
        type="web"
 	}
 	return type
@@ -217,7 +224,7 @@ function Rewrite_Filter(subs,Pout){
 				hname="hostname="+nname.join(", ");
 				//console.log(hname)
 				nlist.push(hname)
-				if(dname.length>0){$notify("🤖 您添加的[rewrite]过滤关键词为："+Pout0.join(", "),"☠️ 主机名 hostname 中已为您删除以下"+dname.length+"个匹配项",dname.join(",") )}
+				if(dname.length>0){$notify("🤖 您为 "+"["+subtag+"]"+" 添加的 [rewrite] 过滤关键词为:","🚫 "+Pout0.join(", "),"☠️ 主机名 hostname 中已为您删除以下"+dname.length+"个匹配项:"+"\n"+dname.join(",") )}
 				}  // if cc -hostname
 				else{
 					drewrite.push(cc);
@@ -228,7 +235,7 @@ function Rewrite_Filter(subs,Pout){
 					} //else
 		}
 	}//cnt for
-	if(drewrite.length>0){$notify("🤖 您添加的[rewrite]过滤关键词为："+Pout0.join(", "),"☠️ 复写 rewrite 中已为您禁用以下"+drewrite.length+"个匹配项",drewrite.join("\n") )};
+	if(drewrite.length>0){$notify("🤖 您为 "+"["+subtag+"]"+" 添加的 [rewrite] 过滤关键词为:","🚫 "+Pout0.join(", "),"☠️ 复写 rewrite 中已为您禁用以下"+drewrite.length+"个匹配项:"+"\n"+drewrite.join("\n") )};
 	return nlist
 	}else { // Pout if
 //$notify("no filter at all")
@@ -256,8 +263,8 @@ function Rule_Handle(subs,Pout){
 			}
 		}//for cnt
 		var no=dlist.length
-		if(dlist.length>0){$notify("🤖 您添加的分流 [filter] 过滤关键词为："+out,"☠️ 已为您删除以下 "+no+"条匹配规则", dlist.join("\n"))
-		}else{$notify("🤖 您添加的[filter]过滤关键词为："+out,"☠️ 没有发现任何匹配项",dlist)}
+		if(dlist.length>0){$notify("🤖 您为 "+"["+subtag+"]"+" 添加的分流 [filter] 过滤关键词为:","🚫 "+out,"☠️ 已为您删除以下 "+no+"条匹配规则:"+"\n"+dlist.join("\n"))
+		}else{$notify("🤖 您为 "+"["+subtag+"]"+" 添加的[filter]过滤关键词为:","🚫 "+out,"☠️ 没有发现任何匹配项")}
 		return nlist
 	} else{return cnt.map(Rule_Policy)}//if Pout
 }
@@ -282,7 +289,7 @@ function Rule_Policy(content){ //增加、替换 policy
 		ply0 = Ppolicy!="Shawn"? Ppolicy:cnt[2]
 		nn=cnt[0]+", "+cnt[1]+", "+ply0+", "+cnt[3]
 	}else if(!RuleK.some(RuleCheck)&& content){
-		$notify("未能解析其中部分规则",content);
+		$notify("未能解析"+"["+subtag+"]"+"其中部分规则:",content);
 		return ""
 	}else{return ""}
 	if(cnt[0].indexOf("URL-REGEX")!=-1 || cnt[0].indexOf("PROCESS")!=-1){
@@ -294,8 +301,8 @@ function Rule_Policy(content){ //增加、替换 policy
 
 //混合订阅类型，用于整体进行了 base64 encode 后的类型
 function SubsEd2QX(subs,Pudp,Ptfo,Pcert,Ptls13){ 
-	const $base64 = new Base64()
-	var list0=$base64.decode(subs).split("\n");
+	var list0=Base64.decode(subs).split("\n");
+	//$notify("After B64","lists",list0)
 	var QuanXK=["shadowsocks=","trojan=","vmess=","http="];
 	var SurgeK=["=ss","=vmess","=trojan","=http","=custom"];
 	var QXlist=[];
@@ -329,7 +336,6 @@ function SubsEd2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 
 //混合订阅类型，用于未整体进行 base64 encode 的类型
 function Subs2QX(subs,Pudp,Ptfo,Pcert,Ptls13){ 
-	//const $base64 = new Base64()
 	var list0=subs.split("\n");
 	var QuanXK=["shadowsocks=","trojan=","vmess=","http="];
 	var SurgeK=["=ss","=vmess","=trojan","=http"];
@@ -372,15 +378,20 @@ function TagCheck_QX(content){
 		var nm=item.split("tag")[1].split("=")[1].trim() // get tag
 		if(nm==""){
 			nm=" ["+item.split("=")[0]+"] "+item.split("=")[1].split(",")[0].split(":")[0]
-			$notify("⚠️ 订阅内出现空节点名:", "✅ 已自动将节点“类型+IP”作为节点名","✅ "+nm)
+			$notify("⚠️ "+"["+subtag+"]"+" 订阅内出现空节点名 ", "✅ 已自动将节点“类型+IP”作为节点名","✅ "+nm)
 			item=item.split("tag")[0]+"tag="+nm
 		}
+		var ni=0
 		while(nmlist.indexOf(nm)!=-1){
-			$notify("⚠️ 订阅内出现重复节点名:", "⚠️ "+ nm, "✅ 已自动添加“”符号作为区分:"+nm+"")
-			nm=nm+""
+			ni=ni+1
+			nm=nm.split("")[0]+"^"+ni
 			item=item.split("tag")[0]+"tag="+nm
 			}	
-		nmlist.push(nm)		
+		if(ni!=0){
+			$notify("⚠️ "+"["+subtag+"]"+" 订阅内出现重复节点名 ", "⚠️ "+ nm.split("")[0], "✅ 已自动添加“”符号作为区分:"+nm)
+			}
+		nmlist.push(nm)	
+		ni=0	
 		Nlist.push(item)
 		
 		}
@@ -390,10 +401,9 @@ function TagCheck_QX(content){
 
 //V2RayN uri转换成 QUANX 格式
 function V2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
-	const $base64 = new Base64()
 	var cert=Pcert
 	var tls13=Ptls13
-	var server=String($base64.decode(subs.replace("vmess://","")).trim()).split("\u0000")[0];
+	var server=String(Base64.decode(subs.replace("vmess://","")).trim()).split("\u0000")[0];
 	var nss=[];
 	if(server!=""){
 		ss=JSON.parse(server);
@@ -495,26 +505,25 @@ function filter(servers,Pin,Pout){
 
 //SSR 类型 URI 转换 quanx 格式
 function SSR2QX(subs,Pudp,Ptfo){
-	const $base64 = new Base64()
 	var nssr=[]
-	var cnt=$base64.decode(subs.split("ssr://")[1].replace(/-/g,"+").replace(/_/g,"/")).split("\u0000")[0]
+	var cnt=Base64.decode(subs.split("ssr://")[1].replace(/-/g,"+").replace(/_/g,"/")).split("\u0000")[0]
 	var obfshost = '';
 	var oparam = '';
 	if(cnt.split(":").length<=6) { //排除难搞的 ipv6 节点
 	type="shadowsocks=";
 	ip=cnt.split(":")[0]+":"+cnt.split(":")[1];
-	pwd="password="+$base64.decode(cnt.split("/?")[0].split(":")[5].replace(/-/g,"+").replace(/_/g,"/")).split("\u0000")[0];
+	pwd="password="+Base64.decode(cnt.split("/?")[0].split(":")[5].replace(/-/g,"+").replace(/_/g,"/")).split("\u0000")[0];
 	mtd="method="+cnt.split(":")[3];
 	obfs="obfs="+cnt.split(":")[4]+", ";
 	ssrp="ssr-protocol="+cnt.split(":")[2];
 	if(cnt.indexOf("obfsparam=")!=-1){
-		obfshost=cnt.split("obfsparam=")[1].split("&")[0]!=""? "obfs-host="+$base64.decode(cnt.split("obfsparam=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/")).split(",")[0].split("\u0000")[0]+", ":""
+		obfshost=cnt.split("obfsparam=")[1].split("&")[0]!=""? "obfs-host="+Base64.decode(cnt.split("obfsparam=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/")).split(",")[0].split("\u0000")[0]+", ":""
 	}
 	if(cnt.indexOf("protoparam=")!=-1){
-		oparam=cnt.split("protoparam=")[1].split("&")[0]!=""? "ssr-protocol-param="+$base64.decode(cnt.split("protoparam=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/")).split(",")[0].split("\u0000")[0]+", ":""
+		oparam=cnt.split("protoparam=")[1].split("&")[0]!=""? "ssr-protocol-param="+Base64.decode(cnt.split("protoparam=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/")).split(",")[0].split("\u0000")[0]+", ":""
 	}
-	tag="tag="+($base64.decode(cnt.split("remarks=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/"))).split("\u0000")[0]
-	//console.log($base64.decode(cnt.split("remarks=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/")))
+	tag="tag="+(Base64.decode(cnt.split("remarks=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/"))).split("\u0000")[0]
+	//console.log(Base64.decode(cnt.split("remarks=")[1].split("&")[0].replace(/-/g,"+").replace(/_/g,"/")))
 	pudp= Pudp==1? "udp-relay=true":"udp-relay=false";
 	ptfo= Ptfo==1? "fast-open=true":"fast-open=false";
 	nssr.push(type+ip,pwd,mtd,obfs+obfshost+oparam+ssrp,pudp,ptfo,tag)
@@ -531,7 +540,7 @@ function TJ2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 	if(cnt.indexOf(":443")!=-1){
 		ip=cnt.split("@")[1].split(":443")[0]+":443";
 	}else{
-		ip=cnt.split("@")[1].split("?")[0]; //非 443 端口的奇葩机场？
+		ip=cnt.split("@")[1].split("?")[0].split("\n")[0].trim(); //非 443 端口的奇葩机场？
 	}
 	pwd="password="+cnt.split("@")[0];
 	obfs="over-tls=true";
@@ -540,7 +549,7 @@ function TJ2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 	if(Pcert==0){pcert="tls-verification=false"}	
 	pudp= Pudp==1? "udp-relay=true":"udp-relay=false";
 	ptfo= Ptfo==1? "fast-open=true":"fast-open=false";
-	tag="tag="+decodeURIComponent(cnt.split("#")[1])
+	tag=cnt.indexOf("#")!=-1? "tag="+decodeURIComponent(cnt.split("#")[1]):"tag= [trojan]"+ip
 	ntrojan.push(type+ip,pwd,obfs,pcert,ptls13,pudp,ptfo,tag)
 	QX=ntrojan.join(", ");
 	return QX;
@@ -548,16 +557,16 @@ function TJ2QX(subs,Pudp,Ptfo,Pcert,Ptls13){
 
 //SS 类型 URI 转换 quanx 格式
 function SS2QX(subs,Pudp,Ptfo){
-	const $base64 = new Base64()
 	var nssr=[]
-	var cnt=subs.split("ss://")[1]	
+	var cnt=subs.split("ss://")[1]
+	//$notify("SS转换 ing","SS",cnt)	
 	if(cnt.split(":").length<=6) { //排除难搞的 ipv6 节点
 	type="shadowsocks=";
 	if(cnt.indexOf("@")!=-1){
 		ip=cnt.split("@")[1].split("#")[0].split("/")[0];
-		pwdmtd=$base64.decode(cnt.split("@")[0].replace(/-/g,"+").replace(/_/g,"/")).split("\u0000")[0].split(":")
+		pwdmtd=Base64.decode(cnt.split("@")[0].replace(/-/g,"+").replace(/_/g,"/")).split("\u0000")[0].split(":")
 	}else{
-		var cnt0=$base64.decode(cnt.split("#")[0].replace(/-/g,"+").replace(/_/g,"/").split("\u0000")[0]);
+		var cnt0=Base64.decode(cnt.split("#")[0].replace(/-/g,"+").replace(/_/g,"/").split("\u0000")[0]);
 		ip=cnt0.split("@")[1].split("#")[0].split("/")[0];
 		pwdmtd=cnt0.split("@")[0].split(":")
 
@@ -670,7 +679,7 @@ function emoji_handle(servers,Pemoji){
 		var oname=ser0[i].split("tag=")[1];
 		var hd=ser0[i].split("tag=")[0];
 		var nname=emoji_del(oname);
-		var Lmoji={"🏳️‍🌈": ["流量","时间","应急","过期","Bandwidth","expire"],"🇦🇨": ["AC"],"🇦🇹": ["奥地利","维也纳"],"🇦🇺": ["AU","Australia","Sydney","澳大利亚","澳洲","墨尔本","悉尼"],"🇧🇪": ["BE","比利时"],"🇧🇬️": ["保加利亚"],"🇧🇷": ["BR","Brazil","巴西","圣保罗"],"🇨🇦": ["Canada","Waterloo","加拿大","蒙特利尔","温哥华","楓葉","枫叶","滑铁卢","多伦多"],"🇨🇭": ["瑞士","苏黎世"],"🇩🇪": ["DE","German","GERMAN","德国","德國","法兰克福"],"🇩🇰": ["丹麦"],"🇪🇸": ["ES"],"🇪🇺": ["EU"],"🇫🇮": ["Finland","芬兰","赫尔辛基"],"🇫🇷": ["FR","France","法国","法國","巴黎"],"🇬🇧": ["UK","GB","England","United Kingdom","英国","伦敦","英"],"🇲🇴": ["MO","Macao","澳门","CTM"],"🇭🇺":["匈牙利","Hungary"],"🇭🇰": ["HK","Hongkong","Hong Kong","香港","深港","沪港","呼港","HKT","HKBN","HGC","WTT","CMI","穗港","京港","港"],"🇮🇩": ["Indonesia","印尼","印度尼西亚","雅加达"],"🇮🇪": ["Ireland","爱尔兰","都柏林"],"🇮🇳": ["India","印度","孟买","Mumbai"],"🇮🇹": ["Italy","Nachash","意大利","米兰","義大利"],"🇯🇵": ["JP","Japan","日本","东京","大阪","埼玉","沪日","穗日","川日","中日","泉日","杭日","深日","辽日"],"🇰🇵": ["KP","朝鲜"],"🇰🇷": ["KR","Korea","KOR","韩国","首尔","韩","韓"],"🇲🇽️": ["MEX","MX","墨西哥"],"🇲🇾": ["MY","Malaysia","马来西亚","吉隆坡"],"🇳🇱": ["NL","Netherlands","荷兰","荷蘭","尼德蘭","阿姆斯特丹"],"🇵🇭": ["PH","Philippines","菲律宾"],"🇷🇴": ["RO","罗马尼亚"],"🇷🇺": ["RU","Russia","俄罗斯","俄羅斯","伯力","莫斯科","圣彼得堡","西伯利亚","新西伯利亚","京俄","杭俄"],"🇸🇦": ["沙特","迪拜"],"🇸🇪": ["SE","Sweden"],"🇸🇬": ["SG","Singapore","新加坡","狮城","沪新","京新","泉新","穗新","深新","杭新"],"🇹🇭": ["TH","Thailand","泰国","泰國","曼谷"],"🇹🇷": ["TR","Turkey","土耳其","伊斯坦布尔"],"🇹🇼": ["TW","Taiwan","台湾","台北","台中","新北","彰化","CHT","台","HINET"],"🇺🇸": ["US","USA","America","United States","美国","美","京美","波特兰","达拉斯","俄勒冈","凤凰城","费利蒙","硅谷","矽谷","拉斯维加斯","洛杉矶","圣何塞","圣克拉拉","西雅图","芝加哥","沪美","哥伦布","纽约"],"🇻🇳": ["VN","越南","胡志明市"],"🇿🇦":["South Africa","南非"],"🇦🇪":["United Arab Emirates","阿联酋"],"🇦🇷": ["AR","阿根廷"],"🇨🇳": ["CN","China","回国","中国","江苏","北京","上海","广州","深圳","杭州","徐州","青岛","宁波","镇江","back"]}
+		var Lmoji={"🏳️‍🌈": ["流量","时间","应急","过期","Bandwidth","expire"],"🇦🇨": ["AC"],"🇦🇹": ["奥地利","维也纳"],"🇦🇺": ["AU","Australia","Sydney","澳大利亚","澳洲","墨尔本","悉尼"],"🇧🇪": ["BE","比利时"],"🇧🇬️": ["保加利亚","Bulgaria"],"🇧🇷": ["BR","Brazil","巴西","圣保罗"],"🇨🇦": ["Canada","Waterloo","加拿大","蒙特利尔","温哥华","楓葉","枫叶","滑铁卢","多伦多"],"🇨🇭": ["瑞士","苏黎世"],"🇩🇪": ["DE","German","GERMAN","德国","德國","法兰克福"],"🇩🇰": ["丹麦"],"🇪🇸": ["ES"],"🇪🇺": ["EU"],"🇫🇮": ["Finland","芬兰","赫尔辛基"],"🇫🇷": ["FR","France","法国","法國","巴黎"],"🇬🇧": ["UK","GB","England","United Kingdom","英国","伦敦","英"],"🇲🇴": ["MO","Macao","澳门","CTM"],"🇭🇺":["匈牙利","Hungary"],"🇭🇰": ["HK","Hongkong","Hong Kong","香港","深港","沪港","呼港","HKT","HKBN","HGC","WTT","CMI","穗港","京港","港"],"🇮🇩": ["Indonesia","印尼","印度尼西亚","雅加达"],"🇮🇪": ["Ireland","爱尔兰","都柏林"],"🇮🇳": ["India","印度","孟买","Mumbai"],"🇮🇹": ["Italy","Nachash","意大利","米兰","義大利"],"🇯🇵": ["JP","Japan","日本","东京","大阪","埼玉","沪日","穗日","川日","中日","泉日","杭日","深日","辽日"],"🇰🇵": ["KP","朝鲜"],"🇰🇷": ["KR","Korea","KOR","韩国","首尔","韩","韓"],"🇲🇽️": ["MEX","MX","墨西哥"],"🇲🇾": ["MY","Malaysia","马来西亚","吉隆坡"],"🇳🇱": ["NL","Netherlands","荷兰","荷蘭","尼德蘭","阿姆斯特丹"],"🇵🇭": ["PH","Philippines","菲律宾"],"🇷🇴": ["RO","罗马尼亚"],"🇷🇺": ["RU","Russia","俄罗斯","俄羅斯","伯力","莫斯科","圣彼得堡","西伯利亚","新西伯利亚","京俄","杭俄"],"🇸🇦": ["沙特","迪拜"],"🇸🇪": ["SE","Sweden"],"🇸🇬": ["SG","Singapore","新加坡","狮城","沪新","京新","泉新","穗新","深新","杭新"],"🇹🇭": ["TH","Thailand","泰国","泰國","曼谷"],"🇹🇷": ["TR","Turkey","土耳其","伊斯坦布尔"],"🇹🇼": ["TW","Taiwan","台湾","台北","台中","新北","彰化","CHT","台","HINET"],"🇺🇸": ["US","USA","America","United States","美国","美","京美","波特兰","达拉斯","俄勒冈","凤凰城","费利蒙","硅谷","矽谷","拉斯维加斯","洛杉矶","圣何塞","圣克拉拉","西雅图","芝加哥","沪美","哥伦布","纽约"],"🇻🇳": ["VN","越南","胡志明市"],"🇿🇦":["South Africa","南非"],"🇦🇪":["United Arab Emirates","阿联酋"],"🇦🇷": ["AR","阿根廷"],"🇨🇳": ["CN","China","回国","中国","江苏","北京","上海","广州","深圳","杭州","徐州","青岛","宁波","镇江","back"]}
 		if(Pemoji==1) { 
 			str1 = JSON.stringify(Lmoji)
 			aa=JSON.parse(str1)
@@ -831,284 +840,152 @@ function Shttp2QX(content){
 	return nserver
 }
 
-
-// Base64, adapted from internet : https://www.jianshu.com/p/54084db83d70
-function Base64(){
-	
-	// 一般的Base64编码字符
-	var commonbase64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-	// 对URL进行编码使用的字符
-	var urlBase64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-	
-	// Base64解码用到的映射表，兼容一般编码的Base64和针对URL进行扩展编码的Base64
-	var base64DecodeChars = new Array(
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-		-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 62, 63, -1, -1, 63,
-		52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -1, -1, -1,
-		-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-		15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, 62, -1,
-		-1, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-		41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, -1, -1, -1, -1, -1);
-	
-	
-	/** 通用的Base64编码函数
-	 * str为待编码的串
-	 * isUrl用来表明编码的对象(str)是否是一个URL
-	*/
-	function base64encode(str,isUrl){
-		var out, i, len;
-		var c1, c2, c3;
-		
-		// 针对不同的编码方式，选择不同的字符集
-		var base64EncodeChars = isUrl ? urlBase64EncodeChars : commonbase64EncodeChars;
-		
-		len = str.length;
-		i = 0;
-		out = "";
-		while(i < len){
-			c1 = str.charCodeAt(i++) & 0xff;
-			
-			// 当最后只有一个字节时
-			if(i == len){
-				out += base64EncodeChars.charAt(c1 >> 2);
-				out += base64EncodeChars.charAt((c1 & 0x3) << 4);
-				out += "==";
-				break;
-			}
-			
-			
-			c2 = str.charCodeAt(i++);
-
-			// 当最后剩余两个字节时
-			if(i == len){
-				out += base64EncodeChars.charAt(c1 >> 2);
-				out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-				out += base64EncodeChars.charAt((c2 & 0xF) << 2);
-				out += "=";
-				break;
-			}
-			
-			//当剩余字节数大于等于3时
-			c3 = str.charCodeAt(i++);
-			out += base64EncodeChars.charAt(c1 >> 2);
-			out += base64EncodeChars.charAt(((c1 & 0x3) << 4) | ((c2 & 0xF0) >> 4));
-			out += base64EncodeChars.charAt(((c2 & 0xF) << 2) | ((c3 & 0xC0) >> 6));
-			out += base64EncodeChars.charAt(c3 & 0x3F);
+//比较完美的一款 base64 encode/decode 工具
+/*
+ *  base64.js: https://github.com/dankogai/js-base64#readme
+ *
+ *  Licensed under the BSD 3-Clause License.
+ *    http://opensource.org/licenses/BSD-3-Clause
+ *
+ *  References:
+ *    http://en.wikipedia.org/wiki/Base64
+ */
+//base64 完毕
+function Base64Code(){
+	// constants
+	var b64chars
+		= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+	var b64tab = function(bin) {
+		var t = {};
+		for (var i = 0, l = bin.length; i < l; i++) t[bin.charAt(i)] = i;
+		return t;
+	}(b64chars);
+	var fromCharCode = String.fromCharCode;
+	// encoder stuff
+	var cb_utob = function(c) {
+		if (c.length < 2) {
+			var cc = c.charCodeAt(0);
+			return cc < 0x80 ? c
+				: cc < 0x800 ? (fromCharCode(0xc0 | (cc >>> 6))
+								+ fromCharCode(0x80 | (cc & 0x3f)))
+				: (fromCharCode(0xe0 | ((cc >>> 12) & 0x0f))
+					+ fromCharCode(0x80 | ((cc >>>  6) & 0x3f))
+					+ fromCharCode(0x80 | ( cc         & 0x3f)));
+		} else {
+			var cc = 0x10000
+				+ (c.charCodeAt(0) - 0xD800) * 0x400
+				+ (c.charCodeAt(1) - 0xDC00);
+			return (fromCharCode(0xf0 | ((cc >>> 18) & 0x07))
+					+ fromCharCode(0x80 | ((cc >>> 12) & 0x3f))
+					+ fromCharCode(0x80 | ((cc >>>  6) & 0x3f))
+					+ fromCharCode(0x80 | ( cc         & 0x3f)));
 		}
-		return out;
-	}
-
-	/**
-	 * Base64解码函数
-	 * @param str
-	 * @returns {*}
-	 */
-	function base64decode(str){
-		var c1, c2, c3, c4;
-		var i, len, out;
-		
-		len = str.length;
-		i = 0;
-		out = "";
-		while(i < len){
-			/*  得到第一个字符 c1
-				* 并过虑掉前后所有与Base64编码无关的字符
-				* */
-			do{
-				c1 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
-			}while(i < len && c1 == -1);
-			
-			// 如果已经到达字符串结尾，并最后还未得到有效的Base64编码字符就结尾循环
-			if(c1 == -1)
-				break;
-			
-			/*  得到字符 c2
-			 * 并过滤掉所有与Base64编码无关的字符
-			 */
-			do{
-				c2 = base64DecodeChars[str.charCodeAt(i++) & 0xff];
-			}while(i < len && c2 == -1);
-
-			// 如果已经到达字符串结尾，并最后还未得到有效的Base64编码字符就结尾循环
-			if(c2 == -1)
-				break;
-			
-			// 根据Base64编码的 c1 和 c2 解码得到一个编码前的字符
-			out += String.fromCharCode((c1 << 2) | ((c2 & 0x30) >> 4));
-
-			/*  得到字符 c3
-			 * 并过滤掉所有与Base64编码无关的字符
-			 * 如果获取的 c3 是 '=' 字符则说明已经解码完成，返回解码得到的字符串
-			 */
-			do{
-				c3 = str.charCodeAt(i++) & 0xff;
-				if(c3 == 61)
-					return out;
-				c3 = base64DecodeChars[c3];
-			}while(i < len && c3 == -1);
-
-			// 如果已经到达字符串结尾，并最后还未得到有效的Base64编码字符就结尾循环
-			if(c3 == -1)
-				break;
-			
-			// 根据Base64编码的 c2 和 c3 解码得到一个编码前的字符
-			out += String.fromCharCode(((c2 & 0XF) << 4) | ((c3 & 0x3C) >> 2));
-			
-			/* 这一步就比较复杂了
-			 * 先是尝试获取第四个Base64 编码的字符 c4
-			 * 如果获取的 c4 是 '=' 字符则说明已经解码完成，返回解码得到的字符串
-			 * */
-			do{
-				c4 = str.charCodeAt(i++) & 0xff;
-				if(c4 == 61)
-					return out;
-				c4 = base64DecodeChars[c4];
-			}while(i < len && c4 == -1);
-
-			// 如果已经到达字符串结尾，并最后还未得到有效的Base64编码字符就结尾循环
-			if(c4 == -1)
-				break;
-
-			// 根据Base64编码的 c3 和 c4 解码得到一个编码前的字符
-			out += String.fromCharCode(((c3 & 0x03) << 6) | c4);
+	};
+	var re_utob = /[\uD800-\uDBFF][\uDC00-\uDFFFF]|[^\x00-\x7F]/g;
+	var utob = function(u) {
+		return u.replace(re_utob, cb_utob);
+	};
+	var cb_encode = function(ccc) {
+		var padlen = [0, 2, 1][ccc.length % 3],
+		ord = ccc.charCodeAt(0) << 16
+			| ((ccc.length > 1 ? ccc.charCodeAt(1) : 0) << 8)
+			| ((ccc.length > 2 ? ccc.charCodeAt(2) : 0)),
+		chars = [
+			b64chars.charAt( ord >>> 18),
+			b64chars.charAt((ord >>> 12) & 63),
+			padlen >= 2 ? '=' : b64chars.charAt((ord >>> 6) & 63),
+			padlen >= 1 ? '=' : b64chars.charAt(ord & 63)
+		];
+		return chars.join('');
+	};
+	var btoa = function(b) {
+		return b.replace(/[\s\S]{1,3}/g, cb_encode);
+	};
+	// var _encode = function(u) {
+	// 	var isUint8Array = Object.prototype.toString.call(u) === '[object Uint8Array]';
+	// 	return isUint8Array ? u.toString('base64')
+	// 		: btoa(utob(String(u)));
+	// }
+	this.encode=function(u){
+			var isUint8Array = Object.prototype.toString.call(u) === '[object Uint8Array]';
+			return isUint8Array ? u.toString('base64')
+				: btoa(utob(String(u)));
 		}
-		return out;
-	}
-
-	/**
-	 * 把 unicode 码转换成 utf8 编码
-	 * @param str
-	 * @returns {string}
-	 */
-	function unicodeToUtf8(str){
-		var out, i, len, c;
-		
-		out = "";
-		len = str.length;
-		for(i = 0; i < len; i++){
-			c = str.charCodeAt(i);
-			
-			// 兼容 ASCII
-			if((c >= 0x0001) && (c <= 0x007F)){
-				out += str.charAt(i);
-			}else if(c > 0x07FF){
-				// 占三个字节的 utf8
-				out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
-				out += String.fromCharCode(0x80 | ((c >> 6) & 0x3F));
-				out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-			}else{
-				// 占两个字节的 utf8
-				out += String.fromCharCode(0xC0 | ((c >> 6) & 0x1F));
-				out += String.fromCharCode(0x80 | ((c >> 0) & 0x3F));
-			}
+	var uriencode = function(u, urisafe) {
+		return !urisafe
+			? _encode(u)
+			: _encode(String(u)).replace(/[+\/]/g, function(m0) {
+				return m0 == '+' ? '-' : '_';
+			}).replace(/=/g, '');
+	};
+	var encodeURI = function(u) { return uriencode(u, true) };
+	// decoder stuff
+	var re_btou = /[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF]{2}|[\xF0-\xF7][\x80-\xBF]{3}/g;
+	var cb_btou = function(cccc) {
+		switch(cccc.length) {
+		case 4:
+			var cp = ((0x07 & cccc.charCodeAt(0)) << 18)
+				|    ((0x3f & cccc.charCodeAt(1)) << 12)
+				|    ((0x3f & cccc.charCodeAt(2)) <<  6)
+				|     (0x3f & cccc.charCodeAt(3)),
+			offset = cp - 0x10000;
+			return (fromCharCode((offset  >>> 10) + 0xD800)
+					+ fromCharCode((offset & 0x3FF) + 0xDC00));
+		case 3:
+			return fromCharCode(
+				((0x0f & cccc.charCodeAt(0)) << 12)
+					| ((0x3f & cccc.charCodeAt(1)) << 6)
+					|  (0x3f & cccc.charCodeAt(2))
+			);
+		default:
+			return  fromCharCode(
+				((0x1f & cccc.charCodeAt(0)) << 6)
+					|  (0x3f & cccc.charCodeAt(1))
+			);
 		}
-		return out;
+	};
+	var btou = function(b) {
+		return b.replace(re_btou, cb_btou);
+	};
+	var cb_decode = function(cccc) {
+		var len = cccc.length,
+		padlen = len % 4,
+		n = (len > 0 ? b64tab[cccc.charAt(0)] << 18 : 0)
+			| (len > 1 ? b64tab[cccc.charAt(1)] << 12 : 0)
+			| (len > 2 ? b64tab[cccc.charAt(2)] <<  6 : 0)
+			| (len > 3 ? b64tab[cccc.charAt(3)]       : 0),
+		chars = [
+			fromCharCode( n >>> 16),
+			fromCharCode((n >>>  8) & 0xff),
+			fromCharCode( n         & 0xff)
+		];
+		chars.length -= [0, 0, 2, 1][padlen];
+		return chars.join('');
+	};
+	var _atob = function(a){
+		return a.replace(/\S{1,4}/g, cb_decode);
+	};
+	var atob = function(a) {
+		return _atob(String(a).replace(/[^A-Za-z0-9\+\/]/g, ''));
+	};
+	// var _decode = buffer ?
+	// 	buffer.from && Uint8Array && buffer.from !== Uint8Array.from
+	// 	? function(a) {
+	// 		return (a.constructor === buffer.constructor
+	// 				? a : buffer.from(a, 'base64')).toString();
+	// 	}
+	// 	: function(a) {
+	// 		return (a.constructor === buffer.constructor
+	// 				? a : new buffer(a, 'base64')).toString();
+	// 	}
+	// 	: function(a) { return btou(_atob(a)) };
+	var _decode=function(u){
+		return btou(_atob(u))
 	}
-
-	/**
-	 * 把 utf8 编码转换成 unicode 码
-	 * @param str
-	 * @returns {string}
-	 */
-	function utf8ToUnicode(str){
-		var out, i, len, c;
-		var char2, char3;
-		
-		out = "";
-		len = str.length;
-		i = 0;
-		while(i < len){
-			c = str.charCodeAt(i++);
-			switch(c >> 4){
-				case 0:
-				case 1:
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-				case 6:
-				case 7:
-					// 0xxxxxxx ASCII 编码
-					out += str.charAt(i - 1);
-					break;
-				case 12:
-				case 13:
-					// 110x xxxx   10xx xxxx
-					// 占两个字节的 utf8
-					char2 = str.charCodeAt(i++);
-					out += String.fromCharCode(((c & 0x1F) << 6) | (char2 & 0x3F));
-					break;
-				case 14:
-					// 1110 xxxx  10xx xxxx  10xx xxxx
-					// 占三个字节的 utf8
-					char2 = str.charCodeAt(i++);
-					char3 = str.charCodeAt(i++);
-					out += String.fromCharCode(((c & 0x0F) << 12) |
-						((char2 & 0x3F) << 6) |
-						((char3 & 0x3F) << 0));
-					break;
-			}
-		}
-		
-		return out;
-	}
-
-	/**
-	 * 转成 十六 进制编码
-	 * @param str
-	 * @returns {string}
-	 * @constructor
-	 */
-	function CharToHex(str){
-		var out, i, len, c, h;
-		out = "";
-		len = str.length;
-		i = 0;
-		while(i < len){
-			c = str.charCodeAt(i++);
-			
-			// 把数据转换成十六进制的字符串
-			h = c.toString(16);
-			if(h.length < 2)
-				h = "0" + h;
-			
-			out += "\\x" + h + " ";
-			if(i > 0 && i % 8 == 0)
-				out += "\r\n";
-		}
-		
-		return out;
-	}
-	
-	this.encode=function(str){
-				// 普通 Base64 编码
-				return base64encode(unicodeToUtf8(str));
-			};
-	this.decode=function(str){
-				// 普通 Base64 编码
-				return utf8ToUnicode(base64decode(str));
-			};
-//	base64={
-//		encode:function(str){
-//			// 普通 Base64 编码
-//			return base64encode(unicodeToUtf8(str));
-//		},
-//		encodeUrl:function(str){
-//			// 使用 Base64 编码字符串
-//			return base64encode(unicodeToUtf8(str),1)
-//		},
-//		decode:function(str){
-//			// 兼容的 Base64 解码
-//			return utf8ToUnicode(base64decode(str));
-//		},
-//		encodeToHex:function(str){
-//			// 普通 Base64 编码 以十六进制显示
-//			return CharToHex(base64encode(unicodeToUtf8(str)));
-//		},
-//		encodeUrlToHex:function(str){
-//			// 使用 Base64 编码 url 以十六进制显示
-//			return CharToHex(base64encode(unicodeToUtf8(str),1));
-//		}
-//	}
-};
+	this.decode = function(a){
+		return _decode(
+			String(a).replace(/[-_]/g, function(m0) { return m0 == '-' ? '+' : '/' })
+				.replace(/[^A-Za-z0-9\+\/]/g, '')
+		);
+	};
+}
