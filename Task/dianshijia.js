@@ -77,7 +77,6 @@ async function all()
   await signinfo();
   await SpWatchVideo();
   await coinlist();
-
 }
 
 function sign() {      
