@@ -123,7 +123,7 @@ function lottery() {
     let lotteryres = JSON.parse(data)
       Incomplete = lotteryres.data.totalSteps - lotteryres.data.doneSteps
      if (Incomplete >0 ){
-        for (k=0;k<data.homeActivities.length;k++){
+        for (k=0;k<task.data.homeActivities.length;k++){
      if (task.data.homeActivities[k].participated==false&&k>=Incomplete){
        lotteryId = task.data.homeActivities[k].activityId
        cycleLucky()
