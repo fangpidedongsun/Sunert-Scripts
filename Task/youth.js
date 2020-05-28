@@ -63,8 +63,8 @@ hostname = *.youth.cn, ios.baertt.com
 ~~~~~~~~~~~~~~~~
 
 */
-const logs = 0   //0为关闭日志，1为开启，默认关闭
 const notifyInterval = `10`  //通知间隔，默认抽奖每10次通知一次
+const logs = 0;   //0为关闭日志，1为开启
 const CookieName = "中青看点"
 const signheaderKey = 'youthheader_zq'
 const gamebodyKey = 'youthgame_zq'
@@ -598,6 +598,7 @@ function earningsInfo() {
     detail += '【'+infores.history[0].group[i].name+'】  '+ infores.history[0].group[i].money+'个青豆\n'
      }
     detail += '<今日合计>： '+infores.history[0].score+" 青豆"
+    sy.log(CookieName+" "+nick+"  "+subTitle+detail)
     resolve()
      })
    })
