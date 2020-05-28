@@ -153,7 +153,7 @@ return new Promise((resolve, reject) => {
          redpackgot = article.data.extends.redpack_got
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
-      if (redpackgot < redpacktotal-1){
+      if (redpackgot < redpacktotal){
      articletotal = '【红包领取】已领/共计 '+ redpackgot+'/'+redpacktotal +' 次\n【阅读文章】篇数/阶梯 '+ haveread+'/'+getreadpack+'篇\n'
      }
       if (redpackgot == redpacktotal){
