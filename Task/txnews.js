@@ -154,7 +154,7 @@ return new Promise((resolve, reject) => {
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
       if (redpackgot < redpacktotal-1){
-     articletotal = '【红包领取】已领/共计 '+ redpackgot+' / '+redpacktotal +'\n【阅读文章】篇数/阶梯 '+ haveread+' / '+getreadpack+'\n'
+     articletotal = '【红包领取】已领/共计 '+ redpackgot+'/'+redpacktotal +' 次\n【阅读文章】篇数/阶梯 '+ haveread+'/'+getreadpack+'篇\n'
      }
       if (redpackgot == redpacktotal){
        articletotal = `【红包领取】`+ redpackgot+' / '+redpacktotal +' ✅\n'+'【阅读文章】 '+ haveread+' / '+getreadpack+' ✅'}
@@ -183,7 +183,7 @@ return new Promise((resolve, reject) => {
         sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-             redpack = `【阶梯红包】到账`+ rcash.data.redpack.amount/100 +`元 🧧 已经/未领 `+redpackgot+' / '+redpacktotal 
+             redpack = `【阶梯红包】到账 +`+ rcash.data.redpack.amount/100 +`元 🌷`
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){

@@ -49,7 +49,7 @@ Cookie获取后，请注释掉Cookie地址。
 #腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
 */
-const notify = 0; //开启全部通知为1，关闭继续阅读为1
+const notify = 0; //开启全部通知为1，关闭继续阅读为0
 const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews2'
 const cookieKey = 'sy_cookie_txnews2'
@@ -152,7 +152,7 @@ function StepsTotal() {
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
         if (redpackgot < redpacktotal-1){
-         articletotal = '【红包领取】已领/共计 '+ redpackgot+' / '+redpacktotal +'\n【阅读文章】篇数/阶梯 '+ haveread+' / '+getreadpack
+         articletotal = '【红包领取】已领/共计 '+ redpackgot+'/'+redpacktotal +' 次\n【阅读文章】篇数/阶梯 '+ haveread+'/'+getreadpack+"篇\n"
      }
       if (redpackgot == redpacktotal){
        articletotal = '【阅读文章】共阅读'+ haveread+' 篇    ✅'}
@@ -184,7 +184,7 @@ function Redpack() {
         sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-            redpack = `【阶梯红包】到账`+ rcash.data.redpack.amount/100 +`元 🧧 已经/未领 `+redpackgot+' / '+redpacktotal+'\n'
+            redpack = `【阶梯红包】到账 +`+ rcash.data.redpack.amount/100 +`元 🌷`+'\n'
            sy.msg(cookieName+signresult, notb, redpack+str)
            sy.log(cookieName+` `+notb+`\n`+ str)
             }
