@@ -109,7 +109,7 @@ function getsign() {
        tip =  obj.data.tip_soup
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
        signresult = '  签到成功🎉'
-       str =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明日+'+ next +'金币'}
+       signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明日+'+ next +'金币'}
       else {
         sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
         console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
@@ -154,14 +154,14 @@ return new Promise((resolve, reject) => {
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
       if (redpackgot < redpacktotal-1){
-     articletotal = '\n【红包领取】已领/共计 '+ redpackgot+' / '+redpacktotal +'\n【阅读文章】篇数/阶梯 '+ haveread+' / '+getreadpack
+     articletotal = '【红包领取】已领/共计 '+ redpackgot+' / '+redpacktotal +'\n【阅读文章】篇数/阶梯 '+ haveread+' / '+getreadpack+'\n'
      }
       if (redpackgot == redpacktotal){
-       articletotal = `\n【红包领取】`+ redpackgot+' / '+redpacktotal +' ✅\n'+'【阅读文章】 '+ haveread+' / '+getreadpack+' ✅'}
-        str += articletotal + `\n【每日一句】`+ Dictum
+       articletotal = `【红包领取】`+ redpackgot+' / '+redpacktotal +' ✅\n'+'【阅读文章】 '+ haveread+' / '+getreadpack+' ✅'}
+        str = articletotal +signinfo+ `\n【每日一句】`+ Dictum
          }
      else if (article.ret == 2011){
-       str += `\n【每日一句】`+ Dictum
+        str += `\n【每日一句】`+ Dictum
          }
      else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
