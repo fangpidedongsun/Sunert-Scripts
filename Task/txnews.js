@@ -107,8 +107,9 @@ function getsign() {
        console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
-       Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+"----- "+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
-       str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'}
+       Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
+       signresult = '  签到成功🎉'
+       str =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明日+'+ next +'金币'}
       else {
         sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
         console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
@@ -153,15 +154,14 @@ return new Promise((resolve, reject) => {
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
       if (redpackgot < redpacktotal-1){
-         articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可继续领取红包' }
-      if (redpackgot == redpacktotal-1){
-         articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可领取今日最后一次红包' }
+     articletotal = '\n【红包领取】已领/共计 '+ redpackgot+' / '+redpacktotal +'\n【阅读文章】篇数/阶梯 '+ haveread+' / '+getreadpack
+     }
       if (redpackgot == redpacktotal){
-       articletotal = `\n今日已阅读` + getreadpack+ `篇，`+ `共领取`+  redpackgot +`个阶梯红包`}
-        str += articletotal + `\n`+ Dictum
+       articletotal = `\n【红包领取】`+ redpackgot+' / '+redpacktotal +' ✅\n'+'【阅读文章】 '+ haveread+' / '+getreadpack+' ✅'}
+        str += articletotal + `\n【每日一句】`+ Dictum
          }
      else if (article.ret == 2011){
-       str += `\n`+ Dictum
+       str += `\n【每日一句】`+ Dictum
          }
      else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
@@ -183,24 +183,24 @@ return new Promise((resolve, reject) => {
         sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-             redpack = `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元 🌷`
+             redpack = `【阶梯红包】到账`+ rcash.data.redpack.amount/100 +`元 🧧 已经/未领 `+redpackgot+' / '+redpacktotal 
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
-             redpack = " 继续阅读领取红包"
+             redpack =  "【阶梯红包】"+redpackgot+' / '+redpacktotal+' 🔕' 
                }
           else { 
-             redpack = " 今日阶梯红包已领完"
+             redpack = "【阶梯红包】"+redpackgot+' / '+redpacktotal+' ✅' 
                }
              }
         else if (rcash.ret == 2016){
-            redpack = " "+rcash.info
+            redpack = "【阶梯红包】"+rcash.info+' ❎\n'
             }
         else if (rcash.ret == 1003){
-            redpack = " 请重新获取红包ID"
+            redpack = "【红包ID】 无❗️"
             }
         else {
-            redpack =  " "+rcash.info
+            redpack =  " "+rcash.info+`❌`
              }
         resolve()
       })
@@ -219,9 +219,9 @@ return new Promise((resolve, reject) => {
      if (log) console.log("获取收益信息" + data)
     } else {
      const obj = JSON.parse(data)
-        notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" +obj.data.wealth[1].title+'元'+ redpack}
+        notb = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'}
    if (notify == true){
-       sy.msg(cookieName, notb, str)
+       sy.msg(cookieName+signresult, notb, redpack+str)
        //sy.log(cookieName +","+notb+ "\n" +str)
        }
     resolve()
