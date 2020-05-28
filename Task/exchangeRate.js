@@ -23,9 +23,9 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 -----------------
 
  */
-const frommoney ='美元'          //使用币
-const exchangemoney = '人民币'   //换算币
-const moneynumb = '1'           //兑换金额
+const frommoney ='人民币'          //使用币
+const exchangemoney = '美元'   //换算币
+const moneynumb = '100'           //兑换金额
 
 let isQuantumultX = $task != undefined; //判断当前运行环境是否是qx
 let isSurge = $httpClient != undefined; //判断当前运行环境是否是surge
