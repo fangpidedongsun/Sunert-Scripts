@@ -50,6 +50,7 @@ Cookie获取后，请注释掉Cookie地址。
 
 */
 const notify = 1; //开启通知为1，关闭为0
+const logs = 0; // 日志开关
 const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews'
 const cookieKey = 'sy_cookie_txnews'
@@ -90,8 +91,8 @@ async function all()
   await StepsTotal();
   await Redpack();
   await getTotal();
-  await activity();
-  await titlebar();
+  //await activity();
+  //await titlebar();
 }
 
 //签到
@@ -101,17 +102,16 @@ function getsign() {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
    sy.post(llUrl, (error, response, data) => {   
-     sy.log(`${cookieName}签到 - data: ${data}`)
+     if(logs) sy.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
-       console.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
        signresult = '  签到成功🎉'
        signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明日+'+ next +'金币'}
       else {
-        sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
+       sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
         console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
      }
   resolve()
@@ -130,7 +130,7 @@ function toRead() {
       if (error){
       sy.msg(cookieName, '阅读:'+ error)
         }else{
-       sy.log(`${cookieName}阅读文章 - data: ${data}`)}
+       if(logs) sy.log(`${cookieName}阅读文章 - data: ${data}`)}
     })
   }
 
@@ -146,7 +146,7 @@ return new Promise((resolve, reject) => {
     },
   };
     sy.get(StepsUrl, (error, response, data) => {
-        sy.log(`${cookieName}阅读统计 - data: ${data}`)
+        if(logs) sy.log(`${cookieName}阅读统计 - data: ${data}`)
         article = JSON.parse(data)
         if (article.ret == 0){
         redpacktotal =  article.data.extends.redpack_total
@@ -180,7 +180,7 @@ return new Promise((resolve, reject) => {
     body: `activity_id=${RedID}`
   };
     sy.post(cashUrl, (error, response, data) => {
-        sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
+        if(logs) sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
              redpack = `【阶梯红包】到账 +`+ rcash.data.redpack.amount/100 +`元 🌷`
@@ -216,13 +216,13 @@ return new Promise((resolve, reject) => {
     sy.post(totalUrl, function(error,response, data) {
     if (error) {
         sy.msg("获取收益信息失败‼️", "", error);
-     if (log) console.log("获取收益信息" + data)
+     if (logs) console.log("获取收益信息" + data)
     } else {
      const obj = JSON.parse(data)
         notb = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'}
    if (notify == true){
        sy.msg(cookieName+signresult, notb, redpack+str)
-       //sy.log(cookieName +","+notb+ "\n" +str)
+       sy.log(cookieName +","+notb+ "\n" +str)
        }
     resolve()
     })
