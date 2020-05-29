@@ -75,7 +75,8 @@ async function all()
   await total();
   await cash();
   await signinfo();
-  await SpWatchVideo();
+  await watchvideo();
+  //await SpWatchVideo();
   await coinlist();
 }
 
@@ -132,9 +133,9 @@ function total() {
        }
       }
      catch(err){
-      err };
+      err }
+    resolve()
      })
-  resolve()
   }) 
 }
 function cash() {
@@ -145,8 +146,8 @@ function cash() {
       sy.log(`现金余额: ${data}`)
       const result = JSON.parse(data)
       subTitle += ' 现金: '+ result.data.amount/100+'元   '
-      resolve()
       })
+  resolve()
    })
 }
 
@@ -275,6 +276,21 @@ function SpWatchVideo() {
       const result = JSON.parse(data)
      if (result.errCode==0){
       //detail += `【激励视频】: `+result.getCoin+'＼n'
+      }
+   })
+resolve()
+ })
+}
+
+function watchvideo() {
+  return new Promise((resolve, reject) => {
+    let url = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=Mobilewatchvideo`, 
+    headers: JSON.parse(signheaderVal)}
+   sy.get(url, (error, response, data) => {
+      sy.log(`激励视频2: ${data}`)
+      const result = JSON.parse(data)
+     if (result.errCode==0){
+      //detail += `【激励视频】 `+result.data.getCoin+'＼n'
       }
    })
 resolve()
