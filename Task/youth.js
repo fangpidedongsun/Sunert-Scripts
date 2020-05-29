@@ -56,7 +56,6 @@ https?:\/\/ios\.baertt\.com\/v5\/Game\/GameVideoReward url script-request-body y
 
 https:\/\/ios\.baertt\.com\/v5\/article\/red_packet url script-request-body youth.js
 
-
 ~~~~~~~~~~~~~~~~
 [MITM]
 hostname = *.youth.cn, ios.baertt.com 
@@ -598,7 +597,6 @@ function earningsInfo() {
     detail += '【'+infores.history[0].group[i].name+'】  '+ infores.history[0].group[i].money+'个青豆\n'
      }
     detail += '<今日合计>： '+infores.history[0].score+" 青豆"
-    sy.log(CookieName+" "+nick+"  "+subTitle+detail)
     resolve()
      })
    })
@@ -615,7 +613,8 @@ function showmsg() {
   else if (rotaryres.code==10010){
     rotarynum = ` 转盘${rotaryres.msg}🎉`
    sy.msg(CookieName+" "+nick+"  "+rotarynum,subTitle,detail)
-      }
+      }    
+    sy.log(CookieName+" "+nick+"  \n"+subTitle+detail)
 }
 
 function init() {
