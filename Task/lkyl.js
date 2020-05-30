@@ -82,12 +82,11 @@ async function all()
   await sign();     // 签到
   await info();     // 账号信息
   await total();    // 总计
-  await status();   // 任务状态
   await tasklist(); // 任务列表
   await lottery();  // 0元抽奖
+  await status();   // 任务状态
   await Daily();    // 日常任务
   await exChange(); // 银豆兑换
- 
 }
 function sign() {
   return new Promise((resolve, reject) =>{
@@ -108,7 +107,7 @@ function sign() {
       subTitle = `  签到失败❌`
       detail = `说明: ${result.errorMessage}`
       }
-    resolve()
+     resolve()
      })
    })
  }
@@ -126,6 +125,7 @@ function status() {
       video()
         }
        }
+    
       if (taskstatus.data.dailyTasks[1].status=='received'){
     detail += `【视频任务】: ✅  +${taskstatus.data.dailyTasks[1].taskReward} 银豆\n`}
       if (taskstatus.data.dailyTasks[0].status!='received'){
@@ -141,8 +141,8 @@ function status() {
   else if (taskstatus.data.weeklyTasks[0].status=='received'){
       detail += `【每周任务】: ✅  +${taskstatus.data.weeklyTasks[0].taskReward}个银豆`
       }
+    resolve()
     })
-   resolve()
   })
 }
 
@@ -181,6 +181,7 @@ function lottery() {
      Incomplete = totalSteps - doneSteps
      rewardAmount= lotteryres.data.rewardAmount
      if (Incomplete >0 ){
+       sy.log(task.data.homeActivities.length)
         for (k=0;k<task.data.homeActivities.length&&task.data.homeActivities[k].participated==false;k++)   { 
      for (j=0;j<Incomplete;j++){
        lotteryId = task.data.homeActivities[k].activityId
