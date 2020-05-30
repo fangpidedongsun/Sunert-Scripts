@@ -203,7 +203,7 @@ function Redpack() {
                }
              }
         else {
-            notb +=  " "+rcash.info+"❌"
+            notb +=  " "+rcash.info+"❌\n"
             sy.msg(cookieName, notb, str)
              }
        }

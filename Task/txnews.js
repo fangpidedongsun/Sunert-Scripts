@@ -176,7 +176,7 @@ function Redpack() {
 return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
-      headers: {Cookie: cookieVal},
+    headers: {Cookie: cookieVal},
     body: `activity_id=${RedID}`
   };
     sy.post(cashUrl, (error, response, data) => {
@@ -187,7 +187,7 @@ return new Promise((resolve, reject) => {
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
-             redpack =  "【阶梯红包】"+redpackgot+' / '+redpacktotal+' 🔕' 
+             redpack =  "【阶梯红包】"+redpackgot+' / '+redpacktotal+' 🔕\n' 
                }
           else { 
              redpack = "【阶梯红包】"+redpackgot+' / '+redpacktotal+' ✅' 
@@ -197,10 +197,10 @@ return new Promise((resolve, reject) => {
             redpack = "【阶梯红包】"+rcash.info+' ❎\n'
             }
         else if (rcash.ret == 1003){
-            redpack = "【红包ID】 无❗️"
+            redpack = "【红包ID】 无❗️\n"
             }
         else {
-            redpack =  " "+rcash.info+`❌`
+            redpack =  " "+rcash.info+`❌\n`
              }
         resolve()
       })
