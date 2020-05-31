@@ -432,7 +432,7 @@ function Withdrawal() {
   }
 else {
 
-    detail += `【随机兑换】❌ 您获取提现地址 \n`
+    detail += `【随机兑换】❌ 请获取提现地址 \n`
 }
 resolve()
  })
