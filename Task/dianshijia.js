@@ -426,13 +426,15 @@ function Withdrawal() {
       detail += `【随机兑换】✅ `+result.data.price/100+`元 🌷\n`
     } else if (result.errCode == 314) {
       detail += `【随机兑换】🔁 ${result.msg} \n`
-    }
-     else if (result.errCode == 317) {
-      detail += `【随机兑换】🔁 ${result.msg} \n`
-    }
+     }
+  resolve()
    })
-resolve()
   }
+else {
+
+    detail += `【随机兑换】❌ 您获取提现地址 \n`
+}
+resolve()
  })
 }
 
