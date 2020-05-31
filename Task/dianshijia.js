@@ -9,7 +9,7 @@
 3.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 更新日志:
 v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通知方式，包含每日签到、走路任务、睡觉赚钱任务、分享任务、激励视频任务、双端活跃和手机在线时长共计7个任务，其中激励视频可多次叠加，即可多次运行，次数未知，激励视频金币未叠加在总金币中，原因未知
-v0530: 添加播放任务，共9次，需运行9次
+v0530: 添加播放任务，共9次，需运行9次，添加随机提现，请添加Cookie，提现一次即可获取，仅测试
 
 By Facsuny
 感谢 chavyleung 等
@@ -20,7 +20,7 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 
 http-request http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\?, script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
-http-request http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?, script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js //(无效无需添加)
+http-request http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?, script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js //(提现测试)
 ~~~~~~~~~~~~~~~~~~~~~
 # 获取电视家 Cookie.
 Surge 4.0
@@ -29,7 +29,7 @@ Surge 4.0
 
 电视家 = type=http-request,pattern=http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
-电视家 = type=http-request,pattern=http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js  //(无效无需添加)
+电视家 = type=http-request,pattern=http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js  //(提现测试)
 
 ~~~~~~~~~~~~~~~~~~
 
@@ -40,7 +40,7 @@ QX 1.0.6+ :
 [rewrite_local]
 http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\? url script-request-header dianshijia.js
 
-http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\? url script-request-header dianshijia.js  //(无效无需添加)
+http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\? url script-request-header dianshijia.js  //(提现测试)
 
 ~~~~~~~~~~~~~~~~~
 
