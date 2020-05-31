@@ -91,9 +91,7 @@ return new Promise((resolve, reject) => {
   const llUrl = {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
-    sy.log(cookieVal)
-    sy.log(signurlVal)
-
+    
    sy.post(llUrl, (error, response, data) => {   
      if(logs) sy.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
@@ -118,7 +116,7 @@ function toRead() {
   const toreadUrl = {
     url: signurlVal,
     headers: {Cookie:cookieVal},
-    body: 'event=video_read&extend={"video_id":"20190727V04IOJ00","channel_id":"5958996"}'
+    body:    'event=article_read&extend={"article_id":"20200424A08KNH00","channel_id":"17240460"}'
   };
    sy.post(toreadUrl,(error, response, data) =>{
       if (error){
