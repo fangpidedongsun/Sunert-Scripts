@@ -91,8 +91,6 @@ async function all()
   await StepsTotal();
   await Redpack();
   await getTotal();
-  //await activity();
-  //await titlebar();
 }
 
 //签到
@@ -229,48 +227,6 @@ return new Promise((resolve, reject) => {
    })
  }
 
-
-//看新闻，领红包
-function titlebar() {
- return new Promise((resolve, reject) => {
-  const barUrl = {
-    url: `https://news.qq.com/signin/v3/challredpackage.htm?disabletitlebar=1&activity_id=${RedID}`,
-    headers: {Cookie: cookieVal}};
-    sy.get(barUrl, function(error,response, data) {
-    if (error) {
-        sy.msg("看新闻，领红包‼️", "", error);
-     if (log) console.log("看新闻" + data)
-    } else {
-        //console.log("看新闻" + data)
-        }
-      resolve()
-      })
-   })
- }
-
-
-//看新闻，领红包
-function activity() {
- return new Promise((resolve, reject) => {
- const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
-  const activityUrl = {
-    url: `https://api.inews.qq.com/activity/v1/user/activity/get?isJailbreak=0&appver=13.5_qqnews_6.1.31&${ID}`,
-    headers: {Cookie: cookieVal},
-     body: `a=1`
-   }
-   sy.post(activityUrl, function(error,response, data) {
-    if (error) {
-        sy.msg("看新闻，领红包‼️", "", error);
-     if (log) console.log("看新闻" + data)
-    } else {
-        console.log("看新闻" + data)
-         const obj = JSON.parse(data)
-          sy.log(cookieName+","+notb+ "\n" )
-        }
-      resolve()
-      })
-   })
- }
 
 
 

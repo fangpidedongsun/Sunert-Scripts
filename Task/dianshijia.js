@@ -94,7 +94,7 @@ async function all()
   await CarveUp();    //瓜分金币
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
-//await Withdrawal(); // 随机兑换
+  await Withdrawal(); // 随机兑换
   await playTask();   // 播放任务
   await coinlist();   // 金币列表
 }
@@ -392,7 +392,6 @@ resolve()
  })
 }
 
-
 function Withdrawal() {
   return new Promise((resolve, reject) => {
     let url = { 
@@ -400,7 +399,7 @@ function Withdrawal() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-      sy.log(`金币随机兑换 data: ${data}`)
+    if(logs)sy.log(`金币随机兑换 : ${data}`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
       detail += `【随机兑换】✅ `+result.data.price/100+`元 🌷\n`
@@ -425,6 +424,29 @@ function CarveUp() {
       detail += `【金币瓜分】✅ +`+result.data.getCoin+`金币\n`
     } else if (result.errCode == 4006) {
       detail += `【金币瓜分】🔁 ${result.msg} \n`
+    }
+   })
+resolve()
+ })
+}
+
+function playTask() {
+  return new Promise((resolve, reject) => {
+    let url = { 
+     url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=playTask`, 
+     headers: JSON.parse(signheaderVal),
+   }
+    sy.get(url, (error, response, data) => {
+      if(logs)sy.log(`播放任务: ${data}`)
+      const result = JSON.parse(data)
+     if (result.errCode==0&&result.data.doneStatus == 3) {
+      detail += `【播放任务】🔕 完成/共计 `+result.data.dayCompCount+`/`+result.data.dayDoCountMax+` 次\n`
+    } 
+     else if (result.errCode==0&&result.data.doneStatus == 2) {
+     detail += `【播放任务】✅ 共计完成`+result.data.dayCompCount+` 次\n`
+    } 
+     else if (result.errCode == 4000) {
+      //detail += `【播放任务】🔁 ${result.msg} \n`
     }
    })
 resolve()
