@@ -392,24 +392,7 @@ resolve()
  })
 }
 
-function Withdrawal() {
-  return new Promise((resolve, reject) => {
-    let url = { 
-     url: drawalVal, 
-     headers: JSON.parse(signheaderVal),
-   }
-    sy.get(url, (error, response, data) => {
-    if(logs)sy.log(`金币随机兑换 : ${data}`)
-      const result = JSON.parse(data)
-     if (result.errCode == 0) {
-      detail += `【随机兑换】✅ `+result.data.price/100+`元 🌷\n`
-    } else if (result.errCode == 314) {
-      detail += `【随机兑换】🔁 ${result.msg} \n`
-    }
-   })
-resolve()
- })
-}
+
 
 function CarveUp() {
   return new Promise((resolve, reject) => {
@@ -427,6 +410,29 @@ function CarveUp() {
     }
    })
 resolve()
+ })
+}
+function Withdrawal() {
+  return new Promise((resolve, reject) => {
+   if (drawalVal !=undefined||null){
+    let url = { 
+     url: drawalVal, 
+     headers: JSON.parse(signheaderVal),
+   }
+    sy.get(url, (error, response, data) => {
+    sy.log(`金币随机兑换 : ${data}`)
+      const result = JSON.parse(data)
+     if (result.errCode == 0) {
+      detail += `【随机兑换】✅ `+result.data.price/100+`元 🌷\n`
+    } else if (result.errCode == 314) {
+      detail += `【随机兑换】🔁 ${result.msg} \n`
+    }
+     else if (result.errCode == 317) {
+      detail += `【随机兑换】🔁 ${result.msg} \n`
+    }
+   })
+resolve()
+  }
  })
 }
 
@@ -453,28 +459,6 @@ resolve()
  })
 }
 
-function playTask() {
-  return new Promise((resolve, reject) => {
-    let url = { 
-     url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=playTask`, 
-     headers: JSON.parse(signheaderVal),
-   }
-    sy.get(url, (error, response, data) => {
-      sy.log(`播放任务: ${data}`)
-      const result = JSON.parse(data)
-     if (result.data.doneStatus == 3) {
-      detail += `【播放任务】🔕 完成/共计 `+result.data.dayCompCount+`/`+result.data.dayDoCountMax+` 次\n`
-    } 
-     else if (result.data.doneStatus == 2) {
-      detail += `【播放任务】✅ 共计完成`+result.data.dayCompCount+` 次\n`
-    } 
-     else if (result.errCode == 4000) {
-      detail += `【播放任务】🔁 ${result.msg} \n`
-    }
-   })
-  resolve()
- })
-}
 
 function init() {
   isSurge = () => {
