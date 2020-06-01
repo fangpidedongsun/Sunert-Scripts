@@ -33,7 +33,7 @@ Surge 4.0 :
 
 中青看点 = type=http-request,pattern=https:\/\/ios\.baertt\.com\/v5\/article\/red_packet,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 
-中青看点 = type=http-request,pattern=https:\/\/ios\.baertt\.com\/v5\/user\/stay\.json,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
+中青看点 = type=http-request,pattern=https:\/\/ios\.baertt\.com\/v5\/user\/app_stay\.json,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 
 ~~~~~~~~~~~~~~~~
 Loon 2.1.0+
@@ -44,7 +44,7 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/complete script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/red_packet script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
-http-request https:\/\/ios\.baertt\.com\/v5\/user\/stay\.json script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
+http-request https:\/\/ios\.baertt\.com\/v5\/user\/app_stay\.json script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 -----------------
 QX 1.0. 7+ :
 [task_local]
@@ -57,7 +57,7 @@ https?:\/\/ios\.baertt\.com\/v5\/article\/complete url script-request-body youth
 
 https:\/\/ios\.baertt\.com\/v5\/article\/red_packet url script-request-body youth.js
 
-https:\/\/ios\.baertt\.com\/v5\/user\/stay\.json url script-request-body youth.js
+https:\/\/ios\.baertt\.com\/v5\/user\/app_stay\.json url script-request-body youth.js
 
 ~~~~~~~~~~~~~~~~
 [MITM]
@@ -97,7 +97,7 @@ else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/articl
     sy.log(`[${CookieName}] 获取阅读: 成功,articlebodyVal: ${articlebodyVal}`)
     sy.msg(CookieName, `获取阅读请求: 成功🎉`, ``)
   }
-else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/stay/)) {
+else if ($request && $request.method != `OPTIONS`&& $request.url.match(/\/v5\/user\/app_stay/)) {
    const timebodyVal = $request.body
     if (timebodyVal)        sy.setdata(timebodyVal,timebodyKey)
     sy.log(`[${CookieName}] 获取阅读: 成功,timebodyVal: ${timebodyVal}`)
@@ -564,7 +564,7 @@ function readTime() {
      detail += `【阅读时长】  共计`+Math.floor(readtimes)+`分钟\n`  
        }
     else if(timeres.error_code==200001){
-     detail += `【阅读时长】 ❎ 阅读时长Cookie\n`  
+     detail += `【阅读时长】 ❎ 未获取阅读时长Cookie\n`  
        }
      })
    resolve()
