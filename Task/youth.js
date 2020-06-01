@@ -561,7 +561,7 @@ function readTime() {
     let timeres = JSON.parse(data)
    if (timeres.error_code==0){
      readtimes = timeres.time/60
-     detail += `【阅读时长】  共计`+Math.round(readtimes)+`分钟\n`  
+     detail += `【阅读时长】  共计`+Math.floor(readtimes)+`分钟\n`  
        }
     else if(timeres.error_code==200001){
      detail += `【阅读时长】 ❎ 阅读时长Cookie\n`  
