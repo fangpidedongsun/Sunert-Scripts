@@ -422,14 +422,14 @@ function cashlist() {
       cashres = `✅ 今日提现:`+result.data[i].amount/100+`元 `
         } 
       if(result.data[i].type==2){
-      totalcash +=  (result.data[i].amount/100)
+      totalcash += result.data[i].amount/100
        }
       }
     if(cashres&&totalcash){
-      detail += `【提现结果】`+cashres+` 共计提现:`+totalcash+`元\n`
+      detail += `【提现结果】`+cashres+`共计提现:`+totalcash.toFixed(2)+`元\n`
      }
     else if(totalcash){
-     detail += `【提现结果】今日未提现 共计提现:`+totalcash+`元\n`
+     detail += `【提现结果】今日未提现 共计提现:`+totalcash.toFixed(2)+`元\n`
     }
    }
    resolve()
@@ -461,7 +461,7 @@ resolve()
 function Withdrawal2() {
   return new Promise((resolve, reject) => {
     let url = { 
-     url: `http://api.gaoqingdianshi.com/api/v2/cash/withdrawal?code=tx000041&rs=9IlYcwYBj83kZDhXXL8kZZtMvoA&sign=59a8b8042576529e52fe78404f821de9`, 
+     url: ``, 
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
