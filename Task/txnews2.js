@@ -49,7 +49,8 @@ Cookie获取后，请注释掉Cookie地址。
 #腾讯新闻app签到，根据红鲤鱼与绿鲤鱼与驴修改
 
 */
-const notify = false; //开启全部通知为true，关闭继续阅读为false
+const notify = 0; //开启全部通知为1，关闭继续阅读为0
+const logs = 0; // 日志开关
 const cookieName = '腾讯新闻'
 const signurlKey = 'sy_signurl_txnews2'
 const cookieKey = 'sy_cookie_txnews2'
@@ -90,15 +91,16 @@ return new Promise((resolve, reject) => {
   const llUrl = {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
+    
    sy.post(llUrl, (error, response, data) => {   
-     sy.log(`${cookieName}签到 - data: ${data}`)
+     if(logs) sy.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
-      //sy.log('腾讯新闻 签到成功，已连续签到' + obj.data.signin_days+"天"+"\n")
        next = obj.data.next_points
        tip =  obj.data.tip_soup
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+obj.data.author
-       str =  '签到成功，已连续签到' + obj.data.signin_days+'天  '+'明天将获得'+ next +'个金币'
+       signresult='  签到成功🎉'
+       signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明天 +'+ next +'金币'
        toRead()} 
       else {
         sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
@@ -114,13 +116,13 @@ function toRead() {
   const toreadUrl = {
     url: signurlVal,
     headers: {Cookie:cookieVal},
-    body: 'event=article_read&extend={"article_id":"20200424A08KNH00","channel_id":"17240460"}'
+    body:    'event=article_read&extend={"article_id":"20200424A08KNH00","channel_id":"17240460"}'
   };
    sy.post(toreadUrl,(error, response, data) =>{
       if (error){
       sy.msg(cookieName, '阅读:'+ error)
         }else{
-       //sy.log(`${cookieName}阅读文章 - data: ${data}`)
+          if(logs) sy.log(`${cookieName}阅读文章 - data: ${data}`)
       }
     redidCheck()
     })
@@ -143,25 +145,23 @@ function StepsTotal() {
   }
     sy.get(StepsUrl, (error, response, data) => {
       try {
-        sy.log(`${cookieName}阅读统计 - data: ${data}`)
+        if(logs) sy.log(`${cookieName}阅读统计 - data: ${data}`)
         article = JSON.parse(data)
         if (article.ret == 0){
         redpacktotal =  article.data.extends.redpack_total
          redpackgot = article.data.extends.redpack_got
            haveread = article.data.extends.article.have_read_num
          getreadpack = article.data.extends.article.redpack_read_num
-        if (redpackgot < redpacktotal-1){
-         articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可继续领取红包' }
-      if (redpackgot == redpacktotal-1){
-         articletotal = '\n今日共'+redpacktotal+'个阶梯红包，' +'已领取'+redpackgot+'个，'+`已阅读`+ haveread+`篇文章，`+ `阅读至`+getreadpack+'篇，可领取今日最后一次红包' }
-      if (redpackgot == redpacktotal){
-       articletotal = `\n今日已阅读` + getreadpack+ `篇，`+ `共领取`+  redpackgot +`个阶梯红包`
+        if (redpackgot < redpacktotal){
+         articletotal = '【红包领取】已领/共计 '+ redpackgot+'/'+redpacktotal +' 次\n【阅读文章】篇数/阶梯 '+ haveread+'/'+getreadpack+"篇"
      }
-        str += articletotal + `\n`+ Dictum
-        }
-        else if (article.ret == 2011){
-         str += `\n`+ Dictum
-        }
+      if (redpackgot == redpacktotal){
+       articletotal = '【阅读文章】共阅读'+ haveread+' 篇    ✅'}
+        str = articletotal+'\n' + signinfo+`\n【每日一句】`+ Dictum
+         }
+     else if (article.ret == 2011){
+       str += `【每日一句】`+ Dictum
+         }
         else {
      sy.log(cookieName + ` 返回值: ${article.ret}, 返回信息: ${article.info}`) 
         }
@@ -182,29 +182,29 @@ function Redpack() {
   };
     sy.post(cashUrl, (error, response, data) => {
       try {
-        sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
+        if(logs) sy.log(`${cookieName}阶梯红包提取 - data: ${data}`)
         rcash = JSON.parse(data)
         if (rcash.ret == 0){
-            notb += `  阶梯红包到账: `+ rcash.data.redpack.amount/100 +`元 🌷`
-           sy.msg(cookieName, notb, str)
+            redpack = `【阶梯红包】到账 +`+ rcash.data.redpack.amount/100 +`元 🌷`+'\n'
+           sy.msg(cookieName+signresult, notb, redpack+str)
            sy.log(cookieName+` `+notb+`\n`+ str)
             }
         else if (rcash.ret == 2013){
             if (article.data.extends.redpack_got<article.data.extends.redpack_total){
-           notb += " 继续阅读领取红包"
+           redpack =  "【阶梯红包】"+redpackgot+' / '+redpacktotal+' 🔕\n' 
          if (notify){
-           sy.msg(cookieName, notb, str)
+           sy.msg(cookieName+signresult, notb, redpack+str)
            sy.log(cookieName+` `+notb+`\n`+ str)
                  }
                }
           else { 
-            notb += " 今日阶梯红包已领完 💤"
-            sy.msg(cookieName, notb, str)
+            redpack = "【阶梯红包】共领取"+redpackgot+'个红包 ✅\n' 
+            sy.msg(cookieName+signresult, notb, redpack+str)
             sy.log(cookieName+` `+notb+`\n`+ str)
                }
              }
         else {
-            notb +=  " "+rcash.info+"❌"
+            notb +=  " "+rcash.info+"❌\n"
             sy.msg(cookieName, notb, str)
              }
        }
@@ -223,17 +223,18 @@ function getTotal() {
     sy.post(totalUrl, function(error,response, data) {
     if (error) {
         sy.msg("获取收益信息失败‼️", "", error);
-     if (log) console.log("获取收益信息" + data)
+       if (logs) console.log("获取收益信息" + data)
     } else {
          const obj = JSON.parse(data)
-           notb = '总计:'+obj.data.wealth[0].title +'金币  '+"红包" + obj.data.wealth[1].title+'元'
+           notb = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " + obj.data.wealth[1].title+'元'
           Redpack()
-          sy.log(cookieName+","+notb+ "\n" )
+        if(logs)sy.log(cookieName+","+notb+ "\n" )
         }
       resolve()
       })
    })
  }
+
 
 function init() {
     isSurge = () => {
