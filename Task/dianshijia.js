@@ -40,7 +40,7 @@ QX 1.0.6+ :
 [rewrite_local]
 http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\? url script-request-header dianshijia.js
 
-http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\? url script-request-header dianshijia.js  //(提现测试)
+http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?code= url script-request-header dianshijia.js  //(随机提现测试)
 
 ~~~~~~~~~~~~~~~~~
 
@@ -95,6 +95,7 @@ async function all()
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
   await Withdrawal(); // 随机兑换
+  //await Withdrawal2(); // 固定兑换
   await playTask();   // 播放任务
   await coinlist();   // 金币列表
 }
@@ -111,9 +112,9 @@ function signin() {
           { subTitle = `【签到成功】🎉`
             var h = result.data.reward.length
           if (h>1){
-            detail = `获取金币${result.data.reward[0].count}，获得奖励${result.data.reward[1].name} `
+            detail = `【签到收益】+${result.data.reward[0].count}金币，奖励${result.data.reward[1].name}\n `
            }else
-             {detail = ` 已签到 ${result.data.conDay}天，获取金币${result.data.reward[0].count}\n`
+             {detail = `【签到收益】+${result.data.reward[0].count}金币\n`
              }
            }
     else if  (result.errCode == 4)
@@ -393,7 +394,6 @@ resolve()
 }
 
 
-
 function CarveUp() {
   return new Promise((resolve, reject) => {
     let url = { 
@@ -437,6 +437,8 @@ else {
 resolve()
  })
 }
+
+
 
 function playTask() {
   return new Promise((resolve, reject) => {
