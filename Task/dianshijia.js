@@ -101,7 +101,7 @@ async function all()
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
   await Withdrawal(); // 金额提现
-  //await Withdrawal2(); //固定兑换
+  //await Withdrawal2(); //固定金额
   await playTask();   // 播放任务
   await coinlist();   // 金币列表
 }
@@ -414,18 +414,24 @@ function cashlist() {
      if(logs)sy.log(`提现列表: ${data}`)
       const result = JSON.parse(data)
             totalcash = Number()
+            cashres = ""
      if (result.errCode == 0) {
     for (i=0;i<result.data.length;i++){
  if
 (result.data[i].type==2&&result.data[i].ctime>=time){
-      detail += `【提现结果】✅ 今日提现:`+result.data[i].amount/100+`元 `
+      cashres = `✅ 今日提现:`+result.data[i].amount/100+`元 `
         } 
       if(result.data[i].type==2){
-      totalcash +=  result.data[i].amount/100
+      totalcash +=  (result.data[i].amount/100)
        }
       }
-      detail += `共计提现:`+totalcash+`元\n`
+    if(cashres&&totalcash){
+      detail += `【提现结果】`+cashres+` 共计提现:`+totalcash+`元\n`
+     }
+    else if(totalcash){
+     detail += `【提现结果】今日未提现 共计提现:`+totalcash+`元\n`
     }
+   }
    resolve()
     })
   })
@@ -450,6 +456,22 @@ else {
       detail += `【金额提现】❌ 请获取提现地址 \n`
    }
 resolve()
+ })
+}
+function Withdrawal2() {
+  return new Promise((resolve, reject) => {
+    let url = { 
+     url: `http://api.gaoqingdianshi.com/api/v2/cash/withdrawal?code=tx000041&rs=9IlYcwYBj83kZDhXXL8kZZtMvoA&sign=59a8b8042576529e52fe78404f821de9`, 
+     headers: JSON.parse(signheaderVal),
+   }
+    sy.get(url, (error, response, data) => {
+    sy.log(`金额兑换 : ${data}`)
+      const result = JSON.parse(data)
+     if (result.errCode == 0) {
+      detail += `【金额提现】✅ `+result.data.price/100+`元 🌷\n`
+    } 
+  resolve()
+   })
  })
 }
 function playTask() {
