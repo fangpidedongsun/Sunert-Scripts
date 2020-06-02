@@ -8,12 +8,14 @@
 2.APP登陆账号后，点击菜单栏'赚赚',即可获取Cookie.
 3.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 更新日志:
-v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通知方式，包含每日签到、走路任务、睡觉赚钱任务、分享任务、激励视频任务、双端活跃和手机在线时长共计7个任务，其中激励视频可多次叠加，即可多次运行，次数未知，激励视频金币未叠加在总金币中，原因未知
+v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通知方式，包含每日签到、走路任务、睡觉赚钱任务、分享任务、激励视频任务、双端活跃和手机在线时长共计7个任务，
 v0530: 添加播放任务，共9次，需运行9次，添加随机提现，请添加Cookie，提现一次即可获取，仅测试
-v0602 增加每日瓜分百万金币，每日12点准时运行
+v0602 增加每日瓜分百万金币，每日12点准时运行，增加提现金额显示
 
 By Facsuny
 感谢 chavyleung 等
+
+赞赏:电视家邀请码`939540`
 ~~~~~~~~~~~~~~~~~~~~
 loon 2.10+ :
 [Script]
@@ -98,7 +100,7 @@ async function all()
   await getCUpcoin;   //瓜分金币
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
-  await Withdrawal(); // 随机兑换
+  await Withdrawal(); // 金额提现
   //await Withdrawal2(); //固定兑换
   await playTask();   // 播放任务
   await coinlist();   // 金币列表
@@ -352,16 +354,14 @@ function coinlist() {
      vdamount += result.data[i].amount
      }
      if (result.data[i].from=="手机在线"){
-      for (j=0;result.data[j].from=="手机在线";j++) {
-     onlamount += result.data[j].amount
-       }
+     onlamount += result.data[i].amount
       }
    }
 if(vdamount){
    detail += `【激励视频】✅ 获得金币`+vdamount+'\n'
 }
 if(onlamount){
-   detail += `【手机在线】✅ 共${j}次，获得金币`+onlamount+'\n'
+   detail += `【手机在线】✅ 获得金币`+onlamount+'\n'
 }
    if (i<7){
    detail += '【未完成/总计】'+`${i-1}/7`
@@ -418,13 +418,13 @@ function cashlist() {
     for (i=0;i<result.data.length;i++){
  if
 (result.data[i].type==2&&result.data[i].ctime>=time){
-      detail += `【提现结果】✅ 今日提现`+result.data[i].amount/100+`元 `
+      detail += `【提现结果】✅ 今日提现:`+result.data[i].amount/100+`元 `
         } 
       if(result.data[i].type==2){
       totalcash +=  result.data[i].amount/100
        }
       }
-      detail += `共计提现 `+totalcash+`元\n`
+      detail += `共计提现:`+totalcash+`元\n`
     }
    resolve()
     })
@@ -441,18 +441,17 @@ function Withdrawal() {
     sy.log(`金币随机兑换 : ${data}`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
-      //detail += `【金额兑换】✅ `+result.data.price/100+`元 🌷\n`
+      //detail += `【金额提现】✅ 到账`+result.data.price/100+`元 🌷\n`
     } 
   resolve()
    })
   }
 else {
-    detail += `【金额兑换】❌ 请获取提现地址 \n`
+      detail += `【金额提现】❌ 请获取提现地址 \n`
    }
 resolve()
  })
 }
-
 function playTask() {
   return new Promise((resolve, reject) => {
     let url = { 
