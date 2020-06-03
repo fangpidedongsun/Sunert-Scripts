@@ -96,7 +96,8 @@ async function all()
   await cash();       // 现金
   await signinfo();   // 签到信息
   await Withdrawal(); // 金额提现
-//await Withdrawal2(); //固定金额
+  await act618();     // 618活动
+  //await Withdrawal2(); //固定金额
   await cashlist();   // 现金列表
   await CarveUp();    //瓜分报名
   await getCUpcoin;   //瓜分金币
@@ -404,6 +405,25 @@ function getCUpcoin() {
 resolve()
  })
 }
+
+function act618() {
+  return new Promise((resolve, reject) => {
+   const userid = JSON.parse(signheaderVal)['userid']
+    let url = { 
+     url: `http://share.dianshihome.com/api/activity/618/attend?userid=${userid}&acode=act618`, 
+     headers: JSON.parse(signheaderVal),
+   }
+     url.headers['host']= 'share.dianshihome.com'
+    sy.get(url, (error, response, data) => {
+    sy.log(`618活动: ${data}`)
+    const result = JSON.parse(data)
+    if (result.errCode == 0) {
+    detail += `【618活动】  `+result.data.prize.name+`🎉\n`
+     }
+   })
+resolve()
+ })
+}
 function cashlist() {
   return new Promise((resolve, reject) => {
     let url = { 
@@ -414,7 +434,9 @@ function cashlist() {
      if(logs)sy.log(`提现列表: ${data}`)
       const result = JSON.parse(data)
             totalcash = Number()
+            total618 = Number()
             cashres = ""
+    
      if (result.errCode == 0) {
     for (i=0;i<result.data.length;i++){
  if
@@ -424,6 +446,9 @@ function cashlist() {
       if(result.data[i].type==2){
       totalcash += result.data[i].amount/100
        }
+     if(result.data[i].from=="618活动"){
+      total618 += result.data[i].amount/100
+       }
       }
     if(cashres&&totalcash){
       detail += `【提现结果】`+cashres+`共计提现:`+totalcash.toFixed(2)+`元\n`
@@ -431,6 +456,9 @@ function cashlist() {
     else if(totalcash){
      detail += `【提现结果】今日未提现 共计提现:`+totalcash.toFixed(2)+`元\n`
     }
+    if(total618){
+      detail += `【618活动】✅ 共计到账:`+total618+`元\n`
+     }
    }
    resolve()
     })
