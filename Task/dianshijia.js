@@ -11,6 +11,7 @@
 v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通知方式，包含每日签到、走路任务、睡觉赚钱任务、分享任务、激励视频任务、双端活跃和手机在线时长共计7个任务，
 v0530: 添加播放任务，共9次，需运行9次，添加随机提现，请添加Cookie，提现一次即可获取，仅测试
 v0602 增加每日瓜分百万金币，每日12点准时运行，增加提现金额显示
+v0603 增加618活动，修复错误
 
 By Facsuny
 感谢 chavyleung 等
@@ -100,7 +101,7 @@ async function all()
   //await Withdrawal2(); //固定金额
   await cashlist();   // 现金列表
   await CarveUp();    //瓜分报名
-  await getCUpcoin;   //瓜分金币
+  await getCUpcoin();   //瓜分金币
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
   await playTask();   // 播放任务
@@ -415,7 +416,7 @@ function act618() {
    }
      url.headers['host']= 'share.dianshihome.com'
     sy.get(url, (error, response, data) => {
-    sy.log(`618活动: ${data}`)
+    if(logs)sy.log(`618活动: ${data}`)
     const result = JSON.parse(data)
     if (result.errCode == 0) {
     detail += `【618活动】  `+result.data.prize.name+`🎉\n`
