@@ -89,11 +89,9 @@ function GetCookie() {
 async function all() 
 { 
   await signin();     // 签到
+  await taskStatus(); // 任务状态
   await walk();       // 走路
-  await sleep();      // 睡觉
-  await wakeup();     // 打卡
-  await share();      // 分享
-  await double();     // 双倍
+  await sleep();      // 睡觉报名
   await total();      // 总计
   await cash();       // 现金
   await signinfo();   // 签到信息
@@ -102,10 +100,6 @@ async function all()
   //await Withdrawal2(); //固定金额
   await cashlist();   // 现金列表
   await CarveUp();    // 瓜分报名
-  await getCUpcoin(); // 瓜分金币
-  await watchvideo(); // 观看视频
-  await SpWatchVideo();//激励视频
-  await playTask();   // 播放任务
   await coinlist();   // 金币列表
 }
 
@@ -149,7 +143,7 @@ function total() {
    sy.get(coinurl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}, 总计: ${data}`)
      const result = JSON.parse(data)
-     subTitle += `待兑换${result.data.coin}金币  ` 
+     subTitle += `待兑换金币: ${result.data.coin} ` 
    try{
       if(result.data.tempCoin){
        for (i=0;i<result.data.tempCoin.length;i++) {  
@@ -172,12 +166,50 @@ function cash() {
       let url = { url: `http://api.gaoqingdianshi.com/api/cash/info`, headers: JSON.parse(signheaderVal)}
       sy.get(url, (error, response, data) => 
       {
-      if(logs)sy.log(`现金余额: ${data}`)
+      if(logs)sy.log(`现金: ${data}`)
       const result = JSON.parse(data)
-      subTitle += '现金: '+ result.data.amount/100+'元 '
+      subTitle += '现金:'+ result.data.amount/100+'元 额度:'+result.data.withdrawalQuota/100+'元'
       })
   resolve()
    })
+}
+
+
+function taskStatus() {
+ return new Promise((resolve, reject) => {    
+    shareurl = { url: `http://act.gaoqingdianshi.com/api/v2/task/get`, headers: JSON.parse(signheaderVal)}
+    sy.get(shareurl, (error, response, data) => {
+    if(logs)sy.log(`${cookieName},任务状态: ${data}`)
+      const result = JSON.parse(data)
+      if (result.errCode == 0){
+   for
+(i=0;i<result.data.length&&result.data[i].dayCompCount<result.data[i].dayDoCountMax;i++){
+      if(result.data[i].name=="双端活跃"){
+         double()
+       }
+      if(result.data[i].name=="手机在线20分钟"){
+         mobileOnline()
+       }
+       if(result.data[i].name=="手机版分享"){
+         share()
+       }
+       if(result.data[i].name=="激励视频"){
+         watchvideo()
+       }
+       if(result.data[i].name=="播放任务"){
+         playTask()
+       }
+       if(result.data[i].name=="百万金币"){
+         getCUpcoin()
+       }
+       if(result.data[i].name=="睡觉赚钱"){
+         wakeup()
+       }
+      }
+     }
+    })
+resolve()
+  })
 }
 
 function share() {
@@ -189,6 +221,17 @@ function share() {
    shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=0216Jaqu1LRHOh0AMjru1ZYgqu16Jaqy&state=code`, headers: JSON.parse(signheaderVal),}
     sy.get(shareurl2, (error, response, data) => {
      })
+resolve()
+  })
+}
+
+function mobileOnline() {
+ return new Promise((resolve, reject) => {    
+    shareurl = { url: `http://api.gaoqingdianshi.com/api/v4/task/complete?code=1M002`, headers: JSON.parse(signheaderVal)}
+    sy.get(shareurl, (error, response, data) => {
+     sy.log(`${cookieName}, 手机在线: ${data}`)
+     })
+   
 resolve()
   })
 }
@@ -304,7 +347,7 @@ function watchvideo() {
     let url = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=Mobilewatchvideo`, 
     headers: JSON.parse(signheaderVal)}
    sy.get(url, (error, response, data) => {
-      if(logs)sy.log(`激励视频2: ${data}`)
+      if(logs)sy.log(`激励视频: ${data}`)
    })
 resolve()
  })
@@ -472,7 +515,7 @@ function Withdrawal() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-    sy.log(`金币随机兑换 : ${data}`)
+    if(logs)sy.log(`金币随机兑换 : ${data}`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
       detail += `【金额提现】✅ 到账`+result.data.price/100+`元 🌷\n`
