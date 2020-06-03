@@ -100,8 +100,8 @@ async function all()
   await act618();     // 618活动
   //await Withdrawal2(); //固定金额
   await cashlist();   // 现金列表
-  await CarveUp();    //瓜分报名
-  await getCUpcoin();   //瓜分金币
+  await CarveUp();    // 瓜分报名
+  await getCUpcoin(); // 瓜分金币
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
   await playTask();   // 播放任务
@@ -185,9 +185,8 @@ function share() {
     sy.get(shareurl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}, 分享: ${data}`)
      })
-   shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=071nXYSz0GhW8c1OnlRz0EM7Tz0nXYSh&state=code`, headers: JSON.parse(signheaderVal),}
+   shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=0216Jaqu1LRHOh0AMjru1ZYgqu16Jaqy&state=code`, headers: JSON.parse(signheaderVal),}
     sy.get(shareurl2, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}, 分享: ${data}`)
      })
 resolve()
   })
@@ -437,7 +436,6 @@ function cashlist() {
             totalcash = Number()
             total618 = Number()
             cashres = ""
-    
      if (result.errCode == 0) {
     for (i=0;i<result.data.length;i++){
  if
