@@ -4,8 +4,9 @@
 
 本脚本仅适用于电视家签到，
 获取Cookie方法:
-1.将下方[rewrite_local]和[Task]地址复制的相应的区域，无需添加 hostname
-2.APP登陆账号后，点击菜单栏'赚赚',即可获取Cookie.
+1.将下方[rewrite_local]和[Task]地址复制的相应的区域，无需添加 hostname，每日7点、12点、20点各运行一次，其他随意
+2.APP登陆账号后，点击菜单栏'赚赚',即可获取Cookie，进入提现页面，点击随机金额，可获取提现地址!!
+
 3.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 更新日志:
 v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通知方式，包含每日签到、走路任务、睡觉赚钱任务、分享任务、激励视频任务、双端活跃和手机在线时长共计7个任务，
@@ -24,7 +25,7 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 
 http-request http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\?, script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
-http-request http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?, script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js //(提现测试)
+http-request http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?, script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 ~~~~~~~~~~~~~~~~~~~~~
 # 获取电视家 Cookie.
 Surge 4.0
@@ -33,7 +34,7 @@ Surge 4.0
 
 电视家 = type=http-request,pattern=http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
-电视家 = type=http-request,pattern=http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js  //(提现测试)
+电视家 = type=http-request,pattern=http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js
 
 ~~~~~~~~~~~~~~~~~~
 
@@ -44,7 +45,7 @@ QX 1.0.6+ :
 [rewrite_local]
 http:\/\/act\.gaoqingdianshi\.com\/\/api\/v4\/sign\/signin\? url script-request-header dianshijia.js
 
-http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?code= url script-request-header dianshijia.js  //(随机提现测试)
+http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal\?code= url script-request-header dianshijia.js
 
 ~~~~~~~~~~~~~~~~~
 
@@ -81,7 +82,7 @@ function GetCookie() {
   const drawalVal = $request.url
   sy.log(`drawalVal:${drawalVal}`)
   if (drawalVal) sy.setdata(drawalVal, drawalKey)
-  sy.msg(cookieName, `获取兑换地址: 成功`, ``)
+  sy.msg(cookieName, `获取提现地址: 成功`, ``)
   }
  sy.done()
 }
