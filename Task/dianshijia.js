@@ -95,13 +95,13 @@ async function all()
   await total();      // 总计
   await cash();       // 现金
   await signinfo();   // 签到信息
+  await Withdrawal(); // 金额提现
+//await Withdrawal2(); //固定金额
   await cashlist();   // 现金列表
   await CarveUp();    //瓜分报名
   await getCUpcoin;   //瓜分金币
   await watchvideo(); // 观看视频
   await SpWatchVideo();//激励视频
-  await Withdrawal(); // 金额提现
-  //await Withdrawal2(); //固定金额
   await playTask();   // 播放任务
   await coinlist();   // 金币列表
 }
@@ -146,7 +146,7 @@ function total() {
    sy.get(coinurl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}, 总计: ${data}`)
      const result = JSON.parse(data)
-     subTitle += ` 待兑换${result.data.coin}金币   ` 
+     subTitle += `待兑换${result.data.coin}金币  ` 
    try{
       if(result.data.tempCoin){
        for (i=0;i<result.data.tempCoin.length;i++) {  
@@ -171,7 +171,7 @@ function cash() {
       {
       if(logs)sy.log(`现金余额: ${data}`)
       const result = JSON.parse(data)
-      subTitle += ' 现金: '+ result.data.amount/100+'元   '
+      subTitle += '现金: '+ result.data.amount/100+'元 '
       })
   resolve()
    })
@@ -447,7 +447,7 @@ function Withdrawal() {
     sy.log(`金币随机兑换 : ${data}`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
-      //detail += `【金额提现】✅ 到账`+result.data.price/100+`元 🌷\n`
+      detail += `【金额提现】✅ 到账`+result.data.price/100+`元 🌷\n`
     } 
   resolve()
    })
