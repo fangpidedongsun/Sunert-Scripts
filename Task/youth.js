@@ -41,7 +41,7 @@ Loon 2.1.0+
 # 本地脚本
 cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, enabled=true, tag=中青看点
 
-http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
+http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign), script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/complete script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/red_packet script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/user\/app_stay\.json script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
@@ -206,7 +206,7 @@ function getAdVideo() {
    if(logs) sy.log(`视频广告:${data}`)
    adVideores = JSON.parse(data)
    if (adVideores.status==1){
-      detail += `【观看视频】+${adVideores.score}个青豆\n` }
+      detail += `【观看视频】  +${adVideores.score}个青豆\n` }
    })
 resolve()
  })
@@ -223,7 +223,7 @@ function gameVideo() {
     if(logs) sy.log(`激励视频:${data}`)
    gameres = JSON.parse(data)
    if (gameres.success==true){
-     detail += `【激励视频】${gameres.items.score}\n`}
+     detail += `【激励视频】  ${gameres.items.score}\n`}
     })
   resolve()
   })
@@ -244,7 +244,7 @@ function readArticle() {
      //detail += ` \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5，`
      }
   else if (readres.items.read_score !== undefined){
-     detail += `【阅读奖励】+${readres.items.read_score}个青豆\n`
+     detail += `【阅读奖励】  +${readres.items.read_score}个青豆\n`
      }
   resolve()
    })
@@ -261,7 +261,7 @@ function Articlered() {
    if(logs) sy.log(`阅读附加:${data}`)
    redres = JSON.parse(data)
    if (redres.success==true){
-     detail += `【惊喜红包】+${redres.items.score}个青豆\n`  
+     detail += `【惊喜红包】  +${redres.items.score}个青豆\n`  
      }
   resolve()
    })
@@ -282,7 +282,7 @@ function rotary() {
    if(logs) sy.log(`转盘抽奖:${data}`)
    rotaryres = JSON.parse(data)
    if (rotaryres.status==1){
-     detail += `【转盘抽奖】+${rotaryres.data.score}个青豆 剩余${rotaryres.data.remainTurn}次\n`  
+     detail += `【转盘抽奖】  +${rotaryres.data.score}个青豆 剩余${rotaryres.data.remainTurn}次\n`  
     }
    if(rotaryres.code!=10010&&rotaryres.data.doubleNum!=0){
       TurnDouble()
@@ -330,7 +330,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    if(logs) sy.log(`转盘宝箱1抽奖:${data}`)
    rotaryres1 = JSON.parse(data)
    if (rotaryres1.status==1){
-     detail += `【转盘宝箱1】+${rotaryres4.data.score}个青豆\n`
+     detail += `【转盘宝箱1】  +${rotaryres4.data.score}个青豆\n`
        }
      })
    resolve()
@@ -352,7 +352,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    if(logs) sy.log(`转盘宝箱2抽奖:${data}`)
    rotaryres2 = JSON.parse(data)
    if (rotaryres2.status==1){
-     detail +=  `【转盘宝箱2】+${rotaryres4.data.score}个青豆\n`
+     detail +=  `【转盘宝箱2】  +${rotaryres4.data.score}个青豆\n`
        }
      })
    resolve()
@@ -374,7 +374,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    if(logs) sy.log(`转盘宝箱3抽奖:${data}`)
    rotaryres3 = JSON.parse(data)
    if (rotaryres3.status==1){
-     detail += `【转盘宝箱3】+${rotaryres4.data.score}个青豆\n` 
+     detail += `【转盘宝箱3】  +${rotaryres4.data.score}个青豆\n` 
        }
      })
    resolve()
@@ -396,7 +396,7 @@ const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]+'
    if(logs) sy.log(`转盘宝箱4抽奖:${data}`)
    rotaryres4 = JSON.parse(data)
    if (rotaryres4.status==1){
-     detail += `【转盘宝箱4】+${rotaryres4.data.score}个青豆\n`  
+     detail += `【转盘宝箱4】  +${rotaryres4.data.score}个青豆\n`  
        }
      })
    resolve()
@@ -415,7 +415,7 @@ function punchCard() {
    if(logs) sy.log(`每日开启打卡:${data}`)
    punchcardstart = JSON.parse(data)
    if (punchcardstart.code==1){
-     detail += `【打卡报名】开启打卡${punchcardstart.msg} ✅ \n`  
+     detail += `【打卡报名】  开启打卡${punchcardstart.msg} ✅ \n`  
        }
     else if(punchcardstart.code==0){
      //detail += `${punchcardstart.msg}`
@@ -438,7 +438,7 @@ function endCard() {
    if(logs) sy.log(`打卡结果:${data}`)
    punchcardend = JSON.parse(data)
    if (punchcardend.code==1){
-     detail += `【早起打卡】${punchcardend.msg}打卡时间: ${punchcardend.data.card_time} ✅`  
+     detail += `【早起打卡】  ${punchcardend.msg}打卡时间: ${punchcardend.data.card_time} ✅`  
        }
     else if(punchcardend.code==0){
      //detail += `${punchcardend.msg}`
@@ -471,7 +471,7 @@ const starturl = {
    if(logs) sy.log(`打卡分享:${data}`)
    shareres = JSON.parse(data)
    if (shareres.code==1){
-     detail += `【手机分享】+${shareres.data.score}个青豆\n`  
+     detail += `【手机分享】  +${shareres.data.score}个青豆\n`  
        }
     else if(shareres.code==0){
      //detail += `${shareres.msg}，`
@@ -494,7 +494,7 @@ function openbox() {
    if(logs) sy.log(`时段开启宝箱:${data}`)
    boxres = JSON.parse(data)
    if (boxres.code==1){
-     detail += `【开启宝箱】+${boxres.data.score}个青豆 下次奖励${boxres.data.time/60}分钟\n`  
+     detail += `【开启宝箱】  +${boxres.data.score}个青豆 下次奖励${boxres.data.time/60}分钟\n`  
        }
     else if(boxres.code==0){
      //detail += `${boxres.msg}，`
@@ -517,7 +517,7 @@ function share() {
    if(logs) sy.log(`宝箱分享:${data}`)
    shareres = JSON.parse(data)
    if (shareres.code==1){
-     detail += `【宝箱分享】+${shareres.data.score}个青豆\n`  
+     detail += `【宝箱分享】  +${shareres.data.score}个青豆\n`  
        }
     else if(shareres.code==0){
      //detail += `${shareres.msg}，`
@@ -543,7 +543,7 @@ function TurnDouble() {
    if(logs) sy.log(`转盘双倍奖励:${data}`)
    Doubleres = JSON.parse(data)
    if(Doubleres.status==1){
-     detail += `【转盘双倍】+${Doubleres.data.score1}个青豆 剩余${rotaryres.data.doubleNum}次\n`};
+     detail += `【转盘双倍】  +${Doubleres.data.score1}个青豆 剩余${rotaryres.data.doubleNum}次\n`};
     })
    resolve()
   })
@@ -564,7 +564,7 @@ function readTime() {
      detail += `【阅读时长】  共计`+Math.floor(readtimes)+`分钟\n`  
        }
     else if(timeres.error_code==200001){
-     detail += `【阅读时长】 ❎ 未获取阅读时长Cookie\n`  
+     detail += `【阅读时长】 ❎  未获取阅读时长Cookie\n`  
        }
      })
    resolve()
