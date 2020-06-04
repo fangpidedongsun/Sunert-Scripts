@@ -96,8 +96,8 @@ async function all()
   await cash();       // 现金
   await signinfo();   // 签到信息
   await Withdrawal(); // 金额提现
-  await act618();     // 618活动
   //await Withdrawal2(); //固定金额
+  await act618();     // 618活动
   await cashlist();   // 现金列表
   await CarveUp();    // 瓜分报名
   await coinlist();   // 金币列表
@@ -183,7 +183,8 @@ function taskStatus() {
       const result = JSON.parse(data)
       if (result.errCode == 0){
    for
-(i=0;i<result.data.length&&result.data[i].dayCompCount<result.data[i].dayDoCountMax;i++){
+(i=0;i<result.data.length;i++){
+if(result.data[i].dayCompCount<result.data[i].dayDoCountMax){
       if(result.data[i].name=="双端活跃"){
          double()
        }
@@ -207,6 +208,7 @@ function taskStatus() {
        }
       }
      }
+     }
     })
 resolve()
   })
@@ -227,7 +229,7 @@ resolve()
 
 function mobileOnline() {
  return new Promise((resolve, reject) => {    
-    shareurl = { url: `http://api.gaoqingdianshi.com/api/v4/task/complete?code=1M002`, headers: JSON.parse(signheaderVal)}
+    shareurl = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=1M002`, headers: JSON.parse(signheaderVal)}
     sy.get(shareurl, (error, response, data) => {
      sy.log(`${cookieName}, 手机在线: ${data}`)
      })
@@ -462,7 +464,10 @@ function act618() {
     if(logs)sy.log(`618活动: ${data}`)
     const result = JSON.parse(data)
     if (result.errCode == 0) {
-    detail += `【618活动】  `+result.data.prize.name+`🎉\n`
+    detail += ` `+result.data.prize.name+`机会:`+result.data.remainCount+`次\n`
+     }
+   else {
+    detail += `\n`
      }
    })
 resolve()
@@ -500,7 +505,7 @@ function cashlist() {
      detail += `【提现结果】今日未提现 共计提现:`+totalcash.toFixed(2)+`元\n`
     }
     if(total618){
-      detail += `【618活动】✅ 共计到账:`+total618+`元\n`
+      detail += `【618活动】✅ 共计:`+total618+`元`
      }
    }
    resolve()
@@ -515,7 +520,7 @@ function Withdrawal() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-    if(logs)sy.log(`金币随机兑换 : ${data}`)
+    sy.log(`金币随机兑换 : ${data}`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
       detail += `【金额提现】✅ 到账`+result.data.price/100+`元 🌷\n`
