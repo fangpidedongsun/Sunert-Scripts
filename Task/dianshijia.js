@@ -1,6 +1,6 @@
 
 /*
-赞赏:电视家邀请码`939540`,农妇山泉 -> 有点咸，万分感谢
+赞赏:电视家邀请码`893988`,农妇山泉 -> 有点咸，万分感谢
 
 本脚本仅适用于电视家签到，
 获取Cookie方法:
@@ -13,11 +13,12 @@ v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通�
 v0530: 添加播放任务，共9次，需运行9次，添加随机提现，请添加Cookie，提现一次即可获取，仅测试
 v0602 增加每日瓜分百万金币，每日12点准时运行，增加提现金额显示
 v0603 增加618活动，修复错误，增加提现额度显示
+v0604 增加游戏时长，可自定义，时长就是对应金币，时长多少金币就多少，上限未知，默认888
 
 By Facsuny
 感谢 chavyleung 等
 
-赞赏:电视家邀请码`939540`
+赞赏:电视家邀请码`893988`
 ~~~~~~~~~~~~~~~~~~~~
 loon 2.10+ :
 [Script]
@@ -51,6 +52,7 @@ http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal url script-request-
 
 */
 const walkstep = '20000';//每日步数设置，可设置0-20000
+const gametimes = "888";  //游戏时长
 const logs = 0   //响应日志开关,默认关闭
 const cookieName = '电视家 📺'
 const signurlKey = 'sy_signurl_dsj'
@@ -98,6 +100,7 @@ async function all()
   await Withdrawal(); // 金额提现
   //await Withdrawal2(); //固定金额
   await act618();     // 618活动
+  await getGametime();// 游戏时长
   await cashlist();   // 现金列表
   await CarveUp();    // 瓜分报名
   await coinlist();   // 金币列表
@@ -373,8 +376,9 @@ function coinlist() {
    sy.get(url, (error, response, data) => {
    if(logs)sy.log(`金币列表: ${data}`)
       const result = JSON.parse(data)
-     let onlamount = Number()
+       let onlamount = Number()
          vdamount = new Number()
+         gamestime = new Number()
     for (i=0;i<result.data.length&&result.data[i].ctime>=time;i++){
      if (result.data[i].from=="签到"){
       detail += `【每日签到】✅ 获得金币`+result.data[i].amount+'\n'
@@ -397,6 +401,9 @@ function coinlist() {
      if (result.data[i].from=="领取瓜分金币"){
       detail += `【瓜分金币】✅ 获得金币`+result.data[i].amount+'\n'
       }
+     if (result.data[i].from=="游戏时长奖励"){
+      gamestime += result.data[i].amount
+      }
      if (result.data[i].from =="激励视频"){
      vdamount += result.data[i].amount
      }
@@ -409,6 +416,9 @@ if(vdamount){
 }
 if(onlamount){
    detail += `【手机在线】✅ 获得金币`+onlamount+'\n'
+}
+if(gamestime){
+   detail += `【游戏时长】✅ 获得金币`+gamestime+'\n'
 }
    if (i<7){
    detail += '【未完成/总计】'+`${i-1}/7`
@@ -464,7 +474,7 @@ function act618() {
     if(logs)sy.log(`618活动: ${data}`)
     const result = JSON.parse(data)
     if (result.errCode == 0) {
-    detail += ` `+result.data.prize.name+`机会:`+result.data.remainCount+`次\n`
+    detail += ` `+result.data.prize.name+` 机会:`+result.data.remainCount+`次\n`
      }
    else {
     detail += `\n`
@@ -566,7 +576,18 @@ function playTask() {
 resolve()
  })
 }
-
+function getGametime() {
+  return new Promise((resolve, reject) => {
+    let url = { 
+     url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=gameTime&time=${gametimes}`, 
+     headers: JSON.parse(signheaderVal),
+   }
+    sy.get(url, (error, response, data) => {
+    if(logs)sy.log(`游戏时长: ${data}`)
+   })
+resolve()
+ })
+}
 
 function init() {
   isSurge = () => {
