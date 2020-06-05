@@ -133,8 +133,11 @@ function paysign() {
    let payurl =  {
       url: `https://pay.sc.weibo.com/aj/mobile/home/welfare/signin/do?_=${time}`,
      headers: JSON.parse(payheaderVal)}
-     sy.post(payurl, (error, response, data) => {
-     sy.log(`${CookieName}钱包, data: ${data}`)
+  $task.fetch(payurl).then(response => {
+    console.log(response.statusCode + "\n\n" + response.body);
+     if(response.statusCode==404){
+   sy.msg(CookieName, subTitle+`  钱包Cookie失效 ❎`, detail)
+   }
      let result = JSON.parse(data)
      if (result.status == 1){
          subTitle += `  钱包签到成功 🎉`
