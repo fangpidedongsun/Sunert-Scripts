@@ -222,7 +222,7 @@ function share() {
     sy.get(shareurl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}, 分享: ${data}`)
      })
-   shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=0216Jaqu1LRHOh0AMjru1ZYgqu16Jaqy&state=code`, headers: JSON.parse(signheaderVal),}
+   shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=021PMOxn0FsQtm1FFNun0C6Pxn0PMOxK&state=code`, headers: JSON.parse(signheaderVal),}
     sy.get(shareurl2, (error, response, data) => {
      })
 resolve()
