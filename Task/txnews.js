@@ -1,11 +1,13 @@
 /*
 腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万阅读红包挑战赛，针对幸运用户参与
 获取Cookie方法:
-1. 把以下地址复制到响应配置下
+1.把以下配置复制到响应配置下
 2.打开腾讯新闻app，阅读几篇文章，倒计时结束后即可获取阅读Cookie;
-3.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次，至少每2分钟一次
-4.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的，无激活ID的可能非活动用户
+3.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次
+4.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的，
 5.此脚本根据阅读篇数开启通知，默认20篇，此版本和另一版本相同
+6.版本更新日志:
+v0606.1 修复无法自动获取视频红包，修改通知为阅读红包到账通知，或者自定义常开
 
 ---------------------
 Surge 4.0
@@ -39,7 +41,7 @@ hostname = api.inews.qq.com
 Cookie获取后，请注释掉Cookie地址。
 
 */
-const notifyInterval = 20; //开启通知间隔为阅读篇数，关闭为0
+const notify = 0; //开启通知1，关闭为0
 const logs = 0; // 日志开关，0为关，1为开
 const cookieName = '腾讯新闻'
 const sy = init()
@@ -139,6 +141,7 @@ function lookVideo() {
         if(logs)sy.log(`${cookieName}观看视频 - data: ${data}`)
        tolookresult = JSON.parse(data)
       if(tolookresult.info=='success'){
+       RedID = tolookresult.data.activity.id
         videocoins = tolookresult.data.countdown_timer.countdown_tips
      }
     }
@@ -285,13 +288,20 @@ return new Promise((resolve, reject) => {
 function showmsg() {
  return new Promise((resolve, reject) => {
     detail = signinfo+ redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
-   sy.log(subTile+`\n`+detail)
-   if(readnum%notifyInterval==0){
+   if(videocoins=="红包+1"){
    sy.msg(cookieName,subTile,detail)
   }
+   else if (openreadred==readredtotal&&openvideored==videoredtotal){
+   sy.msg(cookieName+` 今日任务已完成✅`,subTile,detail)
+  }
+   else if (notify){
+   sy.msg(cookieName,subTile,detail)
+  }
+  sy.log(subTile+`\n`+detail)
  })
 resolve()
 }
+
 
 
 function init() {
