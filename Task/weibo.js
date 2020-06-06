@@ -135,28 +135,30 @@ function paysign() {
      headers: JSON.parse(payheaderVal)}
   $task.fetch(payurl).then(response => {
     console.log(response.statusCode + "\n\n" + response.body);
-     if(response.statusCode==404){
-   sy.msg(CookieName, subTitle+`  钱包Cookie失效 ❎`, detail)
-   }
-     let result = JSON.parse(data)
+   try{
+     let result = JSON.parse(response.body)
      if (result.status == 1){
          subTitle += `  钱包签到成功 🎉`
          detail += `  钱包获取积分:`+ result.score+' 分'
          }  
-     else if (result.status == 2){
+     else if (result.code == 100000){
          subTitle += `   钱包: 重复签到`
-         //detail += `钱包: `+ result.msg
+         detail += ``
        }
      else {
          subTitle = `钱包签到失败❌`
          //detail += ` 钱包: `+result.msg
          }
        sy.msg(CookieName, subTitle, detail)
-       })
+        }
+    catch(e){
+         sy.msg(CookieName, subTitle+`  钱包Cookie失效 ❎`, detail)
+       }
+     })
     }
-  resolve()
   })
 }
+
 
 function init() {
   isSurge = () => {
