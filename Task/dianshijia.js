@@ -91,18 +91,16 @@ function GetCookie() {
 async function all() 
 { 
   await signin();     // 签到
+  await signinfo();   // 签到信息
+  await Withdrawal(); // 金额提现
+//await Withdrawal2();// 固定金额
+  await act618();     // 618活动
   await taskStatus(); // 任务状态
-  await walk();       // 走路
-  await sleep();      // 睡觉报名
+  await runtime();    // 运行时间
   await getGametime();// 游戏时长
   await total();      // 总计
   await cash();       // 现金
-  await signinfo();   // 签到信息
-  await Withdrawal(); // 金额提现
-  //await Withdrawal2(); //固定金额
-  await act618();     // 618活动
   await cashlist();   // 现金列表
-  await CarveUp();    // 瓜分报名
   await coinlist();   // 金币列表
 }
 
@@ -112,7 +110,7 @@ function signin() {
       const url = { url: signurlVal, headers: JSON.parse(signheaderVal)}
       sy.get(url, (error, response, data) =>
        {
-      if(logs)sy.log(`${cookieName}, 签到结果: ${data}`)
+      if(logs)sy.log(`${cookieName}, 签到结果: ${data}\n`)
       const result = JSON.parse(data)
       if  (result.errCode == 0) 
           { signinres = `签到成功 `
@@ -143,7 +141,7 @@ function total() {
      headers: JSON.parse(signheaderVal)
    }
    sy.get(coinurl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}, 总计: ${data}`)
+     if(logs)sy.log(`${cookieName}, 总计: ${data}\n`)
      const result = JSON.parse(data)
      subTitle = `待兑换金币: ${result.data.coin} ` 
    try{
@@ -168,7 +166,7 @@ function cash() {
       let url = { url: `http://api.gaoqingdianshi.com/api/cash/info`, headers: JSON.parse(signheaderVal)}
       sy.get(url, (error, response, data) => 
       {
-      if(logs)sy.log(`现金: ${data}`)
+      if(logs)sy.log(`现金: ${data}\n`)
       const result = JSON.parse(data)
       subTitle += '现金:'+ result.data.amount/100+'元 额度:'+result.data.withdrawalQuota/100+'元'
       })
@@ -176,12 +174,11 @@ function cash() {
    })
 }
 
-
 function taskStatus() {
  return new Promise((resolve, reject) => {    
     shareurl = { url: `http://act.gaoqingdianshi.com/api/v2/task/get`, headers: JSON.parse(signheaderVal)}
     sy.get(shareurl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName},任务状态: ${data}`)
+    if(logs)sy.log(`${cookieName},任务状态: ${data}\n`)
       const result = JSON.parse(data)
       if (result.errCode == 0){
    for
@@ -202,27 +199,21 @@ if(result.data[i].dayCompCount<result.data[i].dayDoCountMax){
        if(result.data[i].name=="播放任务"){
          playTask()
        }
-       if(result.data[i].name=="百万金币"){
-         getCUpcoin()
-       }
-       if(result.data[i].name=="睡觉赚钱"){
-         wakeup()
-       }
       }
      }
-     }
-    })
+    }
+   })
 resolve()
-  })
+ })
 }
 
 function share() {
  return new Promise((resolve, reject) => {    
     shareurl = { url: `http://api.gaoqingdianshi.com/api/v4/task/complete?code=1M005`, headers: JSON.parse(signheaderVal)}
     sy.get(shareurl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}, 分享: ${data}`)
+     if(logs)sy.log(`${cookieName}, 分享: ${data}\n`)
      })
-   shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=021PMOxn0FsQtm1FFNun0C6Pxn0PMOxK&state=code`, headers: JSON.parse(signheaderVal),}
+   shareurl2 = { url: `http://m3.gsyxvip.com/activity/f/transfer?uid=&inviteCode=&type=mInvite&yrwe=1&code=0216Jaqu1LRHOh0AMjru1ZYgqu16Jaqy&state=code`, headers: JSON.parse(signheaderVal),}
     sy.get(shareurl2, (error, response, data) => {
      })
 resolve()
@@ -233,7 +224,7 @@ function mobileOnline() {
  return new Promise((resolve, reject) => {    
     shareurl = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=1M002`, headers: JSON.parse(signheaderVal)}
     sy.get(shareurl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}, 手机在线: ${data}`)
+     if(logs)sy.log(`${cookieName}, 手机在线: ${data}\n`)
      })
    
 resolve()
@@ -246,7 +237,7 @@ function signinfo() {
     let awardurl = { url: `http://act.gaoqingdianshi.com/api/v4/sign/get`, headers: signheaderVal}
      sy.get(awardurl, (error, response, data) => 
   {
-    if(logs)sy.log(`${cookieName}, 签到信息: ${data}`)
+    if(logs)sy.log(`${cookieName}, 签到信息: ${data}\n`)
      const result = JSON.parse(data)
      if (result.errCode == 0) 
     {
@@ -280,13 +271,35 @@ function signinfo() {
     })
   })
 }             
+function runtime() {
+  var date = new Date();
+  var hour = date.getHours();
+  var sleeping = ""
+     if(hour>20){
+     async function run(){
+      await sleep();
+      await CarveUp();
+    }
+  }
+   else if(hour > 11&&hour <14){
+     async function run(){
+      await getCUpcoin();
+      await walk();
+    }
+   }
+   else if(hour > 6&&hour <10){
+     async function run(){
+      await wakeup();
+    }
+  }
+}
 
 function walk() {
   return new Promise((resolve, reject) => {
     let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getWalk?step=${walkstep}`, headers: JSON.parse(signheaderVal)}
    sy.get(url, (error, response, data) => 
       {
-      if(logs)sy.log(`走路任务: ${data}`)
+      if(logs)sy.log(`走路任务: ${data}\n`)
       const result = JSON.parse(data)
      walkcoin = result.data.unGetCoin
     if (walkcoin>10){
@@ -305,13 +318,13 @@ function sleep() {
     let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getSleep?ext=1`, headers: JSON.parse(signheaderVal)}
      sy.get(url, (error, response, data) => {
   try {
-      if(logs)sy.log(`睡觉任务: ${data}`)
+      if(logs)sy.log(`睡觉任务: ${data}\n`)
       const result = JSON.parse(data)
      if (result.errCode==0){
-      sleeping = result.data.name+'报名成功 🛌'
+      cookieName += result.data.name+'报名成功 🛌'
       }
 else if (result.errCode==4006){
-      sleeping = '   睡觉中😴'
+      cookieName += '   睡觉中😴'
       }
 else {
       sleeping = ''
@@ -329,7 +342,7 @@ function wakeup() {
     let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getCoin?code=sleep&coin=1910&ext=1`, 
     headers: JSON.parse(signheaderVal)}
    sy.get(url, (error, response, data) => {
-      if(logs)sy.log(`睡觉打卡: ${data}`)
+      if(logs)sy.log(`睡觉打卡: ${data}\n`)
    })
 resolve()
  })
@@ -340,7 +353,7 @@ function SpWatchVideo() {
     let url = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=SpWatchVideo`, 
     headers: JSON.parse(signheaderVal)}
    sy.get(url, (error, response, data) => {
-      if(logs)sy.log(`激励视频: ${data}`)
+      if(logs)sy.log(`激励视频: ${data}\n`)
    })
 resolve()
  })
@@ -351,18 +364,17 @@ function watchvideo() {
     let url = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=Mobilewatchvideo`, 
     headers: JSON.parse(signheaderVal)}
    sy.get(url, (error, response, data) => {
-      if(logs)sy.log(`激励视频: ${data}`)
+    if(logs)sy.log(`激励视频: ${data}\n`)
    })
 resolve()
  })
 }
 
-
 function double() {
   return new Promise((resolve, reject) => {
     let url = { url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=MutilPlatformActive`, headers: JSON.parse(signheaderVal)}
     sy.get(url, (error, response, data) => {
-      if(logs)sy.log(`双端活跃 data: ${data}`)
+     if(logs)sy.log(`双端活跃 data: ${data}\n`)
    })
 resolve()
  })
@@ -373,7 +385,7 @@ function coinlist() {
     let url = { url: `http://api.gaoqingdianshi.com/api/coin/detail`, 
     headers: JSON.parse(signheaderVal)}
    sy.get(url, (error, response, data) => {
-   if(logs)sy.log(`金币列表: ${data}`)
+   //if(logs)sy.log(`金币列表: ${data}`)
       const result = JSON.parse(data)
        let onlamount = Number()
          vdamount = new Number()
@@ -425,7 +437,7 @@ if(gamestime){
    else if (i>=7){
    detail += `【任务统计】共完成${i-1}次任务🌷`
 }
-   sy.msg(cookieName+sleeping, subTitle, detail)
+   sy.msg(cookieName, subTitle, detail)
    sy.log(subTitle+`\n`+detail)
    })
 resolve()
@@ -489,7 +501,7 @@ function cashlist() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-     if(logs)sy.log(`提现列表: ${data}`)
+     //if(logs)sy.log(`提现列表: ${data}`)
       const result = JSON.parse(data)
             totalcash = Number()
             total618 = Number()
@@ -529,7 +541,7 @@ function Withdrawal() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-    if(logs)sy.log(`金币随机兑换 : ${data}`)
+    if(logs)sy.log(`金币随机兑换 : ${data}\n`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
       detail += `【金额提现】✅ 到账`+result.data.price/100+`元 🌷\n`
@@ -551,7 +563,7 @@ function Withdrawal2() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-    sy.log(`金额兑换 : ${data}`)
+    sy.log(`金额兑换 : ${data}\n`)
       const result = JSON.parse(data)
      if (result.errCode == 0) {
       detail += `【金额提现】✅ `+result.data.price/100+`元 🌷\n`
@@ -567,10 +579,10 @@ function playTask() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-      if(logs)sy.log(`播放任务: ${data}`)
+      if(logs)sy.log(`播放任务: ${data}\n`)
       const result = JSON.parse(data)
      if (result.errCode==0&&result.data.doneStatus == 3) {
-      detail += `【播放任务】🔕 完成/共计 `+result.data.dayCompCount+`/`+result.data.dayDoCountMax+` 次\n`
+     detail += `【播放任务】🔕 完成/共计 `+result.data.dayCompCount+`/`+result.data.dayDoCountMax+` 次\n`
     } 
    })
 resolve()
@@ -583,7 +595,7 @@ function getGametime() {
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
-    if(logs)sy.log(`游戏时长: ${data}`)
+    if(logs)sy.log(`游戏时长: ${data}\n`)
    })
 resolve()
  })
