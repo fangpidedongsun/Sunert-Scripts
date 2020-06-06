@@ -70,6 +70,7 @@ async function all()
   await toRead();
   await lookVideo();
   await StepsTotal();
+  await StepsTotal2();
   await RednumCheck();
   await getTotal();
   await showmsg();
@@ -150,13 +151,13 @@ function StepsTotal() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=readtask_welfare_lowactive&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
    headers: {
       Cookie: cookieVal,
     },
   };
     sy.get(StepsUrl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}阅读统计- data: ${data}`)
+     if(logs)sy.log(`${cookieName}红包统计- data: ${data}`)
        totalred = JSON.parse(data)
         if (totalred.ret == 0){
      for (i=0;i<totalred.data.award.length;i++){
@@ -166,16 +167,37 @@ return new Promise((resolve, reject) => {
 totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
        getreadred=totalred.data.award[i].can_get
        openreadred= totalred.data.award[i].opened
-       readnum= totalred.data.award[i].event_num
         }
    if(totalred.data.award[i].type=='video'){
         videoredtotal = totalred.data.award[i].total
         videotitle = totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
         getreadred = totalred.data.award[i].can_get        
         openvideored = totalred.data.award[i].opened
-        videonum =totalred.data.award[i].event_num
         }
       }
+     }
+    resolve()
+    })
+  })
+}
+
+function StepsTotal2() {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
+return new Promise((resolve, reject) => {
+  const StepsUrl = {
+    url: `https://api.inews.qq.com/activity/v1/activity/notice/info?activity_id=${RedID}&${ID}`,
+   headers: {
+      Cookie: cookieVal,
+    },
+  };
+    sy.get(StepsUrl, (error, response, data) => {
+     if(logs)sy.log(`${cookieName}阅读统计- data: ${data}`)
+       totalnum = JSON.parse(data)
+        if (totalnum.ret == 0){
+sy
+        readnum =  totalnum.data.show_list[0].schedule.current
+        videonum =
+totalnum.data.show_list[1].schedule.current
      }
     resolve()
     })
@@ -203,7 +225,7 @@ return new Promise((resolve, reject) => {
    sy.post(cashUrl, (error, response, data) => {
     sy.log(`${cookieName}阅读红包- data: ${data}`)
         let rcash = JSON.parse(data)
-            readredpack = ''
+            readredpack =  Number()
         if (rcash.ret == 0){
        for (i=0;i<rcash.data.award.length;i++){
         readredpack += rcash.data.award[i].num/100
@@ -222,12 +244,12 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=video&activity_id=readtask_welfare_lowactive`
+    body: `redpack_type=video&activity_id=${RedID}`
   };
     sy.post(cashUrl, (error, response, data) => {
     sy.log(`${cookieName}视频红包-data:${data}`)
         let vcash = JSON.parse(data)
-            videoredpack=``
+            videoredpack= Number()
         if (vcash.ret == 0){
        for (i=0;i<vcash.data.award.length;i++){
         videoredpack += vcash.data.award[i].num/100
@@ -261,7 +283,7 @@ return new Promise((resolve, reject) => {
 
 function showmsg() {
  return new Promise((resolve, reject) => {
-    detail = signinfo+ redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+`篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+    detail = signinfo+ redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
    sy.log(subTile+`\n`+detail)
    if(readnum%notifyInterval==0){
    sy.msg(cookieName,subTile,detail)
