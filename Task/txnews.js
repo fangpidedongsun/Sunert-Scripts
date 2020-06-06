@@ -4,7 +4,7 @@
 1. 把以下地址复制到响应配置下
 2.打开腾讯新闻app，阅读几篇文章，倒计时结束后即可获取阅读Cookie;
 3.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次，至少每2分钟一次
-4.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的
+4.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的，无激活ID的可能非活动用户
 5.此脚本根据阅读篇数开启通知，默认20篇，此版本和另一版本相同
 
 ---------------------
@@ -110,13 +110,15 @@ return new Promise((resolve, reject) => {
    sy.post(toreadUrl,(error, response, data) =>{
      if(logs)sy.log(`${cookieName}阅读文章 - data: ${data}`)
        toread = JSON.parse(data)
+  try {
    if
-(toread.info=='success'&&toread.data.activity.id){
+(toread.info=='success'&&toread.data.activity.id)   {
      RedID = toread.data.activity.id
      readcoins = toread.data.countdown_timer.countdown_tips
       }
-    else {
-    sy.msg(cookieName, '无法获取红包ID', error)
+     }
+    catch(error) {
+    sy.msg(cookieName, '无法获取活动激活ID',  error)
       }
     resolve()
     })
