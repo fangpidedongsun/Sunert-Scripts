@@ -28,7 +28,7 @@ http-request https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? scr
 
 QX 1.0.7+ :
  [task_local]
-0 9 * * * txnews.js, tag=腾讯新闻
+0 9 * * * txnews2.js, tag=腾讯新闻
  [rewrite_local]
 https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews2.js
 
