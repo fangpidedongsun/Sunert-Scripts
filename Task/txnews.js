@@ -39,8 +39,8 @@ hostname = api.inews.qq.com
 Cookie获取后，请注释掉Cookie地址。
 
 */
-const notifyInterval = 1; //开启通知间隔为阅读篇数，关闭为0
-const logs = 1; // 日志开关，0为关，1为开
+const notifyInterval = 20; //开启通知间隔为阅读篇数，关闭为0
+const logs = 0; // 日志开关，0为关，1为开
 const cookieName = '腾讯新闻'
 const sy = init()
 const signurlVal = sy.getdata('sy_signurl_txnews')
