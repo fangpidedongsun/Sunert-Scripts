@@ -133,8 +133,8 @@ function paysign() {
    let payurl =  {
       url: `https://pay.sc.weibo.com/aj/mobile/home/welfare/signin/do?_=${time}`,
      headers: JSON.parse(payheaderVal)}
-  $task.fetch(payurl).then(response => {
-    console.log(response.statusCode + "\n\n" + response.body);
+sy.post(payurl, (error, response, data) => {
+     sy.log(`${CookieName}钱包, data: ${data}`)
    try{
      let result = JSON.parse(response.body)
      if (result.status == 1){
