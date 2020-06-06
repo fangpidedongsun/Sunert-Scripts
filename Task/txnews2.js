@@ -91,7 +91,7 @@ function getsign() {
        next = obj.data.next_points
        tip =  obj.data.tip_soup
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
-       signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明日+'+ next +'金币 成功🎉\n'}
+       signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天 '+'明日+'+ next +'金币 成功🎉\n'}
       else {
        sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
        console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
@@ -107,7 +107,7 @@ function toRead() {
 return new Promise((resolve, reject) => {
   const toreadUrl = {
     url: signurlVal, headers: {Cookie:cookieVal},
-    body: 'event=article_read&extend={"article_id":"20200424A08KNH00","channel_id":"17240460"}'
+    body: 'event=article_read'
   };
    sy.post(toreadUrl,(error, response, data) =>{
      if(logs)sy.log(`${cookieName}阅读文章 - data: ${data}`)
@@ -193,10 +193,9 @@ return new Promise((resolve, reject) => {
     },
   };
     sy.get(StepsUrl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}阅读统计- data: ${data}`)
+     if(logs)sy.log(`${cookieName}阅读统计- data: ${data}\n`)
        totalnum = JSON.parse(data)
         if (totalnum.ret == 0){
-sy
         readnum =  totalnum.data.show_list[0].schedule.current
         videonum =
 totalnum.data.show_list[1].schedule.current
@@ -274,7 +273,7 @@ return new Promise((resolve, reject) => {
     if (error) {
       sy.msg("获取收益信息失败‼️", "", error)
     } else {
-    //if (logs) console.log("获取收益信息" +data)
+    if (logs) console.log("获取收益信息" +data)
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
       }

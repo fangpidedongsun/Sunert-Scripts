@@ -89,7 +89,7 @@ function getsign() {
        next = obj.data.next_points
        tip =  obj.data.tip_soup
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
-       signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天  '+'明日+'+ next +'金币 成功🎉\n'}
+       signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天 明日+'+ next +'金币 成功🎉\n'}
       else {
        sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
        console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
@@ -194,7 +194,6 @@ return new Promise((resolve, reject) => {
      if(logs)sy.log(`${cookieName}阅读统计- data: ${data}`)
        totalnum = JSON.parse(data)
         if (totalnum.ret == 0){
-sy
         readnum =  totalnum.data.show_list[0].schedule.current
         videonum =
 totalnum.data.show_list[1].schedule.current
