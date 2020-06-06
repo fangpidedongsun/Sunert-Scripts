@@ -184,14 +184,13 @@ totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
   })
 }
 function RednumCheck() {
-  let redpack= Number()
-      redpackres= ``
+   redpackres = ``
   if(readcoins=="红包+1"){
     Redpack()
   }
   if(videocoins=="红包+1"){
    videoPack()
-  };
+  }
 }
 
 //阶梯红包到账
@@ -205,13 +204,15 @@ return new Promise((resolve, reject) => {
   }
    sy.post(cashUrl, (error, response, data) => {
     sy.log(`${cookieName}阅读红包- data: ${data}`)
-            rcash = JSON.parse(data)
+        let rcash = JSON.parse(data)
+            readredpack = ''
         if (rcash.ret == 0){
        for (i=0;i<rcash.data.award.length;i++){
-        redpack += rcash.data.award[i].num/100
-                }
-       redpackres += `【阅读红包】到账`+redpack+` 元 🌷\n` 
+        readredpack += rcash.data.award[i].num/100
+            }
+       redpackres += `【阅读红包】到账`+readredpack+` 元 🌷\n` 
            }
+    sy.log(redpackres)
       resolve()
       })
    })
@@ -220,6 +221,7 @@ return new Promise((resolve, reject) => {
 function videoPack() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
+ setTimeout(()=>{
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
@@ -227,13 +229,16 @@ return new Promise((resolve, reject) => {
   };
     sy.post(cashUrl, (error, response, data) => {
     sy.log(`${cookieName}视频红包-data:${data}`)
-        vcash = JSON.parse(data)
+        let vcash = JSON.parse(data)
+            videoredpack=``
         if (vcash.ret == 0){
        for (i=0;i<vcash.data.award.length;i++){
-        redpack += vcash.data.award[i].num/100
+        videoredpack += vcash.data.award[i].num/100
              }
-        redpackres += `【视频红包】到账`+redpack+` 元 🌷\n` 
+        redpackres += `【视频红包】到账`+videoredpack+` 元 🌷\n` 
          }
+       },100)
+    sy.log(redpackres)
      resolve()
       })
    })
@@ -253,7 +258,7 @@ return new Promise((resolve, reject) => {
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
       }
-   resolve()
+    resolve()
     })
    })
  }
