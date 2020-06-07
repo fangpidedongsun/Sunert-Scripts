@@ -234,7 +234,7 @@ resolve()
 function signinfo() {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
-    let awardurl = { url: `http://act.gaoqingdianshi.com/api/v4/sign/get`, headers: signheaderVal}
+    let awardurl = { url: `http://act.gaoqingdianshi.com/api/v4/sign/get`, headers: JSON.parse(signheaderVal)}
      sy.get(awardurl, (error, response, data) => 
   {
     if(logs)sy.log(`${cookieName}, 签到信息: ${data}\n`)
