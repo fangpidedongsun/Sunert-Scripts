@@ -13,7 +13,7 @@ v0527: 修复无法领取睡觉金币，增加激励视频等任务，更新通�
 v0530: 添加播放任务，共9次，需运行9次，添加随机提现，请添加Cookie，提现一次即可获取，仅测试
 v0602 增加每日瓜分百万金币，每日12点准时运行，增加提现金额显示
 v0603 增加618活动，修复错误，增加提现额度显示
-v0604 增加游戏时长，可自定义，时长就是对应金币，时长多少金币就多少，上限未知，默认888
+v0604 增加游戏时长，取消自定义，时长就是对应金币，时长多少金币就多少，上限未知，默认888
 
 By Facsuny
 感谢 chavyleung 等
@@ -52,7 +52,6 @@ http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal url script-request-
 
 */
 const walkstep = '20000';//每日步数设置，可设置0-20000
-const gametimes = "888";  //游戏时长
 const logs = 0   //响应日志开关,默认关闭
 const cookieName = '电视家 📺'
 const signurlKey = 'sy_signurl_dsj'
@@ -588,7 +587,7 @@ resolve()
 function getGametime() {
   return new Promise((resolve, reject) => {
     let url = { 
-     url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=gameTime&time=${gametimes}`, 
+     url: `http://act.gaoqingdianshi.com/api/v4/task/complete?code=gameTime&time=888`, 
      headers: JSON.parse(signheaderVal),
    }
     sy.get(url, (error, response, data) => {
