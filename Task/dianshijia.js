@@ -116,9 +116,9 @@ function signin() {
           { signinres = `签到成功 `
             var h = result.data.reward.length
           if (h>1){
-            detail = `【签到收益】`+signinres+`${result.data.reward[0].count}金币，奖励${result.data.reward[1].name}\n `
+            detail = `【签到收益】`+signinres+`${result.data.reward[0].count}金币，奖励${result.data.reward[1].name} `
            }else
-             {detail = `【签到收益】`+signinres+`+${result.data.reward[0].count}金币\n`
+             {detail = `【签到收益】`+signinres+`+${result.data.reward[0].count}金币 `
              }
            }
     else if  (result.errCode == 4)
@@ -244,14 +244,14 @@ function signinfo() {
      for (i=0; i < result.data.recentDays.length;i++)      
         {
        if (d == result.data.recentDays[i].day)
-          {  detail += ` 连续签到${d}天`
+          {  detail += ` 连续签到${d}天\n`
        var j = result.data.recentDays[i].rewards.length
        if (j > 1){
-                detail += `\n【奖励信息】 ${result.data.recentDays[i].rewards[1].name}  `
+                detail += `【奖励信息】今日:${result.data.recentDays[i].rewards[1].name}  `
                  } 
           else   if (j == 1) 
                  { 
-                detail += `\n【奖励信息】今日: 无 ` 
+                detail += `【奖励信息】今日: 无 ` 
                  }
         var k = result.data.recentDays[i+1].rewards.length
         if ( k > 1 ) {
@@ -259,7 +259,7 @@ function signinfo() {
            
                  }  
            else  { 
-              detail += `明日 无\n`
+              detail += `明日: 无\n`
         
                  }
                }               
