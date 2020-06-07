@@ -226,7 +226,6 @@ function mobileOnline() {
     sy.get(shareurl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}, 手机在线: ${data}\n`)
      })
-   
 resolve()
   })
 }
@@ -288,10 +287,8 @@ function runtime() {
     }
    }
    else if(hour > 6&&hour <10){
-     async function run(){
-      await wakeup();
-    }
-  }
+       wakeup()
+   }
 }
 
 function walk() {
