@@ -157,9 +157,7 @@ function StepsTotal() {
 return new Promise((resolve, reject) => {
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
-   headers: {
-      Cookie: cookieVal,
-    },
+   headers: {Cookie: cookieVal},
   };
     sy.get(StepsUrl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}红包统计- data: ${data}`)
@@ -191,9 +189,7 @@ function StepsTotal2() {
 return new Promise((resolve, reject) => {
   const StepsUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/notice/info?activity_id=${RedID}&${ID}`,
-   headers: {
-      Cookie: cookieVal,
-    },
+   headers: {Cookie: cookieVal},
   };
     sy.get(StepsUrl, (error, response, data) => {
      if(logs)sy.log(`${cookieName}阅读统计- data: ${data}`)
@@ -227,15 +223,17 @@ return new Promise((resolve, reject) => {
     body: `redpack_type=article&activity_id=${RedID}`
   }
    sy.post(cashUrl, (error, response, data) => {
-    sy.log(`${cookieName}阅读红包- data: ${data}`)
+    if(logs)sy.log(`${cookieName}阅读红包- data: ${data}`)
         let rcash = JSON.parse(data)
             readredpack =  Number()
+            redpackres =``
         if (rcash.ret == 0){
        for (i=0;i<rcash.data.award.length;i++){
         readredpack += rcash.data.award[i].num/100
             }
        redpackres += `【阅读红包】到账`+readredpack+` 元 🌷\n` 
            }
+    sy.log(redpackres)
       resolve()
       })
    })
@@ -251,9 +249,10 @@ return new Promise((resolve, reject) => {
     body: `redpack_type=video&activity_id=${RedID}`
   };
     sy.post(cashUrl, (error, response, data) => {
-    sy.log(`${cookieName}视频红包-data:${data}`)
+    if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
         let vcash = JSON.parse(data)
             videoredpack= Number()
+            redpackres =``
         if (vcash.ret == 0){
        for (i=0;i<vcash.data.award.length;i++){
         videoredpack += vcash.data.award[i].num/100
@@ -261,6 +260,7 @@ return new Promise((resolve, reject) => {
         redpackres += `【视频红包】到账`+videoredpack+` 元 🌷\n` 
          }
        },100)
+    sy.log(redpackres)
      resolve()
       })
    })

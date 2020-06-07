@@ -515,7 +515,7 @@ function cashlist() {
       if(result.data[i].type==2){
       totalcash += result.data[i].amount/100
        }
-     if(result.data[i].from=="618活动"){
+     if(result.data[i].from=="618活动"&&result.data[i].ctime>=time){
       total618 += result.data[i].amount/100
        }
       }
@@ -526,7 +526,7 @@ function cashlist() {
      detail += `【提现结果】今日未提现 共计提现:`+totalcash.toFixed(2)+`元\n`
     }
     if(total618){
-      detail += `【618活动】✅ `+actres+`共计:`+total618+`元\n`
+      detail += `【618活动】✅ `+actres+`今日共计:`+total618+`元\n`
      }
    }
    resolve()
