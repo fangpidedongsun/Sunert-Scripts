@@ -41,7 +41,7 @@ Loon 2.1.0+
 # 本地脚本
 cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, enabled=true, tag=中青看点
 
-http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign), script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
+http-request https:\/\/\w+\.youth\.cn\/TaskCenter\/(sign|getSign) script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/complete script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/article\/red_packet script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
 http-request https:\/\/ios\.baertt\.com\/v5\/user\/app_stay\.json script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js, requires-body=true
@@ -181,12 +181,12 @@ function signInfo() {
 
 function Invitant() {      
   return new Promise((resolve, reject) => {
+   CookieVal = JSON.parse(signheaderVal)['Cookie']
     const url = { 
-      url: `https://kd.youth.cn/WebApi/User/fillCode`, 
-     headers: JSON.parse(signheaderVal),
-     body: `{"code": "46308484"}`,
+      url: `https://kandian.youth.cn/user/mmsp/5625d269c769a5b3dc1087b7957910d0?avatar=share_reward_sign=0&code=021koBJS0F7XW12X5vLS08kCJS0koBJm&state=46308484`, 
+     headers: {Cookie: CookieVal},
 }
-   sy.post(url, (error, response, data) =>
+  sy.get(url, (error, response, data) =>
  {
    //sy.log(`Invitdata:${data}`)
  })
