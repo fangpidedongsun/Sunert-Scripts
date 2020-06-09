@@ -94,7 +94,7 @@ async function all()
 //await Withdrawal2();// 固定金额
   await act618();     // 618活动
   await taskStatus(); // 任务状态
-  await runtime();    // 运行时间
+//await runtime();    // 运行时间
   await getGametime();// 游戏时长
   await total();      // 总计
   await cash();       // 现金
@@ -102,6 +102,20 @@ async function all()
   await coinlist();   // 金币列表
 }
 
+  var date = new Date();
+  var hour = date.getHours();
+  var sleeping = "";
+   if (hour>20){
+       sleep();
+       CarveUp();
+  }
+   else if(hour > 11&&hour <14){
+       getCUpcoin();
+       walk();
+   }
+   else if(hour > 6&&hour <9){
+       wakeup()
+   }
 function signin() {      
    return new Promise((resolve, reject) =>
      {
@@ -268,22 +282,6 @@ function signinfo() {
     })
   })
 }             
-function runtime() {
-  var date = new Date();
-  var hour = date.getHours();
-  var sleeping = ""
-     if(hour>20){
-       sleep();
-       CarveUp();
-  }
-   else if(hour > 11&&hour <14){
-       getCUpcoin();
-       walk();
-   }
-   else if(hour > 6&&hour <10){
-       wakeup()
-   }
-}
 
 function walk() {
   return new Promise((resolve, reject) => {
