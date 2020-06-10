@@ -79,7 +79,7 @@ function sign() {
 		url: 'https://nebula.kuaishou.com/rest/n/nebula/sign/sign',
 		headers: {Cookie: cookieVal}}
     sy.get(signurl, (error, response, data) => {
-      sy.log(`${CookieName}, data: ${data}`)
+      //sy.log(`${CookieName}, data: ${data}`)
       let result = JSON.parse(data)
       if(result.result == 10007){
         subTitle = `签到结果: ${result.error_msg}`
@@ -97,7 +97,7 @@ function earn() {
 		url: 'https://nebula.kuaishou.com/rest/n/nebula/sign/query',
 		headers: {Cookie: cookieVal}}
     sy.get(earnurl, (error, response, data) => {
-      sy.log(`${CookieName}, data: ${data}`)
+      //sy.log(`${CookieName}, data: ${data}`)
       let result = JSON.parse(data)
      if (result.data.nebulaSignInPopup.button == '立即签到'){ 
        detail = `签到成功: ${result.data.nebulaSignInPopup.subTitle}, ${result.data.nebulaSignInPopup.title}`
@@ -114,7 +114,7 @@ function info() {
     let reurl = {url:'https://nebula.kuaishou.com/rest/n/nebula/activity/earn/overview',
     headers: {Cookie:cookieVal}}
 	sy.get(reurl, (error, response, data) =>{
-	sy.log(`${CookieName}, data: ${data}`)
+	//sy.log(`${CookieName}, data: ${data}`)
 	let result = JSON.parse(data) 
 	if (result.result == 1) {
 	     subTitle = `现金收益: 💵${result.data.allCash}元    金币收益: 💰${result.data.totalCoin}`
