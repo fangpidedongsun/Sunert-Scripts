@@ -1,6 +1,6 @@
 
 /*
-更新时间: 2020-06-10 18:21
+更新时间: 2020-06-10 20:21
 赞赏:电视家邀请码`893988`,农妇山泉 -> 有点咸，万分感谢
 
 本脚本仅适用于电视家签到，
@@ -106,7 +106,7 @@ async function all()
 var date = new Date();
   var hour = date.getHours();
   var sleeping = "";
-   if (hour>20){
+   if (hour>19){
        sleep();
        CarveUp();
   }
@@ -313,10 +313,10 @@ function sleep() {
       if(logs)sy.log(`睡觉任务: ${data}\n`)
       const result = JSON.parse(data)
      if (result.errCode==0){
-      cookieName += result.data.name+'报名成功 🛌'
+      sleeping = result.data.name+'报名成功 🛌'
       }
 else if (result.errCode==4006){
-      cookieName += '   睡觉中😴'
+      sleeping = '睡觉中😴'
       }
 else {
       sleeping = ''
@@ -429,7 +429,7 @@ if(gamestime){
    else if (i>=7){
    detail += `【任务统计】共完成${i-1}次任务🌷`
 }
-   sy.msg(cookieName, subTitle, detail)
+   sy.msg(cookieName+`  `+sleeping, subTitle, detail)
    sy.log(subTitle+`\n`+detail)
    })
 resolve()
