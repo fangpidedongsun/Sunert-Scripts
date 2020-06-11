@@ -127,7 +127,7 @@ function status() {
       weektask()
        }
   else if (taskstatus.data.weeklyTasks[0].status=='received'){
-      detail += `【每周任务】: ✅  +${taskstatus.data.weeklyTasks[0].taskReward}个银豆`
+      detail += `【每周任务】: ✅  +${taskstatus.data.weeklyTasks[0].taskReward}个银豆\n`
       }
     resolve()
     })
