@@ -99,7 +99,7 @@ function sign() {
       } else if (result.errorMessage == `今天已经签到过了哦`) {
       subTitle = `  重复签到 🔁`
       detail = ``
-      } else if (result.errorcode ==`L0001`) {
+      } else if (result.errorCode =='L0001') {
       subTitle = `签到失败，Cookie 失效❌`
       detail = `说明: ${result.errorMessage}`
       sy.msg(cookieName, subTitle, detail)
@@ -211,7 +211,7 @@ function tasklist() {
 function cycleLucky() {
    return new Promise((resolve, reject) =>{
     let luckyurl = {  
-         url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,headers: JSON.parse(signheaderVal),body: '{}'
+       url: `https://draw.jdfcloud.com//api/lottery/participate?lotteryId=${lotteryId}&openId=${openid}&formId=123&source=HOME&appId=${appid}`,headers: JSON.parse(signheaderVal),body: '{}'
 }
  sy.post(luckyurl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}, 抽奖任务: ${data}`)
@@ -265,7 +265,8 @@ function total() {
       const title = `${cookieName}`
       if (result.success == true) {
       SilverBean = `${result.data}`
-      beantotal = `收益总计：${SilverBean} 银豆  `
+      Silvertotal = `收益总计：${SilverBean} 银豆  `
+     
       }
   let hinturl = {
 	 url: `https://draw.jdfcloud.com//api/bean/square/silverBean/getJdBeanList?openId=${openid}&appId=${appid}`,
@@ -273,26 +274,27 @@ function total() {
     hinturl.headers['Content-Length'] = `0`;
     sy.get(hinturl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}, 可兑换: ${data}`)
-      let result = JSON.parse(data)
+      let excresult = JSON.parse(data)
       const title = `${cookieName}`
-   if (SilverBean >result.datas[0].salePrice) {
-  for (k=0; k < result.datas.length;k++){
-    if (SilverBean < result.datas[k].salePrice && SilverBean > result.datas[k-1].salePrice)
+   if (SilverBean >excresult.datas[0].salePrice) {
+  for (k=0; k < excresult.datas.length;k++){
+    exchangebean = excresult.datas[k].productName
+    if (SilverBean < excresult.datas[k].salePrice && SilverBean > excresult.datas[k-1].salePrice)
      { 
-     detail += beantotal+ `${result.datas[k-1].salePrice}银豆兑换${result.datas[k-1].productName}\n`
+     detail += Silvertotal+ `${excresult.datas[k-1].salePrice}银豆兑换${exchangebean}\n`
     }
-    else if (result.datas[k].salePrice == SilverBean)
+    else if (excresult.datas[k].salePrice == SilverBean)
      { 
-      detail += beantotal+ `${result.datas[k].salePrice}银豆兑换${result.datas[k].productName}\n`
+      detail += Silvertotal+ `${excresult.datas[k].salePrice}银豆兑换${exchangebean}\n`
      }
     }
-   } else if (SilverBean < result.datas[0].salePrice) 
+   } else if (SilverBean < excresult.datas[0].salePrice) 
     { 
-       detail+= beantotal+ `银豆不足以兑换京豆\n`
+       detail+= Silvertotal+ `银豆不足以兑换京豆\n`
     }
-else if (SilverBean == result.datas[0].salePrice) 
+else if (SilverBean == excresult.datas[0].salePrice) 
     { 
-       detail+= beantotal+ `${result.datas[0].salePrice}银豆兑换${result.datas[0].productName}\n`
+       detail+= Silvertotal+ `${excresult.datas[0].salePrice}银豆兑换${excresult.datas[0].productName}\n`
        }
     resolve()
      })
@@ -302,7 +304,7 @@ else if (SilverBean == result.datas[0].salePrice)
 }
 function exChange() {
  return new Promise((resolve, reject) => {
-  if(beantotal==jdbean){
+  if(exchangebean==jdbean+'京豆'){
   let changeurl = {
       url: `https://draw.jdfcloud.com//api/bean/square/silverBean/exchange?appId=${appid}`,
       headers: JSON.parse(signheaderVal),
