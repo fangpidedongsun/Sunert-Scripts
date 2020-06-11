@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-06-08 20:45
+更新时间: 2020-06-12 00:25
 
 本脚本仅适用于京东来客有礼每日获取京豆
 获取Cookie方法:
@@ -99,9 +99,10 @@ function sign() {
       } else if (result.errorMessage == `今天已经签到过了哦`) {
       subTitle = `  重复签到 🔁`
       detail = ``
-      } else  {
-      subTitle = `  签到失败❌`
+      } else if (result.errorcode ==`L0001`) {
+      subTitle = `签到失败，Cookie 失效❌`
       detail = `说明: ${result.errorMessage}`
+      sy.msg(cookieName, subTitle, detail)
       }
      resolve()
      })
@@ -300,7 +301,8 @@ else if (SilverBean == result.datas[0].salePrice)
  })
 }
 function exChange() {
-  return new Promise((resolve, reject) => {
+ return new Promise((resolve, reject) => {
+  if(beantotal==jdbean){
   let changeurl = {
       url: `https://draw.jdfcloud.com//api/bean/square/silverBean/exchange?appId=${appid}`,
       headers: JSON.parse(signheaderVal),
@@ -313,6 +315,7 @@ function exChange() {
       detail += '\n【自动兑换】 兑换'+result.data+'个京豆 ✅'
      }
     })
+  }
   sy.msg(cookieName, '昵称: '+ uesername+' '+subTitle, detail)
   sy.log('昵称: '+ uesername+' '+subTitle+detail)
   resolve()
