@@ -138,7 +138,7 @@ function video() {
  return new Promise((resolve, reject) =>{
   if (taskstatus.data.dailyTasks[1].status!='received'){
     bodyVal = '{"openId": '+'"'+openid+'","taskCode": "watch_video"}'
- for (j=0;taskstatus.data.dailyTasks[1].status!='received';j++){
+ for (j=0;j<4;j++){
    videourl = {
      url: `https://draw.jdfcloud.com//api/bean/square/silverBean/task/join?appId=${appid}`,headers: JSON.parse(signheaderVal),body: bodyVal}
    videotaskurl = {
