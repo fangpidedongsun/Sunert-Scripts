@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-06-12 11:55
+更新时间: 2020-06-12 12:35
 
 本脚本仅适用于京东来客有礼每日获取京豆
 获取Cookie方法:
@@ -325,7 +325,7 @@ function total() {
     }
 else if (SilverBean == excresult.datas[0].salePrice) 
     { 
-       detail+= Silvertotal+ `${excresult.datas[0].salePrice}银豆兑换${excresult.datas[0].productPrice}京豆\n`
+       detail+= Silvertotal+ `${excresult.datas[0].salePrice}银豆随机兑换${excresult.datas[0].productName}\n`
        }
     resolve()
      })
