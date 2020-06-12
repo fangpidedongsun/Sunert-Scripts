@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-06-12 10:50
+更新时间: 2020-06-12 11:55
 
 本脚本仅适用于京东来客有礼每日获取京豆
 获取Cookie方法:
@@ -9,7 +9,6 @@
 3.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
 4.5月17日增加自动兑换京豆，需设置兑换京豆数，现可根据100、200和500设置，不可设置随机兑换数，根据页面填写兑换数值，默认设置500，注意是京豆数❗️ 已取消自动兑换‼️
 5.增加打卡挑战赛自动报名，需要5天后手动领取瓜分奖励‼️
-
 
 by Macsuny
 ~~~~~~~~~~~~~~~~
@@ -115,7 +114,6 @@ function status() {
    let statusurl = {
 	  url: `https://draw.jdfcloud.com//api/bean/square/silverBean/task/get?openId=${openid}&appId=${appid}`,
      headers: JSON.parse(signheaderVal)}
-     statusurl.headers['Content-Length'] = `0`;
    sy.get(statusurl, (error, response, data) =>{
    if(logs)sy.log(`${cookieName}, 任务状态: ${data}`)
      taskstatus = JSON.parse(data)
@@ -260,7 +258,7 @@ return new Promise((resolve, reject) => {
    beanurl.headers['Content-Length'] = `0`;
     sy.get(beanurl, (error, response, data) =>
   {
-     if(logs)sy.log(`${cookieName}, 日常银豆: ${data}`)
+    if(logs)sy.log(`${cookieName}, 日常银豆: ${data}`)
     })
    resolve()
  sy.msg(cookieName, '昵称: '+ uesername+' '+subTitle, detail)
@@ -290,7 +288,6 @@ function total() {
 	  url: `https://draw.jdfcloud.com//api/bean/square/silverBean/getUserBalance?openId=${openid}&appId=${appid}`,
 	  headers: JSON.parse(signheaderVal)
 	}
-     lotteryurl.headers['Content-Length'] = `0`;
     sy.get(lotteryurl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}, 统计: ${data}`)
       let result = JSON.parse(data)
@@ -308,7 +305,6 @@ function total() {
       let excresult = JSON.parse(data)
       const title = `${cookieName}`
            exchangebean = ``
-
    if (SilverBean >excresult.datas[0].salePrice) {
   for (k=0; k < excresult.datas.length;k++){
    if (excresult.datas[k].productName==jdbean+'京豆'){
@@ -316,11 +312,11 @@ function total() {
    }
     if (SilverBean < excresult.datas[k].salePrice && SilverBean > excresult.datas[k-1].salePrice)
      { 
-     detail += Silvertotal+ `${excresult.datas[k-1].salePrice}银豆兑换${exchangebean}\n`
+     detail += Silvertotal+ `${excresult.datas[k-1].salePrice}银豆兑换${excresult.datas[k-1].productPrice}京豆\n`
     }
     else if (excresult.datas[k].salePrice == SilverBean)
      { 
-      detail += Silvertotal+ `${excresult.datas[k].salePrice}银豆兑换${exchangebean}\n`
+      detail += Silvertotal+ `${excresult.datas[k].salePrice}银豆兑换${excresult.datas[k].productPrice}京豆\n`
      }
     }
    } else if (SilverBean < excresult.datas[0].salePrice) 
@@ -329,7 +325,7 @@ function total() {
     }
 else if (SilverBean == excresult.datas[0].salePrice) 
     { 
-       detail+= Silvertotal+ `${excresult.datas[0].salePrice}银豆兑换${excresult.datas[0].productName}\n`
+       detail+= Silvertotal+ `${excresult.datas[0].salePrice}银豆兑换${excresult.datas[0].productPrice}京豆\n`
        }
     resolve()
      })
