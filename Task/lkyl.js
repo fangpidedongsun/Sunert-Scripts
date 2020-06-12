@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-06-12 09:05
+更新时间: 2020-06-12 10:50
 
 本脚本仅适用于京东来客有礼每日获取京豆
 获取Cookie方法:
@@ -7,7 +7,9 @@
 下，
 2.微信搜索'来客有礼'小程序,登陆京东账号，点击'发现',即可获取Cookie，获取后请禁用或注释掉❗️
 3.非专业人士制作，欢迎各位大佬提出宝贵意见和指导
-4.5月17日增加自动兑换京豆，需设置兑换京豆数，现可根据100、200和500设置，不可设置随机兑换数，根据页面填写兑换数值，默认设置500，注意是京豆数❗️
+4.5月17日增加自动兑换京豆，需设置兑换京豆数，现可根据100、200和500设置，不可设置随机兑换数，根据页面填写兑换数值，默认设置500，注意是京豆数❗️ 已取消自动兑换‼️
+5.增加打卡挑战赛自动报名，需要5天后手动领取瓜分奖励‼️
+
 
 by Macsuny
 ~~~~~~~~~~~~~~~~
@@ -37,6 +39,7 @@ hostname = draw.jdfcloud.com
 ~~~~~~~~~~~~~~~~
 
 */
+const challengebean= 100 //默认挑战赛100档
 const jdbean = "500" //兑换京豆数
 const logs = 0   //响应日志开关,默认关闭
 const cookieName = '来客有礼小程序'
@@ -77,6 +80,7 @@ async function all()
   await total();    // 总计
   await tasklist(); // 任务列表
   await lottery();  // 0元抽奖
+  await challenge();// 打卡挑战
   await status();   // 任务状态
   await video();    // 视频任务
   await Daily();    // 日常任务
@@ -116,7 +120,7 @@ function status() {
    if(logs)sy.log(`${cookieName}, 任务状态: ${data}`)
      taskstatus = JSON.parse(data)
       if (taskstatus.data.dailyTasks[0].status!='received'){
-      detail +=  `【日常抽奖】: 🔕 已完成/总计: ${doneSteps} / ${totalSteps}\n`
+      detail +=  `【日常抽奖】: 🔕 已完成/总计: ${doneSteps}/${totalSteps}次\n`
        };
      if (taskstatus.data.dailyTasks[0].status=='received'){
       detail += `【日常抽奖】: ✅  +${taskstatus.data.dailyTasks[0].taskReward} 银豆\n`
@@ -187,6 +191,34 @@ function info() {
     if(logs)sy.log(`${cookieName}, 账号信息: ${data}`)
    let info = JSON.parse(data)  
     uesername = `${info.data.nickName}`
+    resolve()
+  })
+ })
+}          
+function challenge() {
+ return new Promise((resolve, reject) =>{
+  let  d = new Date();
+       M = ("0" + (d.getMonth()+1)).slice(-2);
+       D = ("0" + (d.getDate())).slice(-2);
+       Y = d.getFullYear()  
+    nowday=Y+M+D
+   let challurl = {
+	 url: `https://draw.jdfcloud.com//api/sign/challenge/apply?appId=${appid}`,
+	 headers: JSON.parse(signheaderVal),
+     body: '{"appId":'+' "'+appid+'"'+', "openId":'+' "'+openid+'"'+',"challengeStage":"'+nowday+'","deductAmount":'+challengebean+',"signLevelAmount":'+challengebean+'}'
+}
+    sy.post(challurl, (error, response, data) => {
+    sy.log(`${cookieName}, 打卡挑战赛: ${data}`)
+   let challres = JSON.parse(data)  
+   if(challres.data==true){
+     detail += `【打卡挑战】: 报名成功，押金: `+challengebean+'\n'
+    }
+   if(challres.errorCode=="exist"){
+     detail += `【打卡挑战】: 已报名，押金: `+challengebean+'银豆\n'
+    }
+if(challres.errorCode=="deduct_fail"){
+     detail += `【打卡挑战】: ❎ 报名失败 押金: 不足\n`
+    }
     resolve()
   })
  })
@@ -276,6 +308,7 @@ function total() {
       let excresult = JSON.parse(data)
       const title = `${cookieName}`
            exchangebean = ``
+
    if (SilverBean >excresult.datas[0].salePrice) {
   for (k=0; k < excresult.datas.length;k++){
    if (excresult.datas[k].productName==jdbean+'京豆'){
