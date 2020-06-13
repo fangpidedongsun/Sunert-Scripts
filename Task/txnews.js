@@ -72,6 +72,7 @@ async function all()
   await getsign();
   await toRead();
   await lookVideo();
+  await openApp();
   await StepsTotal();
   await StepsTotal2();
   await RednumCheck();
@@ -221,6 +222,25 @@ function RednumCheck() {
       await videoPack();
    }
   }
+}
+
+function openApp() {
+   ID = signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
+return new Promise((resolve, reject) => {
+  const openUrl = {
+    url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
+    headers: {Cookie: cookieVal},
+    body: `redpack_type=free_redpack&activity_id=${RedID}`
+  }
+   sy.post(openUrl, (error, response, data) => {
+    sy.log(`${cookieName}每日开启- data: ${data}`)
+      let opcash = JSON.parse(data)
+      if(opcash.data.award.num){
+       redpackres = `【每日开启】到账`+opcash.data.award.num/100+` 元 🌷\n` 
+        }
+      })
+    resolve()
+   })
 }
 //阶梯红包到账
 function Redpack() {
