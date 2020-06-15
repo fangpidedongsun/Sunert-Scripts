@@ -158,7 +158,7 @@ function shareApp() {
   ID = signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const shareUrl = {
-    url: `https://gh.prize.qq.com/show/_bxzep/invPack/index.html?${ID}&uid=543676667`,
+    url: `https://url.cn/gaYNDrRV?${ID}&uid=543676667&from=singlemessage&isappinstalled=0`,
     headers: {Cookie: cookieVal},
   }
    sy.get(shareUrl, (error, response, data) => {
