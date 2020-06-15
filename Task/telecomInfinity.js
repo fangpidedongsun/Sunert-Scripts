@@ -178,18 +178,16 @@ function parseData(detail, balance, info, bill) {
 }
 
 function notify(data, balance, exdata, bldata) {
-    // voiceAmount 总语音 voiceUsage voiceBalance
-    // totalCommon usedCommon balanceCommon
     var subtitle = ""
     if (config.info) {
         subtitle = "【手机】 " + exdata.mobileShort + "  (" + exdata.province + "-" + exdata.city + ")"
     }
     var productname = "中国电信"
-    if (typeof data.items[0].productOFFName != "undefined") {
-        productname = data.items[0].productOFFName
+    if (typeof data.items[1].offerType == 11) {
+        productname = data.items[1].productOFFName
     }
-    var Resourcename = " "
-    if (data.items[0].items[1]?.ratableResourcename) {       Resourcename = data.items[0].items[1].ratableResourcename
+    else if (typeof data.items[0].productOFFName != "undefined") {
+        productname = data.items[0].productOFFName
     }
     var message = "【套餐】 " + productname
     var voiceAmount = " "
@@ -211,35 +209,31 @@ if(data.items[i].items[k].nameType == 401100||data.items[i].items[k].nameType ==
    msgAmount = data.items[i].items[k].ratableAmount
    msgBalance = data.items[i].items[k].balanceAmount
   }
+if(data.items[i].offerType == 19){
+   balanceCommon = data.items[i].items[0].ratableResourcename
+   totalCommon = data.items[i].productOFFName
+  }
  }
 }
- //$tool.log.info(data.items)
     if (voiceUsage) {
-        var voice = "【通话】 已用: " + voiceUsage + "分钟  剩余: " + voiceBalance + "分钟  合计: " + voiceAmount + "分钟"
+        var voice = "【通话】 已用: " + voiceUsage + "分钟 剩余: " + voiceBalance + "分钟 合计: " + voiceAmount + "分钟"
         message = message + "\n" + voice
     }
     if (msgUsage) {
-        msginfo = "【短信】 已用: " + msgUsage + "条  剩余: " + msgBalance + "条  合计: " + msgAmount + "条"
+        msginfo = "【短信】 已用: " + msgUsage + "条 剩余: " + msgBalance + "条 合计: " + msgAmount + "条"
         message = message + "\n" + msginfo
     }
-    if (typeof data.totalCommon != "undefined" ) {
-     var balanceCommon = " "
-     var totalCommon = " "
-     var usagedCommon =formatFlow(data.usageCommon/1024) 
-     if(data.balanceCommon){
-         balanceCommon = formatFlow(data.balanceCommon/1024)
-}
-     if(data.totalCommon){
+     usagedCommon = formatFlow(data.balance/1024) 
+   if(typeof totalCommon == "undefined" &&data.totalCommon!=0){
 totalCommon = formatFlow(data.totalCommon/1024)
 }
-       var flow = "【流量】 已用: " + usagedCommon + "   剩余: " + balanceCommon + "  合计: " + totalCommon
+   var flow = "【流量】 已用:" + usagedCommon + "  剩余:" + balanceCommon + "  合计:" + totalCommon
     message = message + "\n" + flow
-    }
+
     var cost = "【话费】 剩余: " + (balance / 100).toFixed(2) + "元"
 message = message + "\n" + cost
     if (bldata != '无'){message +=  `  ${m}月消费合计: `+ bldata.items[0].sumCharge/100+'元'}
-
- if (bldata == '无'){
+    if (bldata == '无'){
 message = message + "\n" + `【${m}月账单】   `+ bldata
 } else if (typeof bldata.items[0].acctName != "undefined" && bldata.serviceResultCode == 0) {
     bills = `【${m}月话费账单】` + "\n   " + bldata.items[0].items[1].chargetypeName + ':    '+
@@ -247,6 +241,7 @@ bldata.items[0].items[1].charge/100+'元'+ "\n   "+ bldata.items[0].items[2].cha
 bldata.items[0].items[2].charge/100+'元'+ "\n   "+ bldata.items[0].items[0].chargetypeName + '合计:  '+ bldata.items[0].items[0].charge/100+'元'
     message = message + "\n" + bills
     }
+
     $tool.notify(config.name, subtitle, message)
     $tool.log.info(config.name + "\n" + subtitle + "\n" + message)
 }
