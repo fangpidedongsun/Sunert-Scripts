@@ -44,7 +44,7 @@ let config = {
 const $tool = Tool()
      d = new Date();
      Y = d.getFullYear(),
-     m =  d.getMonth()  //上月
+     m = d.getMonth()  //上月
      M = ("0" + m).slice(-2)
    let AUTHTOKEN = $tool.read(config.authTokenKey)
    let COOKIE = $tool.read(config.CookieKey)
@@ -178,6 +178,7 @@ function parseData(detail, balance, info, bill) {
 }
 
 function notify(data, balance, exdata, bldata) {
+$tool.log.info(data)
     var subtitle = ""
     if (config.info) {
         subtitle = "【手机】" + exdata.mobileShort + "  (" + exdata.province + "-" + exdata.city + ")"
@@ -196,6 +197,15 @@ function notify(data, balance, exdata, bldata) {
     var msgUsage = ""
     var msgBalance = ""
     var msgAmount = ""
+  if(data.usedCommon){
+     usagedCommon = formatFlow(data.usedCommon/1024)
+}
+  if(data.balanceCommon){
+     balanceCommon = formatFlow(data.balanceCommon/1024)
+}
+  if(data.totalCommon){
+     totalCommon = formatFlow(data.totalCommon/1024)
+}
 for (i=0;i<data.items.length;i++){
 for (k=0;k<data.items[i].items.length;k++){
 if(data.items[i].items[k].nameType == 131100){
@@ -210,7 +220,8 @@ if(data.items[i].items[k].nameType == 401100||data.items[i].items[k].nameType ==
    msgBalance = data.items[i].items[k].balanceAmount
   }
 if(data.items[i].offerType == 19){
-   balanceCommon = data.items[i].items[0].ratableResourcename
+   usagedCommon = formatFlow(data.items[i].items[k].usageAmount/1024)
+   balanceCommon = data.items[i].items[k].ratableResourcename
    totalCommon = data.items[i].productOFFName
   }
  }
@@ -223,11 +234,7 @@ if(data.items[i].offerType == 19){
         msginfo = "【短信】已用: " + msgUsage + "条 剩余: " + msgBalance + "条 合计: " + msgAmount + "条"
         message = message + "\n" + msginfo
     }
-     usagedCommon = formatFlow(data.balance/1024) 
-   if(typeof totalCommon == "undefined" &&data.totalCommon!=0){
-totalCommon = formatFlow(data.totalCommon/1024)
-}
-   var flow = "【流量】已用:" + usagedCommon + "  剩余:" + balanceCommon + "  合计:" + totalCommon
+   var flow = "【流量】已用: " + usagedCommon + "  剩余:" + balanceCommon + "  合计:" + totalCommon
     message = message + "\n" + flow
 
     var cost = "【话费】剩余: " + (balance / 100).toFixed(2) + "元"
