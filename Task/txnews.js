@@ -163,7 +163,6 @@ return new Promise((resolve, reject) => {
   }
    sy.get(shareUrl, (error, response, data) => {
     //sy.log(`${cookieName}- data: ${data}`)
-      let opcash = JSON.parse(data)
       })
     resolve()
    })

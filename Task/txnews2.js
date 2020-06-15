@@ -253,7 +253,6 @@ return new Promise((resolve, reject) => {
   }
    sy.get(openUrl, (error, response, data) => {
     //sy.log(`${cookieName}- data: ${data}`)
-      let opcash = JSON.parse(data)
       })
     resolve()
    })
