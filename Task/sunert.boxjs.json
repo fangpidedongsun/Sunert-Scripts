@@ -1,0 +1,25 @@
+{
+  "id": "sunert.app.sub",
+  "name": "Sunert 签到应用订阅",
+  "author": "@Sunert",
+  "icon": "https://avatars2.githubusercontent.com/u/47924389?s=460&u=5152f048a9e8aaa45102763a578172407c40fcc8&v=4",
+  "repo": "https://github.com/Sunert/Scripts/",
+  "apps": [
+    {
+      "id": "weibo",
+      "name": "新浪微博",
+      "keys": ["sy.signurl.wb", "sy_signheader_wb", "sy_payheader_wb", "sy_token_wb"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/weibo.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/weibo.png", "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"]
+    },
+    {
+      "id": "youth",
+      "name": "中青看点",
+      "keys": ["youthheader_zq", "read_zq", "red_zq", "readtime_zq"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"]
+    }
+  ]
+}
