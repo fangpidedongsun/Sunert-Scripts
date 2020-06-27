@@ -91,13 +91,30 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const cookie = $hammer.read('CookieJD');
 
 var shareCodes = [ // 这个列表填入你要助力的好友的shareCode, 最多可能是5个? 没有验证过
-    'MTAxODcxOTI2NTAwMDAwMDAwMDc4MDExNw==',
-    'MTAxODcxOTI2NTAwMDAwMDAyNjA4ODQyMQ==',
+    'MTAxODc2NTEzNTAwMDAwMDAyODkwODQzNw==',
+    'MTAxODc2NTEzMzAwMDAwMDAyNzExNDQ2OQ==',
     'MTAxODc2NTEzMDAwMDAwMDAwNTUwNDUxMw==',
     'MTAxODc2NTEzOTAwMDAwMDAxODQ5MDg5NQ==',
-    ''
+    'MTAxODcxOTI2NTAwMDAwMDAxOTQ3MjkzMw=='
 ]
-
+// 添加box功能
+// 【用box订阅的好处】
+// 1️⃣脚本也可以远程挂载了。助力功能只需在box里面设置助力码。
+// 2️⃣所有脚本的cookie都可以备份，方便你迁移到其他支持box的软件。
+let isBox = false //默认没有使用box
+const boxShareCodeArr = ['jd_pet1', 'jd_pet2', 'jd_pet3', 'jd_pet4', 'jd_pet5'];
+isBox = boxShareCodeArr.some((item) => {
+  const boxShareCode = $hammer.read(item);
+  return (boxShareCode !== undefined && boxShareCode !== null && boxShareCode !== '');
+});
+if (isBox) {
+  shareCodes = [];
+  for (const item of boxShareCodeArr) {
+    if ($hammer.read(item)) {
+      shareCodes.push($hammer.read(item));
+    }
+  }
+}
 var petInfo = null;
 var taskInfo = null;
 const name = '东东萌宠';
@@ -114,6 +131,7 @@ let goodsUrl = '';
 //     inviteFriendsInit: inviteFriendsInit, //邀请好友, 暂未处理
 //     feedReachInit: feedReachInit, //喂食10次任务  最后执行投食10次任务, 提示剩余狗粮是否够投食10次完成任务, 并询问要不要继续执行
 // };
+// function_map不再写固定死的，改成从初始化任务api那边拿取，避免6.22日下午京东服务器下架一个任务后，脚本对应不上，从而报错的bug
 var function_map = [];
 let gen = entrance();
 gen.next();

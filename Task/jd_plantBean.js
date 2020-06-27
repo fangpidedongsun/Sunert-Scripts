@@ -1,30 +1,131 @@
 /*
 种豆得豆 搬的https://github.com/uniqueque/QuantumultX/blob/4c1572d93d4d4f883f483f907120a75d925a693e/Script/jd_joy.js
-quantumultx用
 会自动关注任务中的店铺跟商品
-
-
+// quantumultx
 [task_local]
-
 1 7-21/2 * * * jd_plantBean.js
-
+// Loon
+cron "1 7-21/2 * * *" script-path=https://github.com/nzw9314/QuantumultX/raw/master/Task/jd_plantBean.js,tag=京东种豆得豆
 */
 
+const $hammer = (() => {
+    const isRequest = "undefined" != typeof $request,
+        isSurge = "undefined" != typeof $httpClient,
+        isQuanX = "undefined" != typeof $task;
+
+    const log = (...n) => { for (let i in n) console.log(n[i]) };
+    const alert = (title, body = "", subtitle = "", link = "") => {
+        if (isSurge) return $notification.post(title, subtitle, body, link);
+        if (isQuanX) return $notify(title, subtitle, (link && !body ? link : body));
+        log("==============📣系统通知📣==============");
+        log("title:", title, "subtitle:", subtitle, "body:", body, "link:", link);
+    };
+    const read = key => {
+        if (isSurge) return $persistentStore.read(key);
+        if (isQuanX) return $prefs.valueForKey(key);
+    };
+    const write = (val, key) => {
+        if (isSurge) return $persistentStore.write(val, key);
+        if (isQuanX) return $prefs.setValueForKey(val, key);
+    };
+    const request = (method, params, callback) => {
+        /**
+         * 
+         * params(<object>): {url: <string>, headers: <object>, body: <string>} | <url string>
+         * 
+         * callback(
+         *      error, 
+         *      <response-body string>?,
+         *      {status: <int>, headers: <object>, body: <string>}?
+         * )
+         * 
+         */
+        let options = {};
+        if (typeof params == "string") {
+            options.url = params;
+        } else {
+            options.url = params.url;
+            if (typeof params == "object") {
+                params.headers && (options.headers = params.headers);
+                params.body && (options.body = params.body);
+            }
+        }
+        method = method.toUpperCase();
+
+        const writeRequestErrorLog = function (m, u) {
+            return err => {
+                log("=== request error -s--");
+                log(`${m} ${u}`, err);
+                log("=== request error -e--");
+            };
+        }(method, options.url);
+
+        if (isSurge) {
+            const _runner = method == "GET" ? $httpClient.get : $httpClient.post;
+            return _runner(options, (error, response, body) => {
+                if (error == null || error == "") {
+                    response.body = body;
+                    callback("", body, response);
+                } else {
+                    writeRequestErrorLog(error);
+                    callback(error);
+                }
+            });
+        }
+        if (isQuanX) {
+            options.method = method;
+            $task.fetch(options).then(
+                response => {
+                    response.status = response.statusCode;
+                    delete response.statusCode;
+                    callback("", response.body, response);
+                },
+                reason => {
+                    writeRequestErrorLog(reason.error);
+                    callback(reason.error);
+                }
+            );
+        }
+    };
+    const done = (value = {}) => {
+        if (isQuanX) return isRequest ? $done(value) : null;
+        if (isSurge) return isRequest ? $done(value) : $done();
+    };
+    return { isRequest, isSurge, isQuanX, log, alert, read, write, request, done };
+})();
 
 //直接用NobyDa的jd cookie
-const cookie = $prefs.valueForKey('CookieJD')
+const cookie = $hammer.read('CookieJD')
 const name = '京东种豆得豆'
 
 //京东接口地址
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 
 var plantUuids = [ // 这个列表填入你要助力的好友的plantUuid
-    'avlxbxdxf3altnm77gkqweriwik3gtnp3vhxdwy',
     'olmijoxgmjutztzexoyxf22tw2cb5uw4ovuv4dq',
     'qawf5ls3ucw25yhfulu32xekqy3h7wlwy7o5jii',
-    'd6wg7f6syive54q4yfrdmaddo4'
+    'mlrdw3aw26j3wcfocjqxtxt6lvc5hcmge6uvali',
+    'hexohqmn2e3mdh2g46phdwmrl7i47afmxp3ipvy',
+    '4npkonnsy7xi3si6xqc2vreolyar2krbjgxtjmq'
 ]
-
+// 添加box功能
+// 【用box订阅的好处】
+// 1️⃣脚本也可以远程挂载了。助力功能只需在box里面设置助力码。
+// 2️⃣所有脚本的cookie都可以备份，方便你迁移到其他支持box的软件。
+let isBox = false //默认没有使用box
+const boxShareCodeArr = ['jd_plantBean1', 'jd_plantBean2', 'jd_plantBean3'];
+isBox = boxShareCodeArr.some((item) => {
+  const boxShareCode = $hammer.read(item);
+  return (boxShareCode !== undefined && boxShareCode !== null && boxShareCode !== '');
+});
+if (isBox) {
+  plantUuids = [];
+  for (const item of boxShareCodeArr) {
+    if ($hammer.read(item)) {
+      plantUuids.push($hammer.read(item));
+    }
+  }
+}
 
 var Task = step();
 Task.next();
@@ -181,6 +282,10 @@ function* step() {
                 console.log(`助力好友失败: ${JSON.stringify(helpResult)}`);
             }
         }
+
+        //todo 扭蛋
+
+
         plantBeanIndexResult = yield plantBeanIndex()
         if (plantBeanIndexResult.code == '0') {
             let plantBeanRound = plantBeanIndexResult.data.roundList[1]
@@ -206,7 +311,7 @@ function* step() {
     } else {
         message = '请先获取cookie\n直接使用NobyDa的京东签到获取'
     }
-    $notify(name, '', message)
+    $hammer.alert(name, message)
 }
 
 function purchaseRewardTask(roundId) {
@@ -322,28 +427,22 @@ function plantBeanIndex() {
     request(functionId, body);//plantBeanIndexBody
 }
 
-function requestGet(url) {
-    $task.fetch({
+function requestGet(url){
+    const option =  {
         url: url,
         headers: {
             Cookie: cookie,
-        },
-        method: "GET",
-    }).then(
-        (response) => {
-            return JSON.parse(response.body)
-        },
-        (reason) => console.log(reason.error, reason)
-    ).then((response) => sleep(response))
+        }
+    };
+    $hammer.request('GET', option, (error, response) => {
+        error ? $hammer.log("Error:", error) : sleep(JSON.parse(response));
+    })
 }
 
 function request(function_id, body = {}) {
-    $task.fetch(taskurl(function_id, body)).then(
-        (response) => {
-            return JSON.parse(response.body)
-        },
-        (reason) => console.log(reason.error, reason)
-    ).then((response) => sleep(response))
+    $hammer.request('POST', taskurl(function_id, body), (error, response) => {
+        error ? $hammer.log("Error:", error) : sleep(JSON.parse(response));
+    })
 }
 
 function taskurl(function_id, body) {
@@ -354,9 +453,7 @@ function taskurl(function_id, body) {
         body: `functionId=${function_id}&body=${JSON.stringify(body)}&appid=ld&client=apple&clientVersion=&networkType=&osVersion=&uuid=`,
         headers: {
             Cookie: cookie,
-        },
-        // method: "GET",
-        method: "POST",
+        }
     }
 }
 
@@ -384,4 +481,4 @@ function getParam(url, name) {
     var r = url.match(reg);
     if (r != null) return unescape(r[2]);
     return null;
-} 
+}
