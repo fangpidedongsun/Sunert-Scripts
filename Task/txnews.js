@@ -339,7 +339,7 @@ function showmsg() {
    else if(notifyInterval==1){
    sy.msg(cookieName,subTile,detail)
   }
-  //sy.log(subTile+`\n`+detail)
+  sy.log(subTile+`\n`+detail)
  })
 resolve()
 }
