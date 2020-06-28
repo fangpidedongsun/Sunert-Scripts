@@ -246,7 +246,7 @@ return new Promise((resolve, reject) => {
     body: `redpack_type=free_redpack&activity_id=${RedID}`
   }
    sy.post(openUrl, (error, response, data) => {
-    sy.log(`${cookieName}每日开启- data: ${data}`)
+    if(logs)sy.log(`${cookieName}每日开启- data: ${data}`)
       let opcash = JSON.parse(data)
       if(opcash.data.award.num){
        redpackres = `【每日开启】到账`+opcash.data.award.num/100+` 元 🌷\n` 
@@ -339,7 +339,7 @@ function showmsg() {
    else if(notifyInterval==1){
    sy.msg(cookieName,subTile,detail)
   }
-  sy.log(subTile+`\n`+detail)
+  //sy.log(subTile+`\n`+detail)
  })
 resolve()
 }
