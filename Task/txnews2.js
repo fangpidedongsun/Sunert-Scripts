@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-06-29 17:40
+更新时间: 2020-06-29 23:40
 
 腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万阅读红包挑战赛，针对幸运用户参与
 
@@ -82,7 +82,6 @@ async function all()
   await openApp();
   await shareApp();
   await StepsTotal();
-  await StepsTotal2();
   await RednumCheck();
   await getTotal();
   await showmsg();
@@ -152,7 +151,7 @@ function lookVideo() {
         if(logs)sy.log(`${cookieName}观看视频 - data: ${data}`)
        tolookresult = JSON.parse(data)
       if(tolookresult.info=='success'){
-        RedID = tolookresult.data.activity.id
+        //RedID = tolookresult.data.activity.id
         videocoins = tolookresult.data.countdown_timer.countdown_tips
      }
     }
@@ -181,12 +180,14 @@ return new Promise((resolve, reject) => {
 totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
        getreadred=totalred.data.award[i].can_get
        openreadred= totalred.data.award[i].opened
+       readnum = totalred.data.award[i].event_num
         }
    if(totalred.data.award[i].type=='video'){
         videoredtotal = totalred.data.award[i].total
         videotitle = totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
         getreadred = totalred.data.award[i].can_get        
         openvideored = totalred.data.award[i].opened
+        videonum = totalred.data.award[i].event_num/2
         }
       }
      }
@@ -195,25 +196,6 @@ totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
   })
 }
 
-function StepsTotal2() {
- const ID = signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
-return new Promise((resolve, reject) => {
-  const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/notice/info?activity_id=${RedID}&${ID}`,
-   headers: {Cookie: cookieVal},
-  };
-    sy.get(StepsUrl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}阅读统计- data: ${data}\n`)
-       totalnum = JSON.parse(data)
-        if (totalnum.ret == 0){
-        readnum =  totalnum.data.show_list[0].schedule.current
-        videonum =
-totalnum.data.show_list[1].schedule.current
-     }
-    resolve()
-    })
-  })
-}
 function RednumCheck() {
   var date = new Date();
   var hour = date.getHours();
@@ -222,13 +204,11 @@ function RednumCheck() {
     Redpack()
   }
   if(videocoins=="红包+1"){
-   videoPack()
+    videoPack()
   }
-  else if(hour>20){
-     async function run(){
-      await Redpack();
-      await videoPack();
-   }
+   else if(hour>20){
+     Redpack(),
+     videoPack()
   }
 }
 function openApp() {
@@ -280,22 +260,23 @@ return new Promise((resolve, reject) => {
        for (i=0;i<rcash.data.award.length;i++){
         readredpack += rcash.data.award[i].num/100
             }
-       redpackres += `【阅读红包】到账`+readredpack+` 元 🌷\n` 
+       if(readredpack!=0){
+       redpackres += `【阅读红包】到账`+readredpack+`元 🌷\n` 
            }
+         }
+     resolve()
        })
-    resolve()
    })
 }
 
 function videoPack() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
- setTimeout(()=>{
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
     body: `redpack_type=video&activity_id=${RedID}`
-  };
+  }
     sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
         let vcash = JSON.parse(data)
@@ -305,10 +286,11 @@ return new Promise((resolve, reject) => {
        for (i=0;i<vcash.data.award.length;i++){
         videoredpack += vcash.data.award[i].num/100
              }
-        redpackres += `【视频红包】到账`+videoredpack+` 元 🌷\n` 
+       if(videoredpack!=0){
+        redpackres += `【视频红包】到账`+videoredpack+`元 🌷\n` 
+          }
          }
      resolve()
-       },100)
       })
    })
 }
@@ -326,15 +308,17 @@ return new Promise((resolve, reject) => {
     if (logs) console.log("获取收益信息" +data)
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
-      }
-    resolve()
-    })
+        }
+     resolve()
+      })
    })
  }
 
 function showmsg() {
  return new Promise((resolve, reject) => {
-   detail = signinfo+ redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+  if(readnum&&videonum){
+   detail = signinfo+redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+  }
    if
 (openvideored%notifyInterval==0&&videocoins=="红包+1"){
    sy.msg(cookieName,subTile,detail)
