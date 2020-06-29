@@ -123,7 +123,8 @@ return new Promise((resolve, reject) => {
       }
      }
     catch(error) {
-    sy.msg(cookieName, '无法获取活动ID',  error)
+       sy.msg(cookieName, '无法获取活动ID',  error)
+       return
       }
     resolve()
     })

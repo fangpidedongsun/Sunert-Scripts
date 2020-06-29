@@ -130,7 +130,8 @@ try {
       }
      }
     catch(error) {
-    sy.msg(cookieName, '无法获取活动激活ID',  error)
+        sy.msg(cookieName, '无法获取活动激活ID',  error)
+        return
       }
     resolve()
     })
