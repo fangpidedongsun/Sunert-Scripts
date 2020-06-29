@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-06-13 00:40
+更新时间: 2020-06-29 17:40
 
 腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万阅读红包挑战赛，针对幸运用户参与
 
@@ -34,7 +34,7 @@ QX 1.0.7+ :
 0 9 * * * txnews2.js, tag=腾讯新闻
  [rewrite_local]
 https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews2.js
-
+https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-response-body txnews2.js
 ~~~~~~~~~~~~~~~~~~
  [MITM]
 hostname = api.inews.qq.com
@@ -59,13 +59,18 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)) {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.headers!==undefined) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
   sy.log(`signurlVal:${signurlVal}`)
   sy.log(`cookieVal:${cookieVal}`)
   if (signurlVal) sy.setdata(signurlVal, 'sy_signurl_txnews2')
   if (cookieVal) sy.setdata(cookieVal,  'sy_cookie_txnews2')
+if($response&&$response.statusCode==200){
+     RedID =  JSON.parse(response.body).data.activity.id
+  sy.setdata(RedID,'activity_txnews2')
+  sy.log(`RedID:${RedID}`)
+}
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
  }
@@ -248,7 +253,7 @@ function shareApp() {
    ID = signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const openUrl = {
-    url: `https://url.cn/xk3Zs0Vc`,
+    url: `https://gh.prize.qq.com/show/_by0n9/invPack/index.html?#/Share?info=17A2385EE6D27888DB9F9D6B0BE90EEA&referpage=defaults`,
     headers: {Cookie: cookieVal},
   }
    sy.get(openUrl, (error, response, data) => {
@@ -347,46 +352,57 @@ resolve()
 
 
 function init() {
-    isSurge = () => {
-      return undefined === this.$httpClient ? false : true
-    }
-    isQuanX = () => {
-      return undefined === this.$task ? false : true
-    }
-    getdata = (key) => {
-      if (isSurge()) return $persistentStore.read(key)
-      if (isQuanX()) return $prefs.valueForKey(key)
-    }
-    setdata = (key, val) => {
-      if (isSurge()) return $persistentStore.write(key, val)
-      if (isQuanX()) return $prefs.setValueForKey(key, val)
-    }
-    msg = (title, subtitle, body) => {
-      if (isSurge()) $notification.post(title, subtitle, body)
-      if (isQuanX()) $notify(title, subtitle, body)
-    }
-    log = (message) => console.log(message+'\n')
-    get = (url, cb) => {
-      if (isSurge()) {
-        $httpClient.get(url, cb)
-      }
-      if (isQuanX()) {
-        url.method = 'GET'
-        $task.fetch(url).then((resp) => cb(null, {}, resp.body))
-      }
-    }
-    post = (url, cb) => {
-      if (isSurge()) {
-        $httpClient.post(url, cb)
-      }
-      if (isQuanX()) {
-        url.method = 'POST'
-        $task.fetch(url).then((resp) => cb(null, {}, resp.body))
-      }
-    }
-    done = (value = {}) => {
-      $done(value)
-    }
-    return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
+  isSurge = () => {
+    return undefined !== this.$httpClient
   }
-
+  isQuanX = () => {
+    return undefined !== this.$task
+  }
+  getdata = (key) => {
+    if (isSurge()) return $persistentStore.read(key)
+    if (isQuanX()) return $prefs.valueForKey(key)
+  }
+  setdata = (key, val) => {
+    if (isSurge()) return $persistentStore.write(key, val)
+    if (isQuanX()) return $prefs.setValueForKey(key, val)
+  }
+  msg = (title, subtitle = '', body = '') => {
+    if (isSurge()) $notification.post(title, subtitle, body)
+    if (isQuanX()) $notify(title, subtitle, body)
+  }
+  log = (msg) => {
+    console.log(`${msg}\n`)
+  }
+  get = (options, callback) => {
+    if (isQuanX()) {
+      if (typeof options == 'string') options = { url: options }
+      options['method'] = 'GET'
+      return $task.fetch(options).then(
+        (response) => {
+          response['status'] = response.statusCode
+          callback(null, response, response.body)
+        },
+        (reason) => callback(reason.error, null, null)
+      )
+    }
+    if (isSurge()) return $httpClient.get(options, callback)
+  }
+  post = (options, callback) => {
+    if (isQuanX()) {
+      if (typeof options == 'string') options = { url: options }
+      options['method'] = 'POST'
+      $task.fetch(options).then(
+        (response) => {
+          response['status'] = response.statusCode
+          callback(null, response, response.body)
+        },
+        (reason) => callback(reason.error, null, null)
+      )
+    }
+    if (isSurge()) $httpClient.post(options, callback)
+  }
+  done = (value = {}) => {
+    $done(value)
+  }
+  return { isSurge, isQuanX, msg, log, getdata, setdata, get, post, done }
+}
