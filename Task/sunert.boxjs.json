@@ -21,5 +21,13 @@
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"]
     }
+    {
+      "id": "dianshijia",
+      "name": "电视家",
+      "keys": ["sy_signurl_dsj", "sy_signheader_dsj", "drawal_dsj"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/dianshijia.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/dianshijia.png"]
+    }
   ]
 }
