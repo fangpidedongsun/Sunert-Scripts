@@ -27,7 +27,39 @@
       "keys": ["sy_signurl_dsj", "sy_signheader_dsj", "drawal_dsj"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/dianshijia.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/dianshijia.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/dianshijia.png", "https://raw.githubusercontent.com/Orz-3/task/master/dianshijia.png"]
+    },
+    {
+      "id": "kuaishou",
+      "name": "快手极速版",
+      "keys": ["cookie_ks"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/kuaishou.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/kuaishou.png", "https://raw.githubusercontent.com/Orz-3/task/master/kuaishou.png"]
+    },
+    {
+      "id": "sinanews",
+      "name": "新浪新闻",
+      "keys": ["sy_signurl_snews", "sy_info_snews", "sy_ck_snews", "sy_infoheader_snews"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/sinanews.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/sinanews.png", "https://raw.githubusercontent.com/Orz-3/task/master/sinanews.png"]
+    },
+    {
+      "id": "chinatelecomEnquiry",
+      "name": "电信套餐查询",
+      "keys": ["china_telecom_authToken_10000", "china_telecom_cookie"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/telecomInfinity.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10000.png", "https://raw.githubusercontent.com/Orz-3/task/master/10000.png"]
+    },
+    {
+      "id": "jddj",
+      "name": "京东到家",
+      "keys": ["sy_cookie_dj"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/jddj.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/jddj.png", "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png"]
     }
   ]
 }
