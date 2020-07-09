@@ -28,9 +28,12 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 
 By Macsuny                   
 */
-const c = 'cctv1'  //修改电视台
-
+const tvnum = "cctv1"  //修改电视台
 const sy = init()
+if (c) sy.setdata(c, tvnum)
+
+const c = sy.getdata(tvnum)
+
 const method = "GET"
        d = new Date();
        M = d.getMonth()+1, D = d.getDate();
