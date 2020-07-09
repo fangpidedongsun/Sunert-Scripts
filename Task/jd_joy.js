@@ -94,7 +94,7 @@ const $hammer = (() => {
 })();
 
 //直接用NobyDa的jd cookie
-const cookie = $hammer.read('CookieJD')
+const cookie = $hammer.read('CookieJD3')
 const name = '京东宠汪汪'
 
 var Task = step();
