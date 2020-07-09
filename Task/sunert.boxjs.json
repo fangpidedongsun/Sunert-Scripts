@@ -62,8 +62,8 @@
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/jddj.png", "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png"]
     },
     {
-      "id": "电视预告",
-      "name": "Tvlist",
+      "id": "TVlist",
+      "name": "电视预告",
       "keys": [],
       "settings": [{ "id": "c", "name": "电视台", "val": "", "type": "textarea", "placeholder": "cctv8", "autoGrow": true, "rows": 2, "desc": "小写英文台标" }],
       "author": "@sunert",
