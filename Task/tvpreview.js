@@ -28,12 +28,9 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 
 By Macsuny                   
 */
-const tvnum = "cctv1"  //修改电视台
+const c = "cctv1"  //修改电视台
 const sy = init()
-if (c) sy.setdata(c, tvnum)
-
-const c = sy.getdata(tvnum)
-
+const tvnum = sy.getdata(c)
 const method = "GET"
        d = new Date();
        M = d.getMonth()+1, D = d.getDate();
@@ -49,25 +46,25 @@ const method = "GET"
       weekday[6]="星期六";
   n = weekday[d.getDay()]
 const wurl = {
-    url: "http://api.cntv.cn/epg/epginfo?serviceId=cbox&c="+c,
+    url: "http://api.cntv.cn/epg/epginfo?serviceId=cbox&c="+tvnum,
     headers: {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
 }
    sy.get(wurl, (error,response, data) => {    
    try { 
       let result = JSON.parse(data)                              
-const title = `${result[`${c}`].channelName}频道节目  ` + M +'月'+ D +'日' + n + h +':'+ m
-      detail = `正在播出: ${result[`${c}`].isLive}\n${result[`${c}`].program[0].showTime} ${result[`${c}`].program[0].t}`
-      for (i = 1; i < result[`${c}`].program.length; i++)
+const title = `${result[`${tvnum}`].channelName}频道节目  ` + M +'月'+ D +'日' + n + h +':'+ m
+      detail = `正在播出: ${result[`${tvnum}`].isLive}\n${result[`${tvnum}`].program[0].showTime} ${result[`${tvnum}`].program[0].t}`
+      for (i = 1; i < result[`${tvnum}`].program.length; i++)
        {      
-         detail += `\n${result[`${c}`].program[i].showTime} ${result[`${c}`].program[i].t}`
+         detail += `\n${result[`${tvnum}`].program[i].showTime} ${result[`${tvnum}`].program[i].t}`
        }
-      var l = result[`${c}`].program.length
+      var l = result[`${tvnum}`].program.length
       if (l > 1) {
-       for (i = 0; i < l && result[`${c}`].program[i].showTime.split(':')[0] < result[`${c}`].program[l-1].showTime.split(':')[0]; i++)
+       for (i = 0; i < l && result[`${tvnum}`].program[i].showTime.split(':')[0] < result[`${tvnum}`].program[l-1].showTime.split(':')[0]; i++)
        { 
-        if (result[`${c}`].liveSt == result[`${c}`].program[i].st)
+        if (result[`${tvnum}`].liveSt == result[`${tvnum}`].program[i].st)
          {   
-         subTitle = `即将播出: ${result[`${c}`].program[i+1].t}`
+         subTitle = `即将播出: ${result[`${tvnum}`].program[i+1].t}`
          } 
         }
       }
