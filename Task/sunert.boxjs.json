@@ -65,7 +65,7 @@
       "id": "TVlist",
       "name": "电视预告",
       "keys": [],
-      "settings": [{ "id": "c", "name": "电视台", "val": "", "type": "textarea", "placeholder": "cctv8", "autoGrow": true, "rows": 2, "desc": "小写英文台标" }],
+      "settings": [{ "id": "c", "name": "电视台", "val": "", "type": "textarea", "placeholder": "cctv8", "desc": "小写英文台标" }],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png"]
