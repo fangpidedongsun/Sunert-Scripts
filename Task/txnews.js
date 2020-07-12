@@ -15,7 +15,7 @@ Surge 4.0
 [Script]
 腾讯新闻 = type=cron,cronexp=0 8 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js,script-update-interval=0
 
-腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js
+腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js, requires-body=true
 
 ~~~~~~~~~~~~~~~~~~~~~
 Loon 2.1.0+
@@ -23,7 +23,7 @@ Loon 2.1.0+
 # 本地脚本
 cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js, enabled=true, tag=腾讯新闻
 
-http-request https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js
+http-request https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js, requires-body=true
 
 -----------------
 
@@ -32,6 +32,12 @@ QX 1.0.7+ :
 0 9 * * * txnews.js, tag=腾讯新闻
  [rewrite_local]
 https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews.js
+
+# 新活动
+https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews.js
+
+#老活动
+
 
 ~~~~~~~~~~~~~~~~~~
  [MITM]
@@ -48,6 +54,8 @@ const cookieName = '腾讯新闻'
 const sy = init()
 const signurlVal = sy.getdata('sy_signurl_txnews')
 const cookieVal = sy.getdata( 'sy_cookie_txnews')
+const videoVal = sy.getdata( 'video_txnews')
+
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -57,7 +65,7 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)) {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("article_read")!= -1) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
   sy.log(`signurlVal:${signurlVal}`)
@@ -66,16 +74,23 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\
   if (cookieVal) sy.setdata(cookieVal,  'sy_cookie_txnews')
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("video_read")!= -1) {
+  const videoVal =  $request.url
+  sy.log(`videoVal:${videoVal}`)
+  if (videoVal) sy.setdata(videoVal,  'video_txnews')
+  sy.msg(cookieName, `获取视频地址: 成功🎉`, ``)
+  }
  }
 async function all() 
 { 
   await getsign();
   await toRead();
+  await Tasklist();
   await lookVideo();
   await openApp();
-  await shareApp();
+  await Redpack();
+  await videoPack();
   await StepsTotal();
-  await RednumCheck();
   await getTotal();
   await showmsg();
 }
@@ -91,7 +106,7 @@ function getsign() {
       const obj = JSON.parse(data)
       if (obj.info=="success"){
        next = obj.data.next_points
-       tip =  obj.data.tip_soup
+       tip =  obj.data.share_tip
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
        signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天 明日+'+ next +'金币 成功🎉\n'}
       else {
@@ -123,18 +138,60 @@ return new Promise((resolve, reject) => {
       }
      }
     catch(error) {
-       sy.msg(cookieName, '无法获取活动ID',  error)
-       return
+       //sy.msg(cookieName, '无法获取活动ID',  error)
+       //return
       }
     resolve()
     })
    })
   }
+
+function tasks() {
+ return new Promise((resolve, reject) => {
+ const tasklist = ['9w6zkk','kl5p8h','erq8vx','aqyd3z','jslzr5','l7glnd','o96j0h','mide1n','u8z8vk']
+for (i=0;i<tasklist.length;i++){
+   const taskUrl = {
+    url: `http://4ul.cn/${tasklist[i]}`, 
+    headers: {Cookie:cookieVal},
+   };
+setTimeout(function(){
+   sy.post(taskUrl,(error, response, data) =>{
+       taskresult = JSON.parse(data)
+      if(taskresult.info=='success'){
+         sy.log(`任务成功,总金币: ${taskresult.data.points}\n${data}`)
+        }
+      else {
+sy.log(`${cookieName}每日任务 - data: ${data}`)
+        }
+       })
+     },(i+1)*500)
+     resolve()
+   }
+ })
+}
+
+function Tasklist() {
+return new Promise((resolve, reject) => {
+  const token =  signurlVal.split('?')[1]
+  const shareUrl = {
+    url: `https://api.inews.qq.com/task/v1/usermergetask/list?${token}`,
+    headers: {Cookie: cookieVal},
+  }
+   sy.get(shareUrl, (error, response, data) => {
+    //sy.log(`${cookieName}- data: ${data}`)
+     tasklist = JSON.parse(data)
+      if (tasklist.data.task_list!==null){
+          tasks()
+        }
+      })
+    resolve()
+   })
+}
 function lookVideo() {
  return new Promise((resolve, reject) => {
   const token = signurlVal.split("?")[1]
    const lookVideoUrl = {
-    url: `https://api.inews.qq.com/event/v1/user/event/report?${token}`, 
+    url: videoVal, 
     headers: {Cookie:cookieVal},
     body: 'event=video_read'
   };
@@ -145,7 +202,7 @@ function lookVideo() {
         if(logs)sy.log(`${cookieName}观看视频 - data: ${data}`)
        tolookresult = JSON.parse(data)
       if(tolookresult.info=='success'){
-       RedID = tolookresult.data.activity.id
+       //RedID = tolookresult.data.activity.id
         videocoins = tolookresult.data.countdown_timer.countdown_tips
         }
        }
@@ -171,7 +228,7 @@ function StepsTotal() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=readtask_welfare_lowactive&${ID}`,
    headers: {Cookie: cookieVal},
   };
     sy.get(StepsUrl, (error, response, data) => {
@@ -211,7 +268,7 @@ function RednumCheck() {
   if(videocoins=="红包+1"){
     videoPack()
   }
-  else if(hour>20){
+  else if(hour>19){
     Redpack();
     videoPack()
   }
@@ -223,7 +280,7 @@ return new Promise((resolve, reject) => {
   const openUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=free_redpack&activity_id=${RedID}`
+    body: `redpack_type=free_redpack&activity_id=readtask_welfare_lowactive`
   }
    sy.post(openUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}每日开启- data: ${data}`)
@@ -243,7 +300,7 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=article&activity_id=${RedID}`
+    body: `redpack_type=article&activity_id=readtask_welfare_lowactive`
   }
    sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}阅读红包- data: ${data}`)
@@ -270,7 +327,7 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=video&activity_id=${RedID}`
+    body: `redpack_type=video&activity_id=readtask_welfare_lowactive`
   };
     sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
@@ -301,7 +358,7 @@ return new Promise((resolve, reject) => {
     if (error) {
       sy.msg("获取收益信息失败‼️", "", error)
     } else {
-    //if (logs) console.log("获取收益信息" +data)
+    if (logs) console.log("获取收益信息" +data)
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
       }
@@ -312,8 +369,13 @@ return new Promise((resolve, reject) => {
 
 function showmsg() {
  return new Promise((resolve, reject) => {
-   detail = signinfo+ redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+   detail = signinfo+ `` + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+  sy.log(subTile+`\n`+detail)
    if
+(openreadred%notifyInterval==0&&readcoins=="红包+1"){
+   sy.msg(cookieName,subTile,detail)
+  }
+   else if
 (openvideored%notifyInterval==0&&videocoins=="红包+1"){
    sy.msg(cookieName,subTile,detail)
   }
@@ -323,7 +385,6 @@ function showmsg() {
    else if(notifyInterval==1){
    sy.msg(cookieName,subTile,detail)
   }
-  sy.log(subTile+`\n`+detail)
  })
 resolve()
 }

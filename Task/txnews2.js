@@ -81,8 +81,10 @@ async function all()
   await lookVideo();
   await openApp();
   await shareApp();
+  await Redpack();
+  await videoPack();
   await StepsTotal();
-  await RednumCheck();
+//await RednumCheck();
   await getTotal();
   await showmsg();
 }
@@ -125,13 +127,13 @@ return new Promise((resolve, reject) => {
 try {
    if
 (toread.info=='success'&&toread.data.activity.id)   {
-     RedID = toread.data.activity.id
+     //RedID = toread.data.activity.id
      readcoins = toread.data.countdown_timer.countdown_tips
       }
      }
     catch(error) {
-        sy.msg(cookieName, '无法获取活动激活ID',  error)
-        return
+        //sy.msg(cookieName, '无法获取活动激活ID',  error)
+        //return
       }
     resolve()
     })
@@ -167,7 +169,7 @@ function StepsTotal() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=readtask_welfare_lowactive&${ID}`,
    headers: {Cookie: cookieVal}
   }
     sy.get(StepsUrl, (error, response, data) => {
@@ -218,7 +220,7 @@ return new Promise((resolve, reject) => {
   const openUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=free_redpack&activity_id=${RedID}`
+    body: `redpack_type=free_redpack&activity_id=readtask_welfare_lowactive`
   }
    sy.post(openUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}每日开启- data: ${data}`)
@@ -250,7 +252,7 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=article&activity_id=${RedID}`
+    body: `redpack_type=article&activity_id=readtask_welfare_lowactive`
   }
    sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}阅读红包- data: ${data}`)
@@ -276,7 +278,7 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=video&activity_id=${RedID}`
+    body: `redpack_type=video&activity_id=readtask_welfare_lowactive`
   }
     sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
