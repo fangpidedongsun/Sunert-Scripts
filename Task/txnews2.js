@@ -1,14 +1,14 @@
 /*
-更新时间: 2020-06-29 23:40
+更新时间: 2020-07-12 22:40
 
-腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万阅读红包挑战赛，针对幸运用户参与
+腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万现金挑战赛，针对幸运用户参与
 
 获取Cookie方法:
 1.把以下配置复制到响应配置下
 2.打开腾讯新闻app，阅读几篇文章，倒计时结束后即可获取阅读Cookie;
-3.脚本运行一次阅读一篇文章，请不要连续运行，防止封号，可设置每几分钟运行一次
+3.看一次推荐视频获取视频地址
 4.可能腾讯有某些限制，有些号码无法领取红包，手动阅读几篇，能领取红包，一般情况下都是正常的，
-5.此脚本根据阅读篇数开启通知，默认20篇，此版本和另一版本相同
+5.此脚本根据视频红包数开启通知，默认4个红包一次，此版本和另一版本相同
 版本更新日志:
 1.01 修复无法自动获取视频红包，修改通知为视频红包到账通知间隔，即有红包到账且红包数除以间隔余0时通知，或者自定义常开或常关，
 
@@ -17,7 +17,7 @@ Surge 4.0
 [Script]
 腾讯新闻 = type=cron,cronexp=0 8 0 * * *,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js,script-update-interval=0
 
-腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js
+腾讯新闻 = type=http-request,pattern=https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\?,script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js, requires-body=true
 
 ~~~~~~~~~~~~~~~~~~~~~
 Loon 2.1.0+
@@ -25,7 +25,7 @@ Loon 2.1.0+
 # 本地脚本
 cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js, enabled=true, tag=腾讯新闻
 
-http-request https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js
+http-request https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews2.js, requires-body=true
 
 -----------------
 
@@ -33,8 +33,8 @@ QX 1.0.7+ :
  [task_local]
 0 9 * * * txnews2.js, tag=腾讯新闻
  [rewrite_local]
-https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-header txnews2.js
-https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-response-body txnews2.js
+https:\/\/api\.inews\.qq\.com\/event\/v1\/user\/event\/report\? url script-request-body txnews2.js
+
 ~~~~~~~~~~~~~~~~~~
  [MITM]
 hostname = api.inews.qq.com
@@ -50,6 +50,7 @@ const cookieName = '腾讯新闻'
 const sy = init()
 const signurlVal = sy.getdata('sy_signurl_txnews2')
 const cookieVal = sy.getdata( 'sy_cookie_txnews2')
+const videoVal = sy.getdata( 'video_txnews2')
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -59,30 +60,33 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.headers!==undefined) {
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("article_read")!= -1) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
   sy.log(`signurlVal:${signurlVal}`)
   sy.log(`cookieVal:${cookieVal}`)
   if (signurlVal) sy.setdata(signurlVal, 'sy_signurl_txnews2')
   if (cookieVal) sy.setdata(cookieVal,  'sy_cookie_txnews2')
-if($response&&$response.statusCode==200){
-     RedID =  JSON.parse(response.body).data.activity.id
-  sy.setdata(RedID,'activity_txnews2')
-  sy.log(`RedID:${RedID}`)
-}
   sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
+  }
+if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("video_read")!= -1) {
+  const videoVal =  $request.url
+  sy.log(`videoVal:${videoVal}`)
+  if (videoVal) sy.setdata(videoVal,  'video_txnews2')
+  sy.msg(cookieName, `获取视频地址: 成功🎉`, ``)
   }
  }
 async function all() 
 { 
   await getsign();
+  await activity();
   await toRead();
   await lookVideo();
   await openApp();
   await shareApp();
+  await Redpack();
+  await videoPack();
   await StepsTotal();
-  await RednumCheck();
   await getTotal();
   await showmsg();
 }
@@ -121,27 +125,14 @@ return new Promise((resolve, reject) => {
   };
    sy.post(toreadUrl,(error, response, data) =>{
      if(logs)sy.log(`${cookieName}阅读文章 - data: ${data}`)
-       toread = JSON.parse(data)
-try {
-   if
-(toread.info=='success'&&toread.data.activity.id)   {
-     RedID = toread.data.activity.id
-     readcoins = toread.data.countdown_timer.countdown_tips
-      }
-     }
-    catch(error) {
-        sy.msg(cookieName, '无法获取活动激活ID',  error)
-        return
-      }
     resolve()
     })
    })
   }
 function lookVideo() {
  return new Promise((resolve, reject) => {
-  const token = signurlVal.split("?")[1]
    const lookVideoUrl = {
-    url: `https://api.inews.qq.com/event/v1/user/event/report?${token}`, 
+    url: videoVal, 
     headers: {Cookie:cookieVal},
     body: 'event=video_read'
   };
@@ -150,11 +141,6 @@ function lookVideo() {
       sy.msg(cookieName, '观看视频:'+ error)
         }else{
         if(logs)sy.log(`${cookieName}观看视频 - data: ${data}`)
-       tolookresult = JSON.parse(data)
-      if(tolookresult.info=='success'){
-        //RedID = tolookresult.data.activity.id
-        videocoins = tolookresult.data.countdown_timer.countdown_tips
-     }
     }
    resolve()
     })
@@ -167,11 +153,11 @@ function StepsTotal() {
   const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const StepsUrl = {
-    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${RedID}&${ID}`,
+    url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${actid}&${ID}`,
    headers: {Cookie: cookieVal}
   }
     sy.get(StepsUrl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}红包统计- data: ${data}`)
+     if(logs)sy.log(`${cookieName}文章统计- data: ${data}`)
        totalred = JSON.parse(data)
         if (totalred.ret == 0){
      for (i=0;i<totalred.data.award.length;i++){
@@ -197,28 +183,13 @@ totalred.data.award[i].title.split("，")[0].replace(/[\u4e00-\u9fa5]/g,``)
   })
 }
 
-function RednumCheck() {
-  var date = new Date();
-  var hour = date.getHours();
-  redpackres = ""
-  if(readcoins=="红包+1"){
-    Redpack()
-  }
-  if(videocoins=="红包+1"){
-    videoPack()
-  }
-   else if(hour>20){
-     Redpack(),
-     videoPack()
-  }
-}
 function openApp() {
    ID = signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
 return new Promise((resolve, reject) => {
   const openUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=free_redpack&activity_id=${RedID}`
+    body: `redpack_type=free_redpack&activity_id=${actid}`
   }
    sy.post(openUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}每日开启- data: ${data}`)
@@ -250,7 +221,7 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=article&activity_id=${RedID}`
+    body: `redpack_type=article&activity_id=${actid}`
   }
    sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}阅读红包- data: ${data}`)
@@ -276,7 +247,7 @@ return new Promise((resolve, reject) => {
   const cashUrl = {
     url: `https://api.inews.qq.com/activity/v1/activity/redpack/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal},
-    body: `redpack_type=video&activity_id=${RedID}`
+    body: `redpack_type=video&activity_id=${actid}`
   }
     sy.post(cashUrl, (error, response, data) => {
     if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
@@ -314,12 +285,32 @@ return new Promise((resolve, reject) => {
       })
    })
  }
+function activity() {
+return new Promise((resolve, reject) => {
+  const ID =  signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
+  const actUrl = {
+    url: `https://api.inews.qq.com/activity/v1/user/activity/get?isJailbreak=0&${ID}`,
+    headers: {Cookie: cookieVal}};
+    sy.get(actUrl, function(error,response, data) {
+    if (error) {
+      sy.msg("获取活动Id失败‼️", "", error)
+    } else {
+     //console.log("获取活动Id" +data)
+     const obj = JSON.parse(data)
+      actid = obj.data.activity.id
+      sy.log(`您的活动ID为:`+actid)
+        }
+     resolve()
+      })
+   })
+ }
 
 function showmsg() {
  return new Promise((resolve, reject) => {
   if(readnum&&videonum){
-   detail = signinfo+redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+   detail = signinfo+`` + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
   }
+  sy.log(subTile+`\n`+detail)
    if
 (openvideored%notifyInterval==0&&videocoins=="红包+1"){
    sy.msg(cookieName,subTile,detail)
@@ -330,7 +321,6 @@ function showmsg() {
    else if(notifyInterval==1){
    sy.msg(cookieName,subTile,detail)
   }
-  sy.log(subTile+`\n`+detail)
  })
 resolve()
 }
