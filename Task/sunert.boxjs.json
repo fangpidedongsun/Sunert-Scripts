@@ -84,14 +84,14 @@
       "keys": ["sy_signurl_txnews", "sy_cookie_txnews"],
      "settings": [
         {
-          "id": "notifyInterval",
+          "id": "notifynum",
           "name": "通知频率",
           "val": 4,
           "type": "number",
           "desc": "视频红包间隔通知开为1，常关为0(默认4次)"
         },
         {
-          "id": "logs",
+          "id": "logsturn",
           "name": "响应日志",
           "val": 0,
           "type": "boolean",
