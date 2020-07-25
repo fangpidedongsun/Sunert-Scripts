@@ -82,7 +82,8 @@
       "id": "txnews",
       "name": "腾讯新闻",
       "keys": ["sy_signurl_txnews", "sy_cookie_txnews"],
-     "settings": [
+      "author": "@sunert",
+      "settings": [
         {
           "id": "notifynum",
           "name": "通知频率",
@@ -93,7 +94,7 @@
         {
           "id": "logsturn",
           "name": "响应日志",
-          "val": 0,
+          "val": false,
           "type": "boolean",
           "desc": "响应日志开关"
         }
