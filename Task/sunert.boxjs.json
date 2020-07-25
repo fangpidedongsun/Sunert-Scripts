@@ -70,6 +70,38 @@
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
       "repo": "tv_boxjs",
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png"]
+    },
+    {
+      "id": "mydigit",
+      "name": "数码之家",
+      "keys": ["sign_mydigit"],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/mydigit.js",
+      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png"]
+    },
+    {
+      id: 'txnews',
+      name: '腾讯新闻',
+      keys: ['sy_signurl_txnews', 'sy_cookie_txnews'],
+     "settings": [
+        {
+          "id": "notifyInterval",
+          "name": "通知频率",
+          "val": 4,
+          "type": "number",
+          "desc": "视频红包间隔通知开为1，常关为0(默认4次)"
+        },
+        {
+          "id": "logs",
+          "name": "响应日志",
+          "val": false,
+          "type": "boolean",
+          "desc": "响应日志开关"
+        },
+      author: '@Sunert',
+      repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
+      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'],
+      script: 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js'
     }
   ]
 }
