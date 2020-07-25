@@ -80,9 +80,9 @@
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png"]
     },
     {
-      id: 'txnews',
-      name: '腾讯新闻',
-      keys: ['sy_signurl_txnews', 'sy_cookie_txnews'],
+      id: "txnews",
+      name: "腾讯新闻",
+      keys: ["sy_signurl_txnews", "sy_cookie_txnews"],
      "settings": [
         {
           "id": "notifyInterval",
@@ -98,10 +98,10 @@
           "type": "boolean",
           "desc": "响应日志开关"
         },
-      author: '@Sunert',
-      repo: 'https://github.com/Sunert/Scripts/blob/master/Task/txnews.js',
-      icons: ['https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png', 'https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'],
-      script: 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js'
+      author: "@Sunert",
+      repo: "https://github.com/Sunert/Scripts/blob/master/Task/txnews.js",
+      icons: ["https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png", "https://raw.githubusercontent.com/Orz-3/task/master/txnews.png'],
+      script: "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js"
     }
   ]
 }
