@@ -110,7 +110,7 @@
           "name": "调试日志",
           "val": false,
           "type": "boolean"
-        },
+        }
       ],
        "repo": "https://github.com/Sunert/Scripts/blob/master/Task/txnews.js",
        "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png", "https://raw.githubusercontent.com/Orz-3/task/master/txnews.png"],
