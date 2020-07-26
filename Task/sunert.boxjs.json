@@ -121,7 +121,7 @@
       "name": "谷歌翻译",
       "keys": [],
       "settings": [{ 
-         "id": "ENword", 
+         "id": "word", 
          "name": "原文", 
          "val": "", 
          "type": "textarea", 
