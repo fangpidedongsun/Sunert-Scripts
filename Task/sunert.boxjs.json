@@ -123,7 +123,7 @@
       "settings": [{ 
          "id": "word", 
          "name": "原文", 
-         "val": "", 
+         "val": "Hello World", 
          "type": "textarea", 
          "placeholder": "Hello World",
          "desc": "兼容中英文短语翻译，填入原文后手动运行" }],
