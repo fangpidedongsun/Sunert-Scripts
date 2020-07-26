@@ -89,7 +89,7 @@
       "keys": ["sign_mydigit"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/mydigit.js",
-      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png","https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png"],
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/mydigit.png", "https://raw.githubusercontent.com/Orz-3/task/master/mydigit.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/mydigit.js"
     },
     {
@@ -110,11 +110,27 @@
           "name": "调试日志",
           "val": false,
           "type": "boolean"
-        }
+        },
       ],
        "repo": "https://github.com/Sunert/Scripts/blob/master/Task/txnews.js",
        "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png", "https://raw.githubusercontent.com/Orz-3/task/master/txnews.png"],
        "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js"
+    },
+    {
+      "id": "translate",
+      "name": "谷歌翻译",
+      "keys": [],
+      "settings": [{ 
+         "id": "ENword", 
+         "name": "原文", 
+         "val": "", 
+         "type": "textarea", 
+         "placeholder": "Hello World",
+         "desc": "兼容中英文短语翻译，填入原文后手动运行" }],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/translate.png", "https://raw.githubusercontent.com/Orz-3/task/master/translate.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/translate.js"
     }
   ]
 }
