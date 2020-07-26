@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-07-12 22:40
+更新时间: 2020-07-27 00:40
 
 腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万现金挑战赛，针对幸运用户参与
 
@@ -11,6 +11,7 @@
 5.此脚本根据视频红包数开启通知，默认4个红包一次，此版本和另一版本相同
 版本更新日志:
 1.01 修复无法自动获取视频红包，修改通知为视频红包到账通知间隔，即有红包到账且红包数除以间隔余0时通知，或者自定义常开或常关，
+1.02 支持boxjs配置，增加通知跳转链接https://news.qq.com/FERD/cjRedDown.htm，需手动领取此红包
 ---------------------
 Surge 4.0
 [Script]
@@ -43,10 +44,10 @@ hostname = api.inews.qq.com
 Cookie获取后，请注释掉Cookie地址。
 
 */
-const cookieName = '腾讯新闻'
-const sy = new Env(cookieName)
-let notifyInterval = sy.getdata('notifynum')||4; //视频红包间隔通知开为1，常关为0
-let logs = sy.getdata('logsturn')||0; // 日志开关，0为关，1为开
+const cookieName = '腾讯新闻';
+const sy = new Env(cookieName);
+let notifyInterval = sy.getdata('notifynum')||4; //视频红包间隔通知开为1，常关为0;
+let logs = sy.getdata('logsturn')||false; // 日志开关，0为关，1为开;
 
 const signurlVal = sy.getdata('sy_signurl_txnews')
 const cookieVal = sy.getdata( 'sy_cookie_txnews')
@@ -98,7 +99,7 @@ function getsign() {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
    sy.post(llUrl, (error, response, data) => {   
-      if(logs)sy.log(`${cookieName}签到 - data: ${data}`)
+      if(logs == 'true')console.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
        next = obj.data.next_points
@@ -124,7 +125,7 @@ return new Promise((resolve, reject) => {
     body: 'event=article_read'
   };
    sy.post(toreadUrl,(error, response, data) =>{
-     if(logs)sy.log(`${cookieName}阅读文章 - data: ${data}`)
+     if(logs == "true")console.log(`${cookieName}阅读文章 - data: ${data}`)
     resolve()
     })
    })
@@ -140,7 +141,7 @@ function lookVideo() {
     if (error){
       sy.msg(cookieName, '观看视频:'+ error)
         }else{
-        if(logs)sy.log(`${cookieName}观看视频 - data: ${data}`)
+          if(logs == "true")sy.log(`${cookieName}观看视频 - data: ${data}`)
     }
    resolve()
     })
@@ -157,7 +158,7 @@ return new Promise((resolve, reject) => {
    headers: {Cookie: cookieVal}
   }
     sy.get(StepsUrl, (error, response, data) => {
-     if(logs)sy.log(`${cookieName}文章统计- data: ${data}`)
+        if(logs == "true")console.log(`${cookieName}文章统计- data: ${data}`)
        totalred = JSON.parse(data)
         if (totalred.ret == 0){
      for (i=0;i<totalred.data.award.length;i++){
@@ -192,7 +193,7 @@ return new Promise((resolve, reject) => {
     body: `redpack_type=free_redpack&activity_id=${actid}`
   }
    sy.post(openUrl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}每日开启- data: ${data}`)
+       if(logs == "true")console.log(`${cookieName}每日开启- data: ${data}`)
       let opcash = JSON.parse(data)
       if(opcash.data.award.num){
        redpackres = `【每日开启】到账`+opcash.data.award.num/100+` 元 🌷\n` 
@@ -224,7 +225,7 @@ return new Promise((resolve, reject) => {
     body: `redpack_type=article&activity_id=${actid}`
   }
    sy.post(cashUrl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}阅读红包- data: ${data}`)
+       if(logs == "true")console.log(`${cookieName}阅读红包- data: ${data}`)
         let rcash = JSON.parse(data)
             readredpack = Number()
             redpackres = ``
@@ -250,7 +251,7 @@ return new Promise((resolve, reject) => {
     body: `redpack_type=video&activity_id=${actid}`
   }
     sy.post(cashUrl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
+       if(logs == "true")console.log(`${cookieName}视频红包-data:${data}`)
         let vcash = JSON.parse(data)
             redpackres = ``
             videoredpack = Number()
@@ -277,7 +278,7 @@ return new Promise((resolve, reject) => {
     if (error) {
       sy.msg("获取收益信息失败‼️", "", error)
     } else {
-    if (logs) sy.log("获取收益信息" +data)
+    if(logs == 'true')console.log("获取收益信息" +data)
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
         }
@@ -298,7 +299,7 @@ return new Promise((resolve, reject) => {
      //console.log("获取活动Id" +data)
      const obj = JSON.parse(data)
       actid = obj.data.activity.id
-      console.log(`您的活动ID为:`+actid)
+      console.log(`您的活动ID为:`+actid+`\n`)
         }
      resolve()
       })
@@ -325,4 +326,5 @@ console.log(subTile+`\n`+detail)
 resolve()
 }
 
+// prettier-ignore
 function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),o=JSON.stringify(this.data);e?this.fs.writeFileSync(t,o):i?this.fs.writeFileSync(s,o):this.fs.writeFileSync(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch(s){const h={};this.lodash_set(h,o,t),e=this.setval(JSON.stringify(h),i),console.log(`${i}: ${JSON.stringify(h)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status),s(t,e,i)});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){const h=t=>!t||!this.isLoon()&&this.isSurge()?t:"string"==typeof t?this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0:"object"==typeof t&&(t["open-url"]||t["media-url"])?this.isLoon()?t["open-url"]:this.isQuanX()?t:void 0:void 0;this.isSurge()||this.isLoon()?$notification.post(s,e,i,h(o)):this.isQuanX()&&$notify(s,e,i,h(o)),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t={}){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
