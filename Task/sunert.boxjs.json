@@ -11,7 +11,8 @@
       "keys": ["sy.signurl.wb", "sy_signheader_wb", "sy_payheader_wb", "sy_token_wb"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/weibo.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/weibo.png", "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/weibo.png", "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js"
     },
     {
       "id": "youth",
@@ -19,7 +20,8 @@
       "keys": ["youthheader_zq", "read_zq", "red_zq", "readtime_zq"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js"
     },
     {
       "id": "dianshijia",
@@ -27,7 +29,8 @@
       "keys": ["sy_signurl_dsj", "sy_signheader_dsj", "drawal_dsj"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/dianshijia.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/dianshijia.png", "https://raw.githubusercontent.com/Orz-3/task/master/dianshijia.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/dianshijia.png", "https://raw.githubusercontent.com/Orz-3/task/master/dianshijia.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js"
     },
     {
       "id": "kuaishou",
@@ -35,7 +38,8 @@
       "keys": ["cookie_ks"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/kuaishou.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/kuaishou.png", "https://raw.githubusercontent.com/Orz-3/task/master/kuaishou.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/kuaishou.png", "https://raw.githubusercontent.com/Orz-3/task/master/kuaishou.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js"
     },
     {
       "id": "sinanews",
@@ -43,7 +47,8 @@
       "keys": ["sy_signurl_snews", "sy_info_snews", "sy_ck_snews", "sy_infoheader_snews"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/sinanews.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/sinanews.png", "https://raw.githubusercontent.com/Orz-3/task/master/sinanews.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/sinanews.png", "https://raw.githubusercontent.com/Orz-3/task/master/sinanews.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/sinanews.js"
     },
     {
       "id": "chinatelecomEnquiry",
@@ -51,7 +56,8 @@
       "keys": ["china_telecom_authToken_10000", "china_telecom_cookie"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/telecomInfinity.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10000.png", "https://raw.githubusercontent.com/Orz-3/task/master/10000.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10000.png", "https://raw.githubusercontent.com/Orz-3/task/master/10000.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js"
     },
     {
       "id": "jddj",
@@ -59,7 +65,8 @@
       "keys": ["sy_cookie_dj"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/jddj.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/jddj.png", "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png"]
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/jddj.png", "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jddj.js"
     },
     {
       "id": "TVlist",
@@ -68,7 +75,8 @@
       "settings": [{ "id": "c", "name": "电视台", "val": "", "type": "textarea", "placeholder": "cctv8", "desc": "请填写小写英文台标，示例: 北京: btv1 | 湖南: hunan | 浙江: zhejiang 河南: henan| 江苏: jiangsu|广东: guangdong 更多电视台请参加电视家网络列表" }],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
-      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png"]
+      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/tvpreview.js"
     },
     {
       "id": "mydigit",
@@ -76,7 +84,8 @@
       "keys": ["sign_mydigit"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/mydigit.js",
-      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png","https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png"]
+      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png","https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/mydigit.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/mydigit.js"
     },
     {
       "id": "txnews",
