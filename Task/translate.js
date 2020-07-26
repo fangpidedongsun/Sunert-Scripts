@@ -36,9 +36,10 @@ function Translate(ENword) {
    if (/[^a-zA-Z.]+$/.test(ENword))
 {
     $task.fetch(cnToenUrl).then(response => { 
+       //console.log(response.body)
       if(/[\u4e00-\u9fa5]/.test(response.body)) {
        const res = response.body.match(/[^\u4e00-\u9fa5]+/g)[0]
-       const rest = res.replace(/[\,\[\"]/g, "")
+       const rest = res.replace(/[\[\"]/g, "").split(".")[0]
        console.log(`谷歌翻译`+`\n原文:`+ENword+`\n翻译结果: `+ rest)
        $.msg(`谷歌翻译  中译英`,`🇨🇳 中文原文:   `+ENword,`🇬🇧 翻译结果 :  `+ rest)
       }
@@ -46,10 +47,9 @@ function Translate(ENword) {
 }
   else  {
     $task.fetch(enTocnUrl).then(response => { 
-       console.log(response.body)
+       //console.log(response.body)
       if(/[a-zA-Z]/.test(response.body)) {
         const rest = response.body.split(",")[0].replace(/[\[\"]/g,"")
-  console.log(rest)
         console.log(`谷歌翻译`+`\n原文: `+ENword+`\n翻译结果: `+ rest)
         $.msg(`谷歌翻译 英译中`,`🇬🇧 英文原文:   `+ENword,`🇨🇳 翻译结果 :  `+ rest)
       }
