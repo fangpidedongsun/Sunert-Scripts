@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-07-25 22:35 
+更新时间: 2020-07-26 18:35 
 
 本脚本仅适用于数码之家每日签到
 获取Cookie方法:
@@ -61,8 +61,9 @@ if (isGetCookie) {
   .finally(() => $.done())
 } else {
  !(async () => {
-  await signin()
-  await Idinfo()
+  await signin();
+  await Idinfo();
+  await Minfo();
   await showmsg()
 })()
   .catch((e) => $.logErr(e))
@@ -90,7 +91,7 @@ function showmsg() {
    if ($.digit.match(/[\u4e00-\u9fa5]+/g)=='已签到') $.subt += '成功'
     else if ($.digit.match(/[\u4e00-\u9fa5]+/g)[0]=='今日已签') $.subt += '重复'
     else $.subt += '失败'
-    $.desc = coin+"  "+level+"  "+signday
+    $.desc = coin+"  "+Mcoin+"  会员等级: "+level+"  "+signday
     $.msg($.name, $.subt, $.desc)
     resolve()
   })
@@ -104,11 +105,27 @@ function Idinfo() {
        url: userInfo,
        headers: signheaders,
 }
-    $.get(url, (err, resp, data) => {
-       //console.log(data);
+    $.post(url, (err, resp, data) => {
+     //console.log(data);
      coin = data.match(/积分: [0-9]+/g)[0];
-     level = data.match(/签到等级 Lv.[0-9]+/g)[0];
+     level = data.match(/Lv.[0-9]+/g)[0];
      signday = data.match(/连续签到<\/span>[0-9]+/g)[0].replace('</span>',"")+"天";
+    resolve()
+  })
+ })
+}
+
+function Minfo() {
+  return new Promise((resolve) => {
+   cookieval = JSON.parse($.getdata($.KEY_sign)).headers.Cookie
+   const url = { 
+       url: `https://www.mydigit.cn/home.php?mod=spacecp&ac=credit&showcredit=1`,
+       headers: {Cookie: cookieval},
+}
+//url.headers["Accept"]= `*/*`
+    $.post(url, (err, resp, data) => {
+      //console.log(data);
+     Mcoin = data.match(/M币: <\/span>[-0-9]+/g)[0].replace('</span>',"");
     resolve()
   })
  })
