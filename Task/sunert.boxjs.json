@@ -95,7 +95,7 @@
     {
       "id": "txnews",
       "name": "腾讯新闻",
-      "keys": ["sy_signurl_txnews", "sy_cookie_txnews"],
+      "keys": ["sy_signurl_txnews", "sy_cookie_txnews","video_txnews"],
       "author": "@sunert",
       "settings": [
         {
