@@ -110,7 +110,7 @@
           "id": "logsturn",
           "name": "调试日志",
           "val": false,
-          "type": "boolean",
+          "type": "boolean"
         }
       ],
        "repo": "https://github.com/Sunert/Scripts/blob/master/Task/txnews.js",
