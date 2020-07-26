@@ -43,10 +43,11 @@ hostname = api.inews.qq.com
 Cookie获取后，请注释掉Cookie地址。
 
 */
-let notifyInterval = sy.getdata('notifynum')||4; //视频红包间隔通知开为1，常关为0
-const logs = sy.getdata('logsturn')||0; // 日志开关，0为关，1为开
 const cookieName = '腾讯新闻'
 const sy = new Env(cookieName)
+let notifyInterval = sy.getdata('notifynum')||4; //视频红包间隔通知开为1，常关为0
+let logs = sy.getdata('logsturn')||0; // 日志开关，0为关，1为开
+
 const signurlVal = sy.getdata('sy_signurl_txnews')
 const cookieVal = sy.getdata( 'sy_cookie_txnews')
 const videoVal = sy.getdata( 'video_txnews')
@@ -276,7 +277,7 @@ return new Promise((resolve, reject) => {
     if (error) {
       sy.msg("获取收益信息失败‼️", "", error)
     } else {
-    if (logs) console.log("获取收益信息" +data)
+    if (logs) sy.log("获取收益信息" +data)
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
         }
