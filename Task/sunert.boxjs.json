@@ -72,7 +72,12 @@
       "id": "TVlist",
       "name": "电视预告",
       "keys": [],
-      "settings": [{ "id": "c", "name": "电视台", "val": "", "type": "textarea", "placeholder": "cctv8", "desc": "请填写小写英文台标，示例: 北京: btv1 | 湖南: hunan | 浙江: zhejiang 河南: henan| 江苏: jiangsu|广东: guangdong 更多电视台请参加电视家网络列表" }],
+      "settings": [{ 
+         "id": "c", 
+         "name": "电视台", 
+         "val": "cctv8", 
+         "type": "textarea", 
+         "desc": "请填写小写英文台标，示例: 北京: btv1 | 湖南: hunan | 浙江: zhejiang 河南: henan| 江苏: jiangsu|广东: guangdong 更多电视台请参加电视家网络列表" }],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png"],
@@ -102,10 +107,9 @@
         },
         {
           "id": "logsturn",
-          "name": "响应日志",
+          "name": "调试日志",
           "val": false,
           "type": "boolean",
-          "desc": "响应日志开关"
         }
       ],
        "repo": "https://github.com/Sunert/Scripts/blob/master/Task/txnews.js",
