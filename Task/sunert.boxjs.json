@@ -151,36 +151,34 @@
               "key": "0X00",
               "label": "学生"
             }
-            ],
-         }
-            
+         ],
          { 
-         "id": "left", 
-         "name": "出发站点", 
-         "val": "北京", 
-         "type": "text", 
-         "desc": "填入中文站点" 
+          "id": "left", 
+          "name": "出发站点", 
+          "val": "北京", 
+          "type": "text", 
+          "desc": "填入中文站点" 
          },
          { 
-         "id": "end", 
-         "name": "目的地", 
-         "val": "上海", 
-         "type": "text", 
-         "desc": "填入中文站点" 
+          "id": "end", 
+          "name": "目的地", 
+          "val": "上海", 
+          "type": "text", 
+          "desc": "填入中文站点" 
          },
          { 
-         "id": "leavedate", 
-         "name": "出发时间", 
-         "val": "2020-08-15", 
-         "type": "date", 
-         "desc": "填入出发日期，请按照格式填写" 
+          "id": "leavedate", 
+          "name": "出发时间", 
+          "val": "2020-08-15", 
+          "type": "date", 
+          "desc": "填入出发日期，请按照格式填写" 
          },
          { 
-         "id": "setrain", 
-         "name": "列车车次", 
-         "val": "G5", 
-         "type": "text", 
-         "desc": "填入列车车次或者列车序号，列车序号请查看日志详情" 
+          "id": "setrain", 
+          "name": "列车车次", 
+          "val": "G5", 
+          "type": "text", 
+          "desc": "填入列车车次或者列车序号，列车序号请查看日志详情" 
          }
          ],
       "author": "@sunert",
