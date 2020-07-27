@@ -151,6 +151,7 @@
               "key": "0X00",
               "label": "学生"
             }
+          "desc": "成人/学生" 
          ],
          { 
           "id": "left", 
@@ -186,7 +187,6 @@
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js"
     }
-    
     
   ]
 }
