@@ -167,8 +167,9 @@ function prize() {
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
     method: 'GET',
-    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1','Cookie' : 'JSESSIONID=1B1CEADF1B9F831C25E71D7F2D996294'}
+    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1','Cookie': '_uab_collina=159587465195914267490366; JSESSIONID=1C42E86BE350A28BD2598F548B81FBCA; _jc_save_fromDate=2020-07-28; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_toDate=2020-07-28; _jc_save_toStation=%u4E0A%u6D77%2CSHH; _jc_save_wfdc_flag=dc; BIGipServerotn=116392458.50210.0000; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerpool_passport=233636362.50215.0000; RAIL_DEVICEID=TEmVLkda1h6kE7OHY5nw7IrLigw87rzYoHKGpgfvYVXcCaZr20FLBAGhBmcZRB2cHcnV-S1fKJnky4Jy2clDf032gzeCbPVcDayzEC1_zayWQw2BZQB-nZ-lMDeN827ZdxTXErkhVsHxmYk2pBciYlcDZohCcIGO; RAIL_EXPIRATION=1596186387169'}
 }
+
 $task.fetch(myRequest).then(response => {
  try {
     console.log('票价信息: ' + response.body+'\n');
@@ -268,7 +269,14 @@ if (setruanwopro){
 if (setdongwo){
   detail += '动卧: '+setdongwo
   }
-  detail +=' (如票价无显示请重试)\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
+if (purpose=='0X00'){
+  purpose = '学生票 '
+}
+else {
+  purpose = '成人票 '
+}
+
+  detail +='\n'+purpose+ ' (如票价无显示请重试)\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
 }
