@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-07-26 18:35 
+更新时间: 2020-07-27 22:35 
 
 本脚本仅适用于数码之家每日签到
 获取Cookie方法:
@@ -125,7 +125,7 @@ function Minfo() {
 //url.headers["Accept"]= `*/*`
     $.post(url, (err, resp, data) => {
       //console.log(data);
-     Mcoin = data.match(/M币: <\/span>[-0-9]+/g)[0].replace('</span>',"");
+       Mcoin = data.match(/M币: (<\/span>||<\/em>)[-0-9]+/g)[0].replace(/[</spanem>]/g,"");
     resolve()
   })
  })
