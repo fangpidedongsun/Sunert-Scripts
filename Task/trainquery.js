@@ -48,7 +48,7 @@ const $ = new Env('列车时刻查询')
 
   purpose = $.getdata('people')||peo
 
-  leftdate = $.getdata('lfdate')||lefdate
+  leftdate = $.getdata('leavedate')||lefdate
 
 let K = $.getdata('setrain')||settrain
 
@@ -166,8 +166,8 @@ function prize() {
   setTimeout(() => {
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
-    //method: 'GET',
-    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1'}
+    method: 'GET',
+    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1','Cookie' : 'JSESSIONID=1B1CEADF1B9F831C25E71D7F2D996294'}
 }
 $task.fetch(myRequest).then(response => {
  try {
