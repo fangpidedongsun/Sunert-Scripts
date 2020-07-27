@@ -28,23 +28,40 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 -----------------
 
  */
-const leftstation ='北京'  //出发地
-const tostation = '上海'   //目的地
-const purpose = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
-const leftdate = '2020-07-29' //出发日期
-const K = ' 1 '  //车次序号!!
-//const traincode = ""
-const $sy = init()
 
 
-all()
-async function all() 
-{ 
-  await namecheck();
-  await trainscheck();
-  await prize();
-  await traintime();
-}
+const leftstat ='北京'  //出发地
+
+      tostat = '上海'   //目的地
+
+      peo = 'ADULT'   //乘客类型，'ADULT'是成人，'0X00'是学生
+
+      lefdate = '2020-08-15' //出发日期
+
+      settrain = 'G153'  //车次序号或者列车车次!!
+
+const $ = new Env('列车时刻查询')
+
+  leftstation = $.getdata('left')||leftstat
+
+  tostation = $.getdata('end')||tostat
+
+  purpose = $.getdata('people')||peo
+
+  leftdate = $.getdata('lfdate')||lefdate
+
+let K = $.getdata('setrain')||settrain
+
+
+ !(async () => {
+  await namecheck()
+  await trainscheck()
+  await prize()
+  await traintime()
+})()
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
+
 
 //站点编码
 function namecheck() {
@@ -58,7 +75,7 @@ $task.fetch(stationnocheck).then(response => {
    //let result = JSON.parse(response.body)
     statno = response.body.split(`${leftstation}`)[1].split("|")[1]
     tostat = response.body.split(`${tostation}`)[1].split("|")[1]
-resolve()
+    resolve()
    })
   })
 }
@@ -72,16 +89,15 @@ if (month < 10) {
 if (day < 10) {
     day = "0" + day+1;
 }
-var nowDate = year + "-" + month + "-" + day;
+let nowDate = year + "-" + month + "-" + day;
+
 if (nowDate > leftdate ){
- $notify(`火车查询错误❌`,"日期错误,请检查后重试",''),
-$done()
+ $notify(`火车查询错误❌`,"日期错误,请检查后重试",'')
 }
 
 // 获取车次列表
 function trainscheck() {
  return new Promise((resolve, reject) =>{
-   setTimeout(() => {
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/query?leftTicketDTO.train_date=${leftdate}&leftTicketDTO.from_station=${statno}&leftTicketDTO.to_station=${tostat}&purpose_codes=${purpose}`,
     method: 'GET',
@@ -91,41 +107,28 @@ function trainscheck() {
 $task.fetch(myRequest).then(response => {
   //console.log('余票信息' + "\n\n" + response.body);
   let ress = JSON.parse(response.body)
-try{
-    train0 = ress.data.result[0].split("|")
-      train =train0[3]
-      starttime = train0[8]
-      arrivetime = train0[9]
-      total = train0[10].split(":")[0]+'小时'+train0[10].split(":")[1]+'分钟'
-    //trainno = train0[2]
-      ruanwopro = train0[21]
-      dongwo = train0[33]
-      yingzuo = train0[29]
-      yingwo = train0[28]
-      ruanwo = train0[23]
-      shangwu = train0[32]
-      yideng = train0[31]
-      erdeng = train0[30]
-      wuzuo = train0[26]
-    trainlist =  '[1] 车次:'+train+" "+ starttime + '--' + arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ " 软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
-  for (i=1;i<ress.data.result.length;i++){
+try {
+  for (i=0;i<ress.data.result.length;i++){
       yupiaoinfo = ress.data.result[i].split("|")
-      train =yupiaoinfo[3]
-      starttime = yupiaoinfo[8]
-      arrivetime = yupiaoinfo[9]
-      total = yupiaoinfo[10].split(":")[0]+'小时'+yupiaoinfo[10].split(":")[1]+'分钟'
-      yingzuo = yupiaoinfo[29]
-      yingwo = yupiaoinfo[28]
-      ruanwo = yupiaoinfo[23]
-      yideng = yupiaoinfo[31]
-      erdeng = yupiaoinfo[30]
-      wuzuo = yupiaoinfo[26]
-      trainlist +=  '\n'+'['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
-   //trainno += ress.data.result[i].split("|")[2]
-   }
-   console.log(trainlist)
-if (K<=ress.data.result.length){
-const info=ress.data.result[K-1].split("|")
+      train = yupiaoinfo[3],
+      starttime = yupiaoinfo[8],
+      arrivetime = yupiaoinfo[9],
+      total = yupiaoinfo[10].split(":")[0]+'小时'+yupiaoinfo[10].split(":")[1]+'分钟',
+      yingzuo = yupiaoinfo[29],
+      yingwo = yupiaoinfo[28],
+      ruanwo = yupiaoinfo[23],
+      yideng = yupiaoinfo[31],
+      erdeng = yupiaoinfo[30],
+      wuzuo = yupiaoinfo[26],
+      trainlist =  '['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
+   //trainno = ress.data.result[i].split("|")[2]
+      console.log(trainlist)
+       let reg = /^[a-zA-Z][0-9]+$/
+if(reg.test(K) && K== ress.data.result[i].split("|")[3]){
+   K  = i+1
+  }
+}
+info = ress.data.result[K-1].split("|")
       //console.log(info)
       traincode = info[3]
       trainno = info[2]
@@ -146,25 +149,25 @@ const info=ress.data.result[K-1].split("|")
       setruanwopro = info[21]
       setruanwo = info[23]
       seattypes = info[35]
-      totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟'
-}
-else {
-    $notify(`火车车次错误❌`,"共"+ress.data.result.length+"列火车经过", '请检查后重试')
-}
-}catch(e){
- $notify(`火车查询错误❌`,"无此方向直达列车经过,请检查后重试",e)}
+      totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟' 
    resolve()
+}catch(e){
+      $notify(`火车查询错误❌`,"无此方向直达列车经过,请检查后重试",e)
+     resolve()
+      return 
+     }
    })
   })
- })
 }
+
+
 function prize() {
  return new Promise((resolve, reject) =>{
   setTimeout(() => {
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
-    method: 'GET',
-    headers: {'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
+    //method: 'GET',
+    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1'}
 }
 $task.fetch(myRequest).then(response => {
  try {
@@ -284,20 +287,4 @@ $done()
 }
 
 
-function init(){isSurge=()=>{return undefined===this.$httpClient?false:true}
-isQuanX=()=>{return undefined===this.$task?false:true}
-getdata=(key)=>{if(isSurge())return $persistentStore.read(key)
-if(isQuanX())return $prefs.valueForKey(key)}
-setdata=(key,val)=>{if(isSurge())return $persistentStore.write(key,val)
-if(isQuanX())return $prefs.setValueForKey(key,val)}
-msg=(title,subtitle,body)=>{if(isSurge())$notification.post(title,subtitle,body)
-if(isQuanX())$notify(title,subtitle,body)}
-log=(message)=>console.log(message)
-get=(url,cb)=>{if(isSurge()){$httpClient.get(url,cb)}
-if(isQuanX()){url.method='GET'
-$task.fetch(url).then((resp)=>cb(null,resp,resp.body))}}
-post=(url,cb)=>{if(isSurge()){$httpClient.post(url,cb)}
-if(isQuanX()){url.method='POST'
-$task.fetch(url).then((resp)=>cb(null,resp,resp.body))}}
-done=(value={})=>{$done(value)}
-return{isSurge,isQuanX,msg,log,getdata,setdata,get,post,done}}
+function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),o=JSON.stringify(this.data);e?this.fs.writeFileSync(t,o):i?this.fs.writeFileSync(s,o):this.fs.writeFileSync(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch(s){const h={};this.lodash_set(h,o,t),e=this.setval(JSON.stringify(h),i),console.log(`${i}: ${JSON.stringify(h)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status),s(t,e,i)});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){const h=t=>!t||!this.isLoon()&&this.isSurge()?t:"string"==typeof t?this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0:"object"==typeof t&&(t["open-url"]||t["media-url"])?this.isLoon()?t["open-url"]:this.isQuanX()?t:void 0:void 0;this.isSurge()||this.isLoon()?$notification.post(s,e,i,h(o)):this.isQuanX()&&$notify(s,e,i,h(o)),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t={}){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
