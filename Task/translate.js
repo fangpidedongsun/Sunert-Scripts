@@ -29,7 +29,7 @@ const $ = new Env("谷歌翻译")
 
 let  ENword = $.getdata('word')||Enword
 
- setword =  encodeURI(ENword)
+ setword = encodeURI(ENword)
 
 const cnToenUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q="+setword}
 const enTocnUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q="+setword}
