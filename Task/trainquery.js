@@ -70,11 +70,10 @@ const stationnocheck = {
     url: `https://kyfw.12306.cn/otn/resources/js/framework/station_name.js`,
     method: 'GET',
 };
-$task.fetch(stationnocheck).then(response => {
-    //console.log(response.statusCode + "\n\n" + response.body);
-   //let result = JSON.parse(response.body)
-    statno = response.body.split(`${leftstation}`)[1].split("|")[1]
-    tostat = response.body.split(`${tostation}`)[1].split("|")[1]
+ $.get(stationnocheck, (err, resp, data) => {
+    //console.log(response.statusCode + "\n\n" + data);
+    statno =data.split(`${leftstation}`)[1].split("|")[1]
+    tostat = data.split(`${tostation}`)[1].split("|")[1]
     resolve()
    })
   })
@@ -91,7 +90,7 @@ if (day < 10) {
 }
 let nowDate = year + "-" + month + "-" + day;
 if (nowDate > leftdate ){
- $notify(`火车查询错误❌`,"日期错误,请检查后重试",'')
+ $.msg(`火车查询错误❌`,"日期错误,请检查后重试",'')
 }
 
 // 获取车次列表
@@ -103,10 +102,11 @@ function trainscheck() {
     headers: {'Cookie' : 'JSESSIONID=1B1CEADF1B9F831C25E71D7F2D996294'}
 };
 
-$task.fetch(myRequest).then(response => {
-  //console.log('余票信息' + "\n\n" + response.body);
-  let ress = JSON.parse(response.body)
+ $.get(myRequest, (err, resp, data) => {
+  //console.log('余票信息' + "\n\n" + data);
+  let ress = JSON.parse(data)
 try {
+    let reg = /^[a-zA-Z][0-9]+$/
   for (i=0;i<ress.data.result.length;i++){
       yupiaoinfo = ress.data.result[i].split("|")
       train = yupiaoinfo[3],
@@ -122,11 +122,11 @@ try {
       trainlist =  '['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
    //trainno = ress.data.result[i].split("|")[2]
       console.log(trainlist)
-       let reg = /^[a-zA-Z][0-9]+$/
 if(reg.test(K) && K== ress.data.result[i].split("|")[3]){
    K  = i+1
   }
 }
+if (K<=ress.data.result.length){
 info = ress.data.result[K-1].split("|")
       traincode = info[3]
       trainno = info[2]
@@ -149,8 +149,17 @@ info = ress.data.result[K-1].split("|")
       seattypes = info[35]
       totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟' 
    resolve()
+  }
+else if (!reg.test(K) && K>ress.data.result.length){
+   var trainlist = ""
+for (y=0;y<ress.data.result.length;y++){
+   trainlist +=  (y+1)+'. '+ress.data.result[y].split("|")[3]+" "+ress.data.result[y].split("|")[8]+"-"+ ress.data.result[y].split("|")[9]+" 历时"+ress.data.result[y].split("|")[10].split(":")[0]+'时'+ress.data.result[y].split("|")[10].split(":")[1]+'分\n'
+    }
+ $.msg(`火车查询错误❌`,"共"+ress.data.result.length+"辆列车经过,请检查后重试",trainlist)
+ return
+}
 }catch(e){
-      $notify(`火车查询错误❌`,"无此方向直达列车经过,请检查后重试",e)
+      $.msg(`火车查询错误❌`,"无此方向列车经过,请检查后重试",e)
      resolve()
       return 
      }
@@ -173,14 +182,14 @@ function prize() {
 'Accept-Language' : `zh-cn`}
 }
 //console.log(myRequest)
-$task.fetch(myRequest).then(response => {
+ $.get(myRequest, (err, resp, data) => {
  try {
-    //console.log('票价信息: ' + response.body+'\n');
-   if (response.body==-1){
-$notify('列车查询失败‼️', '该'+traincode+'次列车车票暂停发售', '')
+    //console.log('票价信息: ' + data+'\n');
+   if ( data==-1){
+$.msg('列车查询失败‼️', '该'+traincode+'次列车车票暂停发售', '')
   return
 }
-   let result = JSON.parse(response.body)
+   let result = JSON.parse(data)
    if (result.data.M){
    setyideng += `(${result.data.M})  `
    }
@@ -219,7 +228,7 @@ $notify('列车查询失败‼️', '该'+traincode+'次列车车票暂停发售
    }
 }
 catch (e){
-  //$notify('列车票价查询失败‼️', '无'+traincode+'列车票价信息', e)
+  //$.msg('列车票价查询失败‼️', '无'+traincode+'列车票价信息', e)
    }
 resolve()
   })
@@ -234,10 +243,10 @@ function traintime() {
     method: 'GET',
 }
 
-$task.fetch(myRequest).then(response => {
+ $.get(myRequest, (err, resp, data) => {
  try {
-    //console.log(response.statusCode + "\n\n" + response.body);
-   let result = JSON.parse(response.body)
+    //console.log(response.statusCode + "\n\n" + data);
+   let result = JSON.parse(data)
   var detail = ""
    if (result.status == true) {
 const traincode = result.data.data[0].station_train_code
@@ -289,12 +298,12 @@ for (i=1;i<result.data.data.length;i++){
 }
 const title = traincode+ "次列车"
 const subTitle = '始发站: '+startstation+ '--终点站: '+endstation
- $notify(title+ " - 出行日期: " +leftdate, subTitle, detail)
+ $.msg(title+ " - 出行日期: " +leftdate, subTitle, detail)
   console.log(traincode+'次列车  \n'+detail)
   }
 } catch (e){
    console.log(traincode)
-  $notify('列车查询失败‼️', '无'+traincode+'列车信息', e)
+  $.msg('列车查询失败‼️', '无'+traincode+'列车信息', e)
 }
   })
 $done()
