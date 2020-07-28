@@ -24,12 +24,17 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 * 谷歌中英互译，适合简单的中英短语单词互译
 */
 
-const Enword = 'CL Online network Technology Co.LTD'  //翻译内容填入引号内
+var Enword = 'CL Online network Technology Co.LTD'  //翻译内容填入引号内
 const $ = new Env("谷歌翻译")
-ENword= $.getdata('word')||Enword
-const word = encodeURI(ENword)
-const cnToenUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q="+word}
-const enTocnUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q="+word}
+
+let  ENword = $.getdata('word')||Enword
+
+ setword =  encodeURI(ENword)
+
+const cnToenUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q="+setword}
+const enTocnUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q="+setword}
+
+//console.log(enTocnUrl)
 
 Translate(ENword)
 function Translate(ENword) {
@@ -51,7 +56,8 @@ function Translate(ENword) {
       if(/[a-zA-Z]/.test(data)) {
         const rest = data.split(",")[0].replace(/[\[\"]/g,"")
         console.log(`谷歌翻译`+`\n原文: `+ENword+`\n翻译结果: `+ rest)
-        $.msg(`谷歌翻译 英译中`,`🇬🇧 英文原文:   `+ENword,`🇨🇳 翻译结果 :  `+ rest)
+
+        $.msg(`谷歌翻译 英译中`,'🇬🇧 英文原文:  '+ ENword,`🇨🇳 翻译结果 :  `+ rest)
       }
     })
    }
