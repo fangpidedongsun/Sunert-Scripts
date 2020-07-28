@@ -10,6 +10,7 @@
 7月28日: 
 取消手动座席选择，增加硬卧，软卧，商务座等所有票价信息，优化通知;
 支持boxjs远程自定义配置，增加可自定义车次，车次序号设置过大时可显示经过车次，可根据车次序号进行设置，由于苹果限制，车次可能显示不全
+增加点击通知链接跳转详情页
 ～～～～～～～～～～～～～～～～
 QX 1.0.6+ :
 [task_local]
@@ -53,8 +54,7 @@ const $ = new Env('列车时刻查询')
 
 let K = $.getdata('setrain')||settrain
 
-
- !(async () => {
+!(async () => {
   await namecheck()
   await trainscheck()
   await prize()
@@ -243,7 +243,6 @@ function traintime() {
     url: `https://kyfw.12306.cn/otn/czxx/queryByTrainNo?train_no=${trainno}&from_station_telecode=${fromstation}&to_station_telecode=${endstation}&depart_date=${leftdate}`,
     method: 'GET',
 }
-
  $.get(myRequest, (err, resp, data) => {
  try {
     //console.log(response.statusCode + "\n\n" + data);
@@ -255,7 +254,8 @@ const arrivetime = result.data.data[0].arrive_time
    starttime = result.data.data[0].start_time
    stationname = result.data.data[0].station_name
    startstation = result.data.data[0].start_station_name
-   endstation = result.data.data[0].end_station_name
+   edstation = result.data.data[0].end_station_name
+
 if (setyideng){
    detail += '一等座: '+setyideng
   }
@@ -296,18 +296,20 @@ else {
   detail +='\n'+purpose+ ' (如票价无显示请重试)\n'+leftstation+'到达目的地'+tostation+'历时'+totaltime+'\n'+arrivetime +'--'+starttime+ '  '+stationname
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
-}
+  }
+  const openurl = encodeURI(`https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=${leftstation},${fromstation}&ts=${tostation},${endstation}&date=${leftdate}&flag=N,N,Y`)
 const title = traincode+ "次列车"
-const subTitle = '始发站: '+startstation+ '--终点站: '+endstation
- $.msg(title+ " - 出行日期: " +leftdate, subTitle, detail)
+const subTitle = '始发站: '+startstation+ '--终点站: '+edstation
   console.log(traincode+'次列车  \n'+detail)
+
+ $.msg(title+ " - 出行日期: " +leftdate, subTitle, detail, { "open-url": `${openurl}`})
   }
 } catch (e){
    console.log(traincode)
   $.msg('列车查询失败‼️', '无'+traincode+'列车信息', e)
 }
   })
-$done()
+   resolve()
  })
 }
 
