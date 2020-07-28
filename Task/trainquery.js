@@ -38,7 +38,7 @@ const leftstat ='北京'  //出发地
 
       lefdate = '2020-08-15' //出发日期
 
-      settrain = 'G153'  //车次序号或者列车车次!!
+      settrain = '1'  //车次序号或者列车车次!!
 
 const $ = new Env('列车时刻查询')
 
@@ -82,7 +82,7 @@ $task.fetch(stationnocheck).then(response => {
 var date = new Date();
 var year = date.getFullYear();
 var month = date.getMonth() + 1;
-var day = date.getDate()+1;
+var day = date.getDate();
 if (month < 10) {
     month = "0" + month;
 }
@@ -90,7 +90,6 @@ if (day < 10) {
     day = "0" + day+1;
 }
 let nowDate = year + "-" + month + "-" + day;
-
 if (nowDate > leftdate ){
  $notify(`火车查询错误❌`,"日期错误,请检查后重试",'')
 }
@@ -129,7 +128,6 @@ if(reg.test(K) && K== ress.data.result[i].split("|")[3]){
   }
 }
 info = ress.data.result[K-1].split("|")
-      //console.log(info)
       traincode = info[3]
       trainno = info[2]
       fromstationno = info[16]
@@ -167,12 +165,21 @@ function prize() {
    const myRequest = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
     method: 'GET',
-    headers: {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1','Cookie': '_uab_collina=159587465195914267490366; JSESSIONID=1C42E86BE350A28BD2598F548B81FBCA; _jc_save_fromDate=2020-07-28; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_toDate=2020-07-28; _jc_save_toStation=%u4E0A%u6D77%2CSHH; _jc_save_wfdc_flag=dc; BIGipServerotn=116392458.50210.0000; route=9036359bb8a8a461c164a04f8f50b252; BIGipServerpool_passport=233636362.50215.0000; RAIL_DEVICEID=TEmVLkda1h6kE7OHY5nw7IrLigw87rzYoHKGpgfvYVXcCaZr20FLBAGhBmcZRB2cHcnV-S1fKJnky4Jy2clDf032gzeCbPVcDayzEC1_zayWQw2BZQB-nZ-lMDeN827ZdxTXErkhVsHxmYk2pBciYlcDZohCcIGO; RAIL_EXPIRATION=1596186387169'}
+    headers: {
+'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1`,
+'Host' : `kyfw.12306.cn`,
+'Pragma' : `no-cache`,
+'Accept' : `*/*`,
+'Accept-Language' : `zh-cn`}
 }
-
+//console.log(myRequest)
 $task.fetch(myRequest).then(response => {
  try {
-    console.log('票价信息: ' + response.body+'\n');
+    //console.log('票价信息: ' + response.body+'\n');
+   if (response.body==-1){
+$notify('列车查询失败‼️', '该'+traincode+'次列车车票暂停发售', '')
+  return
+}
    let result = JSON.parse(response.body)
    if (result.data.M){
    setyideng += `(${result.data.M})  `
