@@ -129,7 +129,7 @@ if(reg.test(K) && K== ress.data.result[i].split("|")[3]){
 }
 if (K<=ress.data.result.length){
 info = ress.data.result[K-1].split("|")
-      console.log(info)
+      //console.log(info)
       traincode = info[3]
       trainno = info[2]
       fromstationno = info[16]
@@ -184,7 +184,7 @@ function prize() {
 }
 //console.log(prizeurl)
  $.get(prizeurl, (err, resp, data) => {
-    console.log('票价信息: 响应码: ' +resp.statusCode+" \n"+ data+'\n');
+    //console.log('票价信息: 响应码: ' +resp.statusCode+" \n"+ data+'\n');
     if ( data == -1||resp.statusCode == 404){
 $.msg('列车查询失败‼️', '该'+traincode+'次列车车票暂停发售', '')
      return
