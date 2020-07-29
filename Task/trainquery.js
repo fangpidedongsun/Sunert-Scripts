@@ -179,6 +179,7 @@ function prize() {
 'Connection' : `keep-alive`,
 'Accept' : `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
 'Host' : `kyfw.12306.cn`,
+'Cookie' : `_uab_collina=159587465195914267490366; JSESSIONID=2D2C3ED0892CE56ADB0576B030CC1344; _jc_save_fromDate=2020-07-29; _jc_save_fromStation=%u5317%u4EAC%2CBJP; _jc_save_toDate=2020-07-29; _jc_save_toStation=%u676D%u5DDE%2CHZH; _jc_save_wfdc_flag=dc; BIGipServerotn=250610186.64545.0000; route=9036359bb8a8a461c164a04f8f50b252; RAIL_DEVICEID=TEmVLkda1h6kE7OHY5nw7IrLigw87rzYoHKGpgfvYVXcCaZr20FLBAGhBmcZRB2cHcnV-S1fKJnky4Jy2clDf032gzeCbPVcDayzEC1_zayWQw2BZQB-nZ-lMDeN827ZdxTXErkhVsHxmYk2pBciYlcDZohCcIGO; RAIL_EXPIRATION=1596186387169`,
 'User-Agent' : `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1`,
 'Accept-Language' : `zh-cn` }
 }
