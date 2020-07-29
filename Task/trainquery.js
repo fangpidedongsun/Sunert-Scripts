@@ -174,7 +174,13 @@ function prize() {
  return new Promise((resolve, reject) =>{
    const prizeurl = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
-    method: 'GET'
+    method: 'GET',
+    headers : {'Accept-Encoding' : `gzip, deflate, br`,
+'Connection' : `keep-alive`,
+'Accept' : `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
+'Host' : `kyfw.12306.cn`,
+'User-Agent' : `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1`,
+'Accept-Language' : `zh-cn` }
 }
 //console.log(prizeurl)
  $.get(prizeurl, (err, resp, data) => {
