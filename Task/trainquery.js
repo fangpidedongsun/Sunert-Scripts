@@ -174,16 +174,11 @@ function prize() {
  return new Promise((resolve, reject) =>{
    const prizeurl = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
-    headers: {
-'User-Agent' : `Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.1 Mobile/15E148 Safari/604.1`,
-'Host' : `kyfw.12306.cn`,
-'Accept' : `*/*`,
-'Accept-Language' : `zh-cn`}
-    //method: 'GET'
+    method: 'GET'
 }
 //console.log(prizeurl)
  $.get(prizeurl, (err, resp, data) => {
-    //console.log('票价信息: 响应码: ' +resp.statusCode+" \n"+ data+'\n');
+    console.log('票价信息: 响应码: ' +resp.statusCode+" \n"+ data+'\n');
     if ( data == -1||resp.statusCode == 404){
 $.msg('列车查询失败‼️', '该'+traincode+'次列车车票暂停发售或者查询失败,请重试', err)
      return
