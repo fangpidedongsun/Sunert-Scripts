@@ -79,17 +79,8 @@ const stationnocheck = {
    })
   })
 }
-var date = new Date();
-var year = date.getFullYear();
-var month = date.getMonth() + 1;
-var day = date.getDate();
-if (month < 10) {
-    month = "0" + month;
-}
-if (day < 10) {
-    day = "0" + day+1;
-}
-let nowDate = year + "-" + month + "-" + day;
+
+let nowDate = $.time('yyyy-MM-dd');
 if (nowDate > leftdate ){
  $.msg(`火车查询错误❌`,"日期错误,请检查后重试",'')
 }
@@ -121,7 +112,7 @@ try {
       wuzuo = yupiaoinfo[26],
       trainlist =  '['+(i+1)+'] 车次:'+train+" "+starttime+"--"+ arrivetime+" 总计时间:"+total+'\n一等座:'+yideng+' 二等座:'+erdeng+ ' 硬座:'+yingzuo+" 硬卧:"+yingwo+ "  软卧:"+ ruanwo+' 无座:'+wuzuo+'\n'
    //trainno = ress.data.result[i].split("|")[2]
-      console.log(trainlist)
+      $.log(trainlist)
 if(reg.test(K) && K== ress.data.result[i].split("|")[3]){
    K  = i+1
   }
@@ -129,27 +120,27 @@ if(reg.test(K) && K== ress.data.result[i].split("|")[3]){
 if (K<=ress.data.result.length){
 info = ress.data.result[K-1].split("|")
       //console.log(info)
-      traincode = info[3]
-      trainno = info[2]
-      fromstationno = info[16]
-      tostationno = info[17]
-      fromstation = info[4]
-      endstation = info[5]
-      leftstationcode = info[6]
-      tostationcode = info[7]
-      setyingzuo = info[29]
-      setyingwo = info[28]
-      setyideng = info[31]
-      seterdeng = info[30]
-      setruanzuo = info[24]
-      setwuzuo = info[26]
-      setdongwo = info[33]
-      setshangwu = info[32]
-      setruanwopro = info[21]
-      setruanwo = info[23]
-      seattypes = info[35]
-      totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟' 
-   resolve()
+      traincode = info[3]  //列车车次
+      trainno = info[2]    //列车编码
+      fromstationno = info[16] //发车站序号
+      tostationno = info[17]   //目的地序号
+      fromstation = info[4]    //始发站编码
+      endstation = info[5]     //终点站编码
+      leftstationcode = info[6] //出发站编码
+      tostationcode = info[7]   //目的地编码
+      setyingzuo = info[29]     //硬座余票
+      setyingwo = info[28]      //硬卧余票
+      setyideng = info[31]      //一等座余票
+      seterdeng = info[30]      //二等座余票
+      setruanzuo = info[24]     //软座余票
+      setwuzuo = info[26]       //无座余票
+      setdongwo = info[33]      //动卧余票
+      setshangwu = info[32]      //商务座余票
+      setruanwopro = info[21]    //高级软卧余票
+      setruanwo = info[23]      //软卧余票
+      seattypes = info[35]      //座席代码
+      totaltime  = info[10].split(":")[0]+'小时'+info[10].split(":")[1]+'分钟' //运行时间
+      resolve()
   }
 else if (!reg.test(K) && K>ress.data.result.length){
    var trainlist = ""
@@ -171,7 +162,7 @@ for (y=0;y<ress.data.result.length;y++){
 
 function prize() {
  return new Promise((resolve, reject) =>{
-   var timestamp=$.time;
+   var timestamp=$.startTime;
    const prizeurl = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
     method: 'GET',
@@ -179,7 +170,7 @@ function prize() {
 'Connection' : `keep-alive`,
 'Accept' : `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
 'Host' : `kyfw.12306.cn`,
-'Cookie' : `_uab_collina=159587465195914267490366; JSESSIONID=2D2C3ED0892CE56ADB0576B030CC1344; _jc_save_fromDate=${leftdate}; _jc_save_fromStation=${leftstation}%2C${fromstationno}; _jc_save_toDate=${leftdate}; _jc_save_toStation=${tostation}%2${tostationno}; _jc_save_wfdc_flag=dc; BIGipServerotn=250610186.64545.0000; route=9036359bb8a8a461c164a04f8f50b252;  RAIL_EXPIRATION=${$.time}`,
+'Cookie' : `_uab_collina=159587465195914267490366; JSESSIONID=2D2C3ED0892CE56ADB0576B030CC1344; _jc_save_fromDate=${leftdate}; _jc_save_fromStation=${leftstation}%2C${leftstationcode}; _jc_save_toDate=${leftdate}; _jc_save_toStation=${tostation}%2${tostationcode}; _jc_save_wfdc_flag=dc; BIGipServerotn=250610186.64545.0000; route=9036359bb8a8a461c164a04f8f50b252;  RAIL_EXPIRATION=${timestamp}`,
 'User-Agent' : `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1`,
 'Accept-Language' : `zh-cn` }
 }
@@ -297,12 +288,12 @@ else {
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
   }
-  const openurl = encodeURI(`https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=${leftstation},${fromstation}&ts=${tostation},${tostationcode}&date=${leftdate}&flag=N,N,Y`)
+  const openurl = encodeURI(`https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=${leftstation},${leftstationcode}&ts=${tostation},${tostationcode}&date=${leftdate}&flag=N,N,Y`)
 const title = traincode+ "次列车"
 const subTitle = '始发站: '+startstation+ '--终点站: '+edstation
-  console.log(traincode+'次列车  \n'+detail)
 
- $.msg(title+ " - 出行日期: " +leftdate, subTitle, detail, { "open-url": `${openurl}`})
+  $.msg(title+ " - 出行日期: " +leftdate, subTitle, detail, { "open-url": `${openurl}`})
+  console.log(traincode+'次列车  \n'+detail)
   }
 } catch (e){
    console.log(traincode)
