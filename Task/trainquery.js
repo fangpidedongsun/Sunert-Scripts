@@ -297,7 +297,7 @@ else {
 for (i=1;i<result.data.data.length;i++){
     detail  += `\n`+result.data.data[i].arrive_time +'--'+result.data.data[i].start_time+ '  '+result.data.data[i].station_name
   }
-  const openurl = encodeURI(`https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=${leftstation},${fromstation}&ts=${tostation},${endstation}&date=${leftdate}&flag=N,N,Y`)
+  const openurl = encodeURI(`https://kyfw.12306.cn/otn/leftTicket/init?linktypeid=dc&fs=${leftstation},${fromstation}&ts=${tostation},${tostationcode}&date=${leftdate}&flag=N,N,Y`)
 const title = traincode+ "次列车"
 const subTitle = '始发站: '+startstation+ '--终点站: '+edstation
   console.log(traincode+'次列车  \n'+detail)
