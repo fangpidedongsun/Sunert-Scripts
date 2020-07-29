@@ -171,7 +171,7 @@ for (y=0;y<ress.data.result.length;y++){
 
 function prize() {
  return new Promise((resolve, reject) =>{
-   var timestamp=new Date().getTime();
+   var timestamp=$.time;
    const prizeurl = {
     url: `https://kyfw.12306.cn/otn/leftTicket/queryTicketPrice?train_no=${trainno}&from_station_no=${fromstationno}&to_station_no=${tostationno}&seat_types=${seattypes}&train_date=${leftdate}`,
     method: 'GET',
@@ -179,7 +179,7 @@ function prize() {
 'Connection' : `keep-alive`,
 'Accept' : `text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8`,
 'Host' : `kyfw.12306.cn`,
-'Cookie' : `_uab_collina=159587465195914267490366; JSESSIONID=2D2C3ED0892CE56ADB0576B030CC1344; _jc_save_fromDate=${leftdate}; _jc_save_fromStation=${leftstation}%2C${fromstationno}; _jc_save_toDate=${leftdate}; _jc_save_toStation=${tostation}%2${tostationno}; _jc_save_wfdc_flag=dc; BIGipServerotn=250610186.64545.0000; route=9036359bb8a8a461c164a04f8f50b252;  RAIL_EXPIRATION=${timestamp}`,
+'Cookie' : `_uab_collina=159587465195914267490366; JSESSIONID=2D2C3ED0892CE56ADB0576B030CC1344; _jc_save_fromDate=${leftdate}; _jc_save_fromStation=${leftstation}%2C${fromstationno}; _jc_save_toDate=${leftdate}; _jc_save_toStation=${tostation}%2${tostationno}; _jc_save_wfdc_flag=dc; BIGipServerotn=250610186.64545.0000; route=9036359bb8a8a461c164a04f8f50b252;  RAIL_EXPIRATION=${$.time}`,
 'User-Agent' : `Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/604.3.5 (KHTML, like Gecko) Version/13.0 Safari/604.1`,
 'Accept-Language' : `zh-cn` }
 }
@@ -260,7 +260,7 @@ if (setyideng){
    detail += '一等座: '+setyideng
   }
 if (seterdeng){
-   detail += '二等座: '+seterdeng
+   detail += ' 二等座: '+seterdeng
   }
 if (setshangwu){
    detail += '\n商务座: '+setshangwu
@@ -269,22 +269,22 @@ if (setyingzuo){
    detail += '硬座: '+setyingzuo
   }
 if (setruanzuo){
-   detail += '软座: '+setruanzuo  
+   detail += ' 软座: '+setruanzuo  
   }
 if (setwuzuo){
-   detail += '无座: '+setwuzuo
+   detail += ' 无座: '+setwuzuo
   }
 if (setruanwo){
    detail += '\n软卧: '+setruanwo
   }
 if (setyingwo){
-   detail += '硬卧: '+setyingwo
+   detail += ' 硬卧: '+setyingwo
   }
 if (setruanwopro){
-   detail += '高级软卧: '+setruanwopro
+   detail += ' 高级软卧: '+setruanwopro
   }
 if (setdongwo){
-  detail += '动卧: '+setdongwo
+  detail += ' 动卧: '+setdongwo
   }
 if (purpose=='0X00'){
   purpose = '学生票 '
