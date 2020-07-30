@@ -133,6 +133,38 @@
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/translate.js"
     },
     {
+      "id": "exchange rate",
+      "name": "汇率换算",
+      "keys": [],
+      "settings": [
+         { 
+         "id": "f", 
+         "name": "使用币", 
+         "val": "人民币", 
+         "type": "text", 
+         "desc": "填写中文币种,注意澳门元为澳门帕塔卡，香港元为港币，台湾为新台币"     
+         },
+         { 
+         "id": "t", 
+         "name": "兑换币", 
+         "val": "港币", 
+         "type": "text", 
+         "desc": "填写中文币种,注意澳门元为澳门帕塔卡，香港元为港币，台湾为新台币"     
+         },
+         { 
+         "id": "ex", 
+         "name": "兑换金额", 
+         "val": "10", 
+         "type": "number", 
+         "desc": "填写数字"     
+         }
+        ],
+      "author": "@sunert",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
+      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/exchangerate.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/exchangerate.png"],
+      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/exchangerate.js"
+    },
+    {
       "id": "trainquery",
       "name": "列车时刻",
       "keys": [],
