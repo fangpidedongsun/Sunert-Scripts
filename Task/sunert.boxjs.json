@@ -160,7 +160,7 @@
          }
         ],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/exchangerate.js",
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/exchangerate.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/exchangerate.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/exchangerate.js"
     },
