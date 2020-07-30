@@ -138,21 +138,21 @@
       "keys": [],
       "settings": [
          { 
-         "id": "f", 
+         "id": "froma", 
          "name": "使用币", 
          "val": "人民币", 
          "type": "text", 
          "desc": "填写中文币种,注意澳门元为澳门帕塔卡，香港元为港币，台湾为新台币"     
          },
          { 
-         "id": "t", 
+         "id": "toex", 
          "name": "兑换币", 
          "val": "港币", 
          "type": "text", 
          "desc": "填写中文币种,注意澳门元为澳门帕塔卡，香港元为港币，台湾为新台币"     
          },
          { 
-         "id": "ex", 
+         "id": "numex", 
          "name": "兑换金额", 
          "val": "10", 
          "type": "number", 
