@@ -35,6 +35,7 @@
             {
               "val": "4",
               "type": "number",
+              "placeholder": "4",
               "desc": "设定通知频率"
             }]
          },
