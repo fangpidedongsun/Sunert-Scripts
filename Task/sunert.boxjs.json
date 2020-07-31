@@ -22,7 +22,7 @@
       "settings": [
         {
          "id": "notifytimes",
-         "name": "通知频率",
+         "name": "通知频率 (点击查看设置说明)",
          "val": "4",
          "type": "radios",
          "desc": "无/默认", 
