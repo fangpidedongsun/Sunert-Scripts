@@ -67,7 +67,7 @@ hostname = *.youth.cn, ios.baertt.com
 
 */
 const setnotify = 50  //通知间隔，默认抽奖每50次通知一次，如需关闭全部通知请设为0
-const resplogs = 0;   //0为关闭日志，1为开启
+const resplogs = false;   //调试日志开关为false或true
 
 const CookieName = "中青看点"
 const $ = new Env(CookieName)
@@ -144,7 +144,7 @@ function sign() {
       headers: JSON.parse(signheaderVal),
 }
      $.post(signurl, (error, response, data) =>{
-      if(logs==true? true:false) $.log(`${CookieName}, data: ${data}`)
+       if(logs=="true")  $.log(`${CookieName}, data: ${data}`)
        signres =JSON.parse(data)
        if (signres.status == 1){
           signresult = `【签到信息】成功`
@@ -173,7 +173,7 @@ function signInfo() {
 }
    $.post(infourl, (error, response, data) =>
  {
-if(logs=="true" ? true: false)$.log(`${CookieName}, 签到信息: ${data}`)
+        if(logs=="true")$.log(`${CookieName}, 签到信息: ${data}`)
       signinfo =JSON.parse(data)
       if (signinfo.status == 1){
          subTitle = `【收益总计】${signinfo.data.user.score}青豆  现金约${signinfo.data.user.money}元`
@@ -227,7 +227,7 @@ function getAdVideo() {
       body: 'type=taskCenter'
 }
    $.post(url, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`视频广告:${data}`)
+     if(logs=="true") $.log(`视频广告:${data}`)
    adVideores = JSON.parse(data)
    if (adVideores.status==1){
       detail += `【观看视频】  +${adVideores.score}个青豆\n` }
@@ -244,7 +244,7 @@ function gameVideo() {
 }
    $.post(url, (error, response, data) =>
  {
-    if(logs=="true" ? true: false) $.log(`激励视频:${data}`)
+      if(logs=="true")$.log(`激励视频:${data}`)
    gameres = JSON.parse(data)
    if (gameres.success==true){
      detail += `【激励视频】  ${gameres.items.score}\n`}
@@ -262,7 +262,7 @@ function readArticle() {
 }
    $.post(url, (error, response, data) =>
  {
-  if(logs=="true" ? true: false) $.log(`阅读奖励:${data}`)
+    if(logs=="true") $.log(`阅读奖励:${data}`)
    readres = JSON.parse(data)
     if (readres.items.max_notice == '\u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5'){
      //detail += ` \u770b\u592a\u4e45\u4e86\uff0c\u63621\u7bc7\u8bd5\u8bd5，`
@@ -282,7 +282,7 @@ function Articlered() {
       body: redpbodyVal,
 }
   $.post(url, (error, response, data) =>{
-if(logs=="true" ? true: false)$.log(`阅读附加:${data}`)
+     if(logs=="true")$.log(`阅读附加:${data}`)
    redres = JSON.parse(data)
    if (redres.success==true){
      detail += `【惊喜红包】  +${redres.items.score}个青豆\n`  
@@ -303,7 +303,7 @@ function rotary() {
       body: rotarbody
 }
   $.post(url, (error, response, data) =>{
- if(logs=="true"||0 ? true: false)$.log(`转盘抽奖:${data}`)
+    if(logs=="true")$.log(`转盘抽奖:${data}`)
    rotaryres = JSON.parse(data)
    if (rotaryres.status==1){
      detail += `【转盘抽奖】  +${rotaryres.data.score}个青豆 剩余${rotaryres.data.remainTurn}次\n`  
@@ -335,7 +335,7 @@ for (i=0;i<4;i++){
       body: rotarbody
 }
   $.post(url, (error, response, data) =>{
-    $.log(`转盘宝箱抽奖:${data}`)
+    if(logs=="true")$.log(`转盘宝箱抽奖:${data}`)
    rotaryres1 = JSON.parse(data)
    if (rotaryres1.status==1){
      detail += `【转盘宝箱】  +${rotaryres4.data.score}个青豆\n`
@@ -357,7 +357,7 @@ function punchCard() {
       headers: JSON.parse(signheaderVal),
 }
   $.post(url, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`每日开启打卡:${data}`)
+    if(logs=="true")$.log(`每日开启打卡:${data}`)
    punchcardstart = JSON.parse(data)
    if (punchcardstart.code==1){
      detail += `【打卡报名】  开启打卡${punchcardstart.msg} ✅ \n`  
@@ -380,7 +380,7 @@ function endCard() {
       headers: JSON.parse(signheaderVal),
 }
   $.post(url, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`打卡结果:${data}`)
+    if(logs=="true")$.log(`打卡结果:${data}`)
    punchcardend = JSON.parse(data)
    if (punchcardend.code==1){
      detail += `【早起打卡】  ${punchcardend.msg}打卡时间: ${punchcardend.data.card_time} ✅`  
@@ -403,7 +403,7 @@ const starturl = {
       headers: JSON.parse(signheaderVal),
 }
   $.post(starturl, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`打卡分享开启:${data}`)
+    if(logs=="true") $.log(`打卡分享开启:${data}`)
    sharestart = JSON.parse(data)
    if (sharestart.code==1){
      //detail += `分享${shareres.msg}`  
@@ -413,7 +413,7 @@ const starturl = {
       headers: JSON.parse(signheaderVal),
      }
   $.post(endurl, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`打卡分享:${data}`)
+   if(logs=="true") $.log(`打卡分享:${data}`)
    shareres = JSON.parse(data)
    if (shareres.code==1){
      detail += `【手机分享】  +${shareres.data.score}个青豆\n`  
@@ -436,7 +436,7 @@ function openbox() {
       headers: JSON.parse(signheaderVal),
 }
   $.post(url, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`时段开启宝箱:${data}`)
+    if(logs=="true") $.log(`时段开启宝箱:${data}`)
    boxres = JSON.parse(data)
    if (boxres.code==1){
      detail += `【开启宝箱】  +${boxres.data.score}个青豆 下次奖励${boxres.data.time/60}分钟\n`  
@@ -459,7 +459,7 @@ function share() {
       headers: JSON.parse(signheaderVal),
 }
   $.post(url, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`宝箱分享:${data}`)
+   if(logs==true) $.log(`宝箱分享:${data}`)
    shareres = JSON.parse(data)
    if (shareres.code==1){
      detail += `【宝箱分享】  +${shareres.data.score}个青豆\n`  
@@ -485,7 +485,7 @@ function TurnDouble() {
       body: rotarbody
 }
   $.post(url, (error, response, data) =>{
-   if(logs=="true"||0 ? true: false) $.log(`转盘双倍奖励:${data}`)
+   if(logs==true) $.log(`转盘双倍奖励:${data}`)
    Doubleres = JSON.parse(data)
    if(Doubleres.status==1){
      detail += `【转盘双倍】  +${Doubleres.data.score1}个青豆 剩余${rotaryres.data.doubleNum}次\n`};
@@ -502,7 +502,7 @@ function readTime() {
       body: timebodyVal,
 }
   $.post(url, (error, response, data) =>{
-    if(logs=="true"||0 ? true: false) $.log(`阅读时长:${data}`)
+    if(logs=="true")$.log(`阅读时长:${data}`)
     let timeres = JSON.parse(data)
    if (timeres.error_code==0){
      readtimes = timeres.time/60
@@ -525,7 +525,7 @@ function earningsInfo() {
       headers: signheaderVal,
 }
   $.get(url, (error, response, data) =>{
-   //if(logs=="true"||0 ? true: false) $.log(`收益信息:${data}`)
+   if(logs=="true") $.log(`收益信息:${data}`)
    infores = JSON.parse(data)
    if (infores.status==0){
      detail += `<收益统计>：\n`  
