@@ -36,15 +36,10 @@
               "val": "1",
               "label": "通知常开",
               "desc": "常开通知"
-            },
-            {
-              "val": "4",
-              "type": "number",
-              "label": "默认通知频率",
-              "placeholder": "4",
-              "desc": "设定通知频率"
-            }
-            ]
+            }],
+         "val": "4",
+         "type": "number",
+         "desc": "设定通知频率"
          },
          {
           "id": "zqlogs",
