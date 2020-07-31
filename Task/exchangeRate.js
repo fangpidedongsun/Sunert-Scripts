@@ -1,6 +1,6 @@
 
 /**
-本任务脚本可查询实时货币汇率及换算，默认小数点后三位
+本任务脚本可查询实时货币汇率及换算，默认小数点后三位，兼容boxjs设置
 注意澳门元为澳门帕塔卡，香港元为港币，台湾为新台币
 ～～～～～～～～～～～～～～～～
 QX 1.0.6+ :
@@ -28,7 +28,7 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 const f ='人民币'  //使用币
 const t = '港币'   //换算币
 const ex = '10'   //兑换金额
-const $ = new Env("每日汇率及换算")
+const $ = new Env("实时汇率及换算")
 
 let frommoney =$.getdata("froma")||f;   
 let exchangemoney = $.getdata("toex")||t;
@@ -66,7 +66,7 @@ function code() {
       HKTOCN = result.data[9].rate.toFixed(3)
       GBTOCN = result.data[3].rate.toFixed(3)
       EUTOCN = result.data[4].rate.toFixed(3)
-      $.detail = "🇨🇳 "+result.data[0].code+ result.data[0].symbol+" 1 元 <==> 🇺🇸 "+ result.data[1].code+result.data[1].symbol+" "+USDTOCN+" 美元\n  约合 🇬🇧 "+result.data[3].code+ result.data[3].symbol+" "+GBTOCN+" 英镑\n  约合 🇩🇪 "+result.data[4].code+ result.data[4].symbol+" "+EUTOCN+" 欧元\n  约合 🇯🇵 "+result.data[2].code+ result.data[2].symbol+" "+JPTOCN+" 日元\n  约合 🇭🇰 "+result.data[9].code+ result.data[9].symbol+" "+GBTOCN+" 港币\n"
+      $.detail = "🇨🇳 "+result.data[0].code+ result.data[0].symbol+" 1 元 <==> 🇺🇸 "+ result.data[1].code+result.data[1].symbol+" "+USDTOCN+" 美元\n  约合 🇬🇧 "+result.data[3].code+ result.data[3].symbol+" "+GBTOCN+" 英镑\n  约合 🇩🇪 "+result.data[4].code+ result.data[4].symbol+" "+EUTOCN+" 欧元\n  约合 🇯🇵 "+result.data[2].code+ result.data[2].symbol+" "+JPTOCN+" 日元\n  约合 🇭🇰 "+ result.data[9].symbol+" "+GBTOCN+" 港币\n"
        $.subTitle = '美元兑人民币汇率: '+ (1/result.data[1].rate).toFixed(3)+'元'
      }
        catch (erro){
