@@ -29,7 +29,7 @@
          "items": [
             {
               "val": "0",
-              "label": "静默运行"
+              "label": "静默运行",
               "desc": "无任何通知"
             },
             {
@@ -43,7 +43,7 @@
           "name": "调试日志",
           "val": false,
           "type": "boolean"
-         }
+         },
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js"
