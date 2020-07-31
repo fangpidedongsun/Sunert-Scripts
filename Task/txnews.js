@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-07-27 22:30
+更新时间: 2020-07-31 17:30
 
 腾讯新闻签到修改版，可以自动阅读文章获取红包，该活动为瓜分百万现金挑战赛，针对幸运用户参与
 
@@ -57,7 +57,23 @@ let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
    GetCookie()
 } else {
-   all()
+!(async () => {
+{ 
+  await getsign()
+  await activity()
+  await toRead()
+  await lookVideo()
+  await openApp()
+  await shareApp()
+  await Redpack()
+  await videoPack()
+  await StepsTotal()
+  await getTotal()
+  await showmsg()
+ }
+})()
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
 }
 
 function GetCookie() {
@@ -77,20 +93,7 @@ if ($request &&$request.body.indexOf("video_read")> -1) {
   $.msg(cookieName, `获取视频地址: 成功🎉`, ``)
   }
  }
-async function all() 
-{ 
-  await getsign();
-  await activity();
-  await toRead();
-  await lookVideo();
-  await openApp();
-  await shareApp();
-  await Redpack();
-  await videoPack();
-  await StepsTotal();
-  await getTotal();
-  await showmsg();
-}
+
 
 //签到
 function getsign() {
@@ -142,6 +145,12 @@ function lookVideo() {
       $.msg(cookieName, '观看视频:'+ error)
         }else{
           if(logs == "true")$.log(`${cookieName}观看视频 - data: ${data}`)
+                 tolookresult = JSON.parse(data)
+     if(tolookresult.info=='success'){
+        videocoins = tolookresult.data.countdown_timer.countdown_tips
+     }else{
+     videocoins =""
+     }
     }
    resolve()
     })
