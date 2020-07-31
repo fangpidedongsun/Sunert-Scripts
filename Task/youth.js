@@ -72,7 +72,7 @@ const resplogs = 0;   //0为关闭日志，1为开启
 const CookieName = "中青看点"
 const $ = new Env(CookieName)
 let notifyInterval = $.getdata("notifytimes")||setnotify
-let logs = $.getdata("reslog")||resplogs
+let logs = $.getdata("zqlogs")||resplogs
 
 const signheaderKey = 'youthheader_zq'
 const articlebodyKey = 'read_zq'

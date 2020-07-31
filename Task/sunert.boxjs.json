@@ -39,7 +39,7 @@
             }]
          },
          {
-          "id": "logsturn",
+          "id": "zqlogs",
           "name": "调试日志",
           "val": false,
           "type": "boolean"
@@ -244,6 +244,5 @@
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js"
     }
-    
   ]
 }
