@@ -3,16 +3,16 @@
   "name": "Sunert 签到应用订阅",
   "author": "@Sunert",
   "icon": "https://avatars2.githubusercontent.com/u/47924389?s=460&u=5152f048a9e8aaa45102763a578172407c40fcc8&v=4",
-  "repo": "https://github.com/Sunert/Scripts/tree/master",
+  "repo": "https://gitee.com/Sunert/Scripts/tree/master",
   "apps": [
     {
       "id": "weibo",
       "name": "新浪微博",
       "keys": ["sy.signurl.wb", "sy_signheader_wb", "sy_payheader_wb", "sy_token_wb"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/weibo.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/weibo.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/weibo.png", "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/weibo.js"
     },
     {
       "id": "youth",
@@ -48,52 +48,52 @@
           "type": "boolean"
          }
        ],
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/youth.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/youth.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/youth.png", "https://raw.githubusercontent.com/Orz-3/task/master/youth.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/youth.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/youth.js"
     },
     {
       "id": "dianshijia",
       "name": "电视家",
       "keys": ["sy_signurl_dsj", "sy_signheader_dsj", "drawal_dsj"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/dianshijia.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/dianshijia.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/dianshijia.png", "https://raw.githubusercontent.com/Orz-3/task/master/dianshijia.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/dianshijia.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/dianshijia.js"
     },
     {
       "id": "kuaishou",
       "name": "快手极速版",
       "keys": ["cookie_ks"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/kuaishou.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/kuaishou.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/kuaishou.png", "https://raw.githubusercontent.com/Orz-3/task/master/kuaishou.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/kuaishou.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/kuaishou.js"
     },
     {
       "id": "sinanews",
       "name": "新浪新闻",
       "keys": ["sy_signurl_snews", "sy_info_snews", "sy_ck_snews", "sy_infoheader_snews"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/sinanews.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/sinanews.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/sinanews.png", "https://raw.githubusercontent.com/Orz-3/task/master/sinanews.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/sinanews.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/sinanews.js"
     },
     {
       "id": "chinatelecomEnquiry",
       "name": "电信套餐查询",
       "keys": ["china_telecom_authToken_10000", "china_telecom_cookie"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/telecomInfinity.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/telecomInfinity.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/telecominfinty.png", "https://raw.githubusercontent.com/Orz-3/task/master/telecominfinty.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/telecomInfinity.js"
     },
     {
       "id": "jddj",
       "name": "京东到家",
       "keys": ["sy_cookie_dj"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/jddj.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/jddj.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/jddj.png", "https://raw.githubusercontent.com/Orz-3/task/master/jddj.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jddj.js"
     },
@@ -108,18 +108,18 @@
          "type": "text", 
          "desc": "请填写小写英文台标，示例: 北京: btv1 | 湖南: hunan | 浙江: zhejiang 河南: henan| 江苏: jiangsu|广东: guangdong 更多电视台请参加电视家网络列表" }],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/tvpreview.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/tvpreview.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/tvpreview.js"
     },
     {
       "id": "mydigit",
       "name": "数码之家",
       "keys": ["sign_mydigit"],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/mydigit.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/mydigit.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/mydigit.png", "https://raw.githubusercontent.com/Orz-3/task/master/mydigit.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/mydigit.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/mydigit.js"
     },
     {
       "id": "txnews",
@@ -141,9 +141,9 @@
           "type": "boolean"
         }
       ],
-       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/txnews.js",
+       "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/txnews.js",
        "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png", "https://raw.githubusercontent.com/Orz-3/task/master/txnews.png"],
-       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js"
+       "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/txnews.js"
     },
     {
       "id": "translate",
@@ -157,9 +157,9 @@
          "placeholder": "Hello World",
          "desc": "兼容中英文短语翻译，填入原文后手动运行" }],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/translate.png", "https://raw.githubusercontent.com/Orz-3/task/master/translate.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/translate.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/translate.js"
     },
     {
       "id": "exchange rate",
@@ -189,9 +189,9 @@
          }
         ],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/exchangeRate.js",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/exchangeRate.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/exchangerate.png", "https://raw.githubusercontent.com/Orz-3/task/master/exchangerate.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/exchangeRate.js"
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/exchangeRate.js"
     },
     {
       "id": "trainquery",
@@ -244,9 +244,9 @@
          }
          ],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/trainquery.js",
-      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png"],
-      "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js"
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/trainquery.js",
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/12306.png", "https://raw.githubusercontent.com/Orz-3/task/master/12306.png"],
+      "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/trainquery.js"
     }
   ]
 }
