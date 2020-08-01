@@ -85,7 +85,7 @@
       "keys": ["china_telecom_authToken_10000", "china_telecom_cookie"],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/telecomInfinity.js",
-      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/10000.png", "https://raw.githubusercontent.com/Orz-3/task/master/10000.png"],
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/telecominfinty.png", "https://raw.githubusercontent.com/Orz-3/task/master/telecominfinty.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/telecomInfinity.js"
     },
     {
@@ -190,7 +190,7 @@
         ],
       "author": "@sunert",
       "repo": "https://github.com/Sunert/Scripts/blob/master/Task/exchangeRate.js",
-      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/exchangerate.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/exchangerate.png"],
+      "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/exchangerate.png", "https://raw.githubusercontent.com/Orz-3/mini/master/exchangerate"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/exchangeRate.js"
     },
     {
@@ -244,7 +244,7 @@
          }
          ],
       "author": "@sunert",
-      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/tvpreview.js",
+      "repo": "https://github.com/Sunert/Scripts/blob/master/Task/trainquery.js",
       "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rule/Images/ICON/trainquery.png"],
       "script": "https://raw.githubusercontent.com/Sunert/Scripts/master/Task/trainquery.js"
     }

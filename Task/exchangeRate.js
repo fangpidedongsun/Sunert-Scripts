@@ -93,7 +93,6 @@ function rate() {
         rated = Number(rateresult.result.list[`${exchangecode}`].rate)
         $.detail += fromsymbol+" "+moneynumb+" "+frommoney+' = '+ exchangesymbol+" "+(moneynumb*rated).toFixed(3)+" "+exchangemoney+'  (各币种换算)\n'+'最后更新: '+rateresult.result.list[`${exchangecode}`].updatetime
        $.msg($.name, $.subTitle, $.detail)
-
         }
       }
       catch (erro){
