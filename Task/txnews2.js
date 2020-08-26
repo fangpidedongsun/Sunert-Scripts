@@ -60,20 +60,20 @@ if (isGetCookie) {
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("article_read")!= -1) {
+if ($request &&$request.body.indexOf("article_read")> -1) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
-  console.log(`signurlVal:${signurlVal}`)
-  console.log(`cookieVal:${cookieVal}`)
-  if (signurlVal) sy.setdata(signurlVal, 'sy_signurl_txnews2')
-  if (cookieVal) sy.setdata(cookieVal,  'sy_cookie_txnews2')
-  sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
+  $.log(`signurlVal:${signurlVal}`)
+  $.log(`cookieVal:${cookieVal}`)
+  if (signurlVal) $.setdata(signurlVal, 'sy_signurl_txnews2')
+  if (cookieVal) $.setdata(cookieVal,  'sy_cookie_txnews2')
+  $.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("video_read")!= -1) {
+if ($request &&$request.body.indexOf("video_read")> -1) {
   const videoVal =  $request.url
-  sy.log(`videoVal:${videoVal}`)
-  if (videoVal) sy.setdata(videoVal,  'video_txnews2')
-  sy.msg(cookieName, `获取视频地址: 成功🎉`, ``)
+  $.log(`videoVal:${videoVal}`)
+  if (videoVal) $.setdata(videoVal,  'video_txnews2')
+  $.msg(cookieName, `获取视频地址: 成功🎉`, ``)
   }
  }
 async function all() 
