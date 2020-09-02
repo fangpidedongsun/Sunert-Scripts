@@ -178,7 +178,7 @@ function parseData(detail, balance, info, bill) {
 }
 
 function notify(data, balance, exdata, bldata) {
-$tool.log.info(data)
+//$tool.log.info(data)
     var subtitle = ""
     if (config.info) {
         subtitle = "【手机】" + exdata.mobileShort + "  (" + exdata.province + "-" + exdata.city + ")"

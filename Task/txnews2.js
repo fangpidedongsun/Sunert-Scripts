@@ -44,52 +44,56 @@ hostname = api.inews.qq.com
 Cookie获取后，请注释掉Cookie地址。
 
 */
-const notifyInterval = 4; //视频红包间隔通知开为1，常关为0
-const logs = 0; // 日志开关
-const cookieName = '腾讯新闻'
-const sy = new Env(cookieName)
-const signurlVal = sy.getdata('sy_signurl_txnews2')
-const cookieVal = sy.getdata( 'sy_cookie_txnews2')
-const videoVal = sy.getdata( 'video_txnews2')
+const cookieName = '腾讯新闻';
+const $ = new Env(cookieName);
+let notifyInterval = $.getdata('notifynum')||4; //视频红包间隔通知开为1，常关为0;
+let logs = $.getdata('logsturn')||false; // 日志开关，0为关，1为开;
+
+const signurlVal = $.getdata('sy_signurl_txnews2')
+const cookieVal = $.getdata( 'sy_cookie_txnews2')
+const videoVal = $.getdata( 'video_txnews2')
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
    GetCookie()
 } else {
-   all()
+!(async () => {
+{ 
+  await getsign()
+  await activity()
+  await toRead()
+  await lookVideo()
+  await openApp()
+  await shareApp()
+  await Redpack()
+  await videoPack()
+  await StepsTotal()
+  await getTotal()
+  await showmsg()
+ }
+})()
+  .catch((e) => $.logErr(e))
+  .finally(() => $.done())
 }
 
 function GetCookie() {
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("article_read")!= -1) {
+if ($request &&$request.body.indexOf("article_read")> -1) {
   const signurlVal =  $request.url
   const cookieVal = $request.headers['Cookie'];
-  console.log(`signurlVal:${signurlVal}`)
-  console.log(`cookieVal:${cookieVal}`)
-  if (signurlVal) sy.setdata(signurlVal, 'sy_signurl_txnews2')
-  if (cookieVal) sy.setdata(cookieVal,  'sy_cookie_txnews2')
-  sy.msg(cookieName, `获取Cookie: 成功🎉`, ``)
+  $.log(`signurlVal:${signurlVal}`)
+  $.log(`cookieVal:${cookieVal}`)
+  if (signurlVal) $.setdata(signurlVal, 'sy_signurl_txnews2')
+  if (cookieVal) $.setdata(cookieVal,  'sy_cookie_txnews2')
+  $.msg(cookieName, `获取Cookie: 成功🎉`, ``)
   }
-if ($request && $request.method != 'OPTIONS' && $request.url.match(/user\/event\/report\?/)&&$request.body.indexOf("video_read")!= -1) {
+if ($request &&$request.body.indexOf("video_read")> -1) {
   const videoVal =  $request.url
-  sy.log(`videoVal:${videoVal}`)
-  if (videoVal) sy.setdata(videoVal,  'video_txnews2')
-  sy.msg(cookieName, `获取视频地址: 成功🎉`, ``)
+  $.log(`videoVal:${videoVal}`)
+  if (videoVal) $.setdata(videoVal,  'video_txnews2')
+  $.msg(cookieName, `获取视频地址: 成功🎉`, ``)
   }
  }
-async function all() 
-{ 
-  await getsign();
-  await activity();
-  await toRead();
-  await lookVideo();
-  await openApp();
-  await shareApp();
-  await Redpack();
-  await videoPack();
-  await StepsTotal();
-  await getTotal();
-  await showmsg();
-}
+
 
 //签到
 function getsign() {
@@ -97,8 +101,8 @@ function getsign() {
   const llUrl = {
     url: `https://api.inews.qq.com/task/v1/user/signin/add?`,headers:{Cookie: cookieVal}
   };
-   sy.post(llUrl, (error, response, data) => {   
-      if(logs)console.log(`${cookieName}签到 - data: ${data}`)
+   $.post(llUrl, (error, response, data) => {   
+      if(logs == 'true')console.log(`${cookieName}签到 - data: ${data}`)
       const obj = JSON.parse(data)
       if (obj.info=="success"){
        next = obj.data.next_points
@@ -106,7 +110,7 @@ function getsign() {
        Dictum = tip.replace(/[\<|\.|\>|br]/g,"")+""+obj.data.author.replace(/[\<|\.|\>|br|图|腾讯网友]/g,"")
        signinfo =  '【签到信息】连续签到' + obj.data.signin_days+'天 '+'明日+'+ next +'金币 成功🎉\n'}
       else {
-       sy.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
+       $.msg('签到失败，🉐登录腾讯新闻app获取cookie', "", "")
        console.log('签到失败，🉐登录腾讯新闻app获取cookie'+data)
        return
      }
@@ -123,8 +127,8 @@ return new Promise((resolve, reject) => {
     url: signurlVal, headers: {Cookie:cookieVal},
     body: 'event=article_read'
   };
-   sy.post(toreadUrl,(error, response, data) =>{
-     if(logs)console.log(`${cookieName}阅读文章 - data: ${data}`)
+   $.post(toreadUrl,(error, response, data) =>{
+     if(logs == "true")console.log(`${cookieName}阅读文章 - data: ${data}`)
     resolve()
     })
    })
@@ -136,11 +140,17 @@ function lookVideo() {
     headers: {Cookie:cookieVal},
     body: 'event=video_read'
   };
-   sy.post(lookVideoUrl,(error, response, data) =>{
+   $.post(lookVideoUrl,(error, response, data) =>{
     if (error){
-      sy.msg(cookieName, '观看视频:'+ error)
+      $.msg(cookieName, '观看视频:'+ error)
         }else{
-        if(logs)sy.log(`${cookieName}观看视频 - data: ${data}`)
+          if(logs == "true")$.log(`${cookieName}观看视频 - data: ${data}`)
+                 tolookresult = JSON.parse(data)
+     if(tolookresult.info=='success'){
+        videocoins = tolookresult.data.countdown_timer.countdown_tips
+     }else{
+     videocoins =""
+     }
     }
    resolve()
     })
@@ -156,8 +166,8 @@ return new Promise((resolve, reject) => {
     url: `https://api.inews.qq.com/activity/v1/activity/info/get?activity_id=${actid}&${ID}`,
    headers: {Cookie: cookieVal}
   }
-    sy.get(StepsUrl, (error, response, data) => {
-     if(logs)console.log(`${cookieName}文章统计- data: ${data}`)
+    $.get(StepsUrl, (error, response, data) => {
+        if(logs == "true")console.log(`${cookieName}文章统计- data: ${data}`)
        totalred = JSON.parse(data)
         if (totalred.ret == 0){
      for (i=0;i<totalred.data.award.length;i++){
@@ -191,8 +201,8 @@ return new Promise((resolve, reject) => {
     headers: {Cookie: cookieVal},
     body: `redpack_type=free_redpack&activity_id=${actid}`
   }
-   sy.post(openUrl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}每日开启- data: ${data}`)
+   $.post(openUrl, (error, response, data) => {
+       if(logs == "true")console.log(`${cookieName}每日开启- data: ${data}`)
       let opcash = JSON.parse(data)
       if(opcash.data.award.num){
        redpackres = `【每日开启】到账`+opcash.data.award.num/100+` 元 🌷\n` 
@@ -208,8 +218,8 @@ return new Promise((resolve, reject) => {
     url: `https://gh.prize.qq.com/show/_by0n9/invPack/index.html?#/Share?info=17A2385EE6D27888DB9F9D6B0BE90EEA&referpage=defaults`,
     headers: {Cookie: cookieVal},
   }
-   sy.get(openUrl, (error, response, data) => {
-    //sy.log(`${cookieName}- data: ${data}`)
+   $.get(openUrl, (error, response, data) => {
+    //$.log(`${cookieName}- data: ${data}`)
       })
     resolve()
    })
@@ -223,8 +233,8 @@ return new Promise((resolve, reject) => {
     headers: {Cookie: cookieVal},
     body: `redpack_type=article&activity_id=${actid}`
   }
-   sy.post(cashUrl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}阅读红包- data: ${data}`)
+   $.post(cashUrl, (error, response, data) => {
+       if(logs == "true")console.log(`${cookieName}阅读红包- data: ${data}`)
         let rcash = JSON.parse(data)
             readredpack = Number()
             redpackres = ``
@@ -249,8 +259,8 @@ return new Promise((resolve, reject) => {
     headers: {Cookie: cookieVal},
     body: `redpack_type=video&activity_id=${actid}`
   }
-    sy.post(cashUrl, (error, response, data) => {
-    if(logs)sy.log(`${cookieName}视频红包-data:${data}`)
+    $.post(cashUrl, (error, response, data) => {
+       if(logs == "true")console.log(`${cookieName}视频红包-data:${data}`)
         let vcash = JSON.parse(data)
             redpackres = ``
             videoredpack = Number()
@@ -273,11 +283,11 @@ return new Promise((resolve, reject) => {
   const totalUrl = {
     url: `https://api.inews.qq.com/activity/v1/usercenter/activity/list?isJailbreak`,
     headers: {Cookie: cookieVal}};
-    sy.post(totalUrl, function(error,response, data) {
+    $.post(totalUrl, function(error,response, data) {
     if (error) {
-      sy.msg("获取收益信息失败‼️", "", error)
+      $.msg("获取收益信息失败‼️", "", error)
     } else {
-    if (logs) console.log("获取收益信息" +data)
+    if(logs == 'true')console.log("获取收益信息" +data)
      const obj = JSON.parse(data)
       subTile = '【收益总计】'+obj.data.wealth[0].title +'金币  '+"现金: " +obj.data.wealth[1].title+'元'
         }
@@ -291,14 +301,14 @@ return new Promise((resolve, reject) => {
   const actUrl = {
     url: `https://api.inews.qq.com/activity/v1/user/activity/get?isJailbreak=0&${ID}`,
     headers: {Cookie: cookieVal}};
-    sy.get(actUrl, function(error,response, data) {
+    $.get(actUrl, function(error,response, data) {
     if (error) {
-      sy.msg("获取活动Id失败‼️", "", error)
+      $.msg("获取活动Id失败‼️", "", error)
     } else {
      //console.log("获取活动Id" +data)
      const obj = JSON.parse(data)
       actid = obj.data.activity.id
-      console.log(`您的活动ID为:`+actid)
+      console.log(`您的活动ID为:`+actid+`\n`)
         }
      resolve()
       })
@@ -308,22 +318,22 @@ return new Promise((resolve, reject) => {
 function showmsg() {
  return new Promise((resolve, reject) => {
   if(readnum&&videonum){
-   detail = signinfo+`` + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
-  };
-  console.log(subTile+`\n`+detail)
+   detail = signinfo+redpackres + `【文章阅读】已读/再读: `+ readnum +`/`+readtitle+` 篇\n`+`【阅读红包】已开/总计: `+openreadred+`/`+readredtotal+` 个🧧\n`+ `【观看视频】已看/再看: `+ videonum +`/`+videotitle+` 分钟\n`+`【视频红包】已开/总计: `+openvideored+`/`+videoredtotal+` 个🧧\n【每日一句】`+Dictum
+  }
+console.log(subTile+`\n`+detail)
  if(notifyInterval==1){
-   sy.msg(cookieName,subTile,detail,{ "open-url": "https://news.qq.com/FERD/cjRedDown.htm" })
+   $.msg(cookieName,subTile,detail,{ "open-url": "https://news.qq.com/FERD/cjRedDown.htm" })
   }
    else if
 (openvideored%notifyInterval==0&&videocoins=="红包+1"){
-   sy.msg(cookieName,subTile,detail)
+   $.msg(cookieName,subTile,detail,{ "open-url": "https://news.qq.com/FERD/cjRedDown.htm" } )
   }
    else if (openreadred==readredtotal&&openvideored==videoredtotal){
-   sy.msg(cookieName+` 今日任务已完成✅`,subTile,detail)
+   $.msg(cookieName+` 今日任务已完成✅`,subTile,detail)
   }
  })
 resolve()
 }
 
-
-function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.existsSync(t),i=!e&&this.fs.existsSync(s),o=JSON.stringify(this.data);e?this.fs.writeFileSync(t,o):i?this.fs.writeFileSync(s,o):this.fs.writeFileSync(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch(s){const h={};this.lodash_set(h,o,t),e=this.setval(JSON.stringify(h),i),console.log(`${i}: ${JSON.stringify(h)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status),s(t,e,i)});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){const h=t=>!t||!this.isLoon()&&this.isSurge()?t:"string"==typeof t?this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0:"object"==typeof t&&(t["open-url"]||t["media-url"])?this.isLoon()?t["open-url"]:this.isQuanX()?t:void 0:void 0;this.isSurge()||this.isLoon()?$notification.post(s,e,i,h(o)):this.isQuanX()&&$notify(s,e,i,h(o)),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t={}){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}
+// prettier-ignore
+function Env(t,s){return new class{constructor(t,s){this.name=t,this.data=null,this.dataFile="box.dat",this.logs=[],this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,s),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient}isLoon(){return"undefined"!=typeof $loon}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.exists$nc(t),i=!e&&this.fs.exists$nc(s);if(!e&&!i)return{};{const i=e?t:s;try{return JSON.parse(this.fs.readFile$nc(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),s=this.path.resolve(process.cwd(),this.dataFile),e=this.fs.exists$nc(t),i=!e&&this.fs.exists$nc(s),o=JSON.stringify(this.data);e?this.fs.writeFile$nc(t,o):i?this.fs.writeFile$nc(s,o):this.fs.writeFile$nc(t,o)}}lodash_get(t,s,e){const i=s.replace(/\[(\d+)\]/g,".$1").split(".");let o=t;for(const t of i)if(o=Object(o)[t],void 0===o)return e;return o}lodash_set(t,s,e){return Object(t)!==t?t:(Array.isArray(s)||(s=s.toString().match(/[^.[\]]+/g)||[]),s.slice(0,-1).reduce((t,e,i)=>Object(t[e])===t[e]?t[e]:t[e]=Math.abs(s[i+1])>>0==+s[i+1]?[]:{},t)[s[s.length-1]]=e,t)}getdata(t){let s=this.getval(t);if(/^@/.test(t)){const[,e,i]=/^@(.*?)\.(.*?)$/.exec(t),o=e?this.getval(e):"";if(o)try{const t=JSON.parse(o);s=t?this.lodash_get(t,i,""):s}catch(t){s=""}}return s}setdata(t,s){let e=!1;if(/^@/.test(s)){const[,i,o]=/^@(.*?)\.(.*?)$/.exec(s),h=this.getval(i),a=i?"null"===h?null:h||"{}":"{}";try{const s=JSON.parse(a);this.lodash_set(s,o,t),e=this.setval(JSON.stringify(s),i),console.log(`${i}: ${JSON.stringify(s)}`)}catch(s){const h={};this.lodash_set(h,o,t),e=this.setval(JSON.stringify(h),i),console.log(`${i}: ${JSON.stringify(h)}`)}}else e=$.setval(t,s);return e}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,s){return this.isSurge()||this.isLoon()?$persistentStore.write(t,s):this.isQuanX()?$prefs.setValueForKey(t,s):this.isNode()?(this.data=this.loaddata(),this.data[s]=t,this.writedata(),!0):this.data&&this.data[s]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,s=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?$httpClient.get(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status,s(t,e,i))}):this.isQuanX()?$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,s)=>{try{const e=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookie$nc(e,null),s.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t)))}post(t,s=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),delete t.headers["Content-Length"],this.isSurge()||this.isLoon())$httpClient.post(t,(t,e,i)=>{!t&&e&&(e.body=i,e.statusCode=e.status),s(t,e,i)});else if(this.isQuanX())t.method="POST",$task.fetch(t).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t));else if(this.isNode()){this.initGotEnv(t);const{url:e,...i}=t;this.got.post(e,i).then(t=>{const{statusCode:e,statusCode:i,headers:o,body:h}=t;s(null,{status:e,statusCode:i,headers:o,body:h},h)},t=>s(t))}}msg(s=t,e="",i="",o){const h=t=>!t||!this.isLoon()&&this.isSurge()?t:"string"==typeof t?this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0:"object"==typeof t&&(t["open-url"]||t["media-url"])?this.isLoon()?t["open-url"]:this.isQuanX()?t:void 0:void 0;this.isSurge()||this.isLoon()?$notification.post(s,e,i,h(o)):this.isQuanX()&&$notify(s,e,i,h(o)),this.logs.push("","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="),this.logs.push(s),e&&this.logs.push(e),i&&this.logs.push(i)}log(...t){t.length>0?this.logs=[...this.logs,...t]:console.log(this.logs.join(this.logSeparator))}logErr(t,s){const e=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();e?$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):$.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.message)}wait(t){return new Promise(s=>setTimeout(s,t))}done(t={}){const s=(new Date).getTime(),e=(s-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${e} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,s)}

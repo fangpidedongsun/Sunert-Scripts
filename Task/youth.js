@@ -295,7 +295,6 @@ function Articlered() {
 function rotary() {      
  const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]
  return new Promise((resolve, reject) => {
-    setTimeout(()=> {
    const time = new Date().getTime()
     const url = { 
       url: `https://kd.youth.cn/WebApi/RotaryTable/turnRotary?_=${time}`, 
@@ -315,7 +314,6 @@ function rotary() {
     rotarynum = ` 转盘${rotaryres.msg}🎉`
       }
     resolve()
-   })
   })
  })
 }
@@ -351,7 +349,6 @@ for (i=0;i<4;i++){
 //开启打卡
 function punchCard() {      
  return new Promise((resolve, reject) => {
-  setTimeout(() =>  {
     const url = { 
       url: `https://kd.youth.cn/WebApi/PunchCard/signUp?`, 
       headers: JSON.parse(signheaderVal),
@@ -367,14 +364,12 @@ function punchCard() {
        }
      })
    resolve()
-   })
  })
 }
 
 //结束打卡
 function endCard() {      
  return new Promise((resolve, reject) => {
-  setTimeout(() =>  {
     const url = { 
       url: `https://kd.youth.cn/WebApi/PunchCard/doCard?`, 
       headers: JSON.parse(signheaderVal),
@@ -390,14 +385,12 @@ function endCard() {
        }
      })
    resolve()
-   })
  })
 }
 
 //打卡分享
 function Cardshare() {      
  return new Promise((resolve, reject) => {
-  setTimeout(() =>  {
 const starturl = { 
       url: `https://kd.youth.cn/WebApi/PunchCard/shareStart?`, 
       headers: JSON.parse(signheaderVal),
@@ -424,13 +417,11 @@ const starturl = {
      })
     resolve()
     })
-   })
  })
 }
 //开启时段宝箱
 function openbox() {      
  return new Promise((resolve, reject) => {
-  setTimeout(() =>  {
     const url = { 
       url: `https://kd.youth.cn/WebApi/invite/openHourRed`, 
       headers: JSON.parse(signheaderVal),
@@ -446,14 +437,12 @@ function openbox() {
        }
    resolve()
      })
-   })
- })
+  })
 }
 
 //宝箱分享
 function share() {      
  return new Promise((resolve, reject) => {
-  setTimeout(() =>  {
     const url = { 
       url: `https://kd.youth.cn/WebApi/invite/shareEnd`, 
       headers: JSON.parse(signheaderVal),
@@ -469,7 +458,6 @@ function share() {
        }
    resolve()
      })
-   })
  })
 }
 
@@ -477,7 +465,6 @@ function share() {
 function TurnDouble() {      
  const rotarbody = signheaderVal.split("&")[15]+'&'+signheaderVal.split("&")[8]
  return new Promise((resolve, reject) => {
-    setTimeout(()=> {
    const time = new Date().getTime()
     const url = { 
       url: `https://kd.youth.cn/WebApi/RotaryTable/toTurnDouble?_=${time}`, 
@@ -492,7 +479,6 @@ function TurnDouble() {
     })
    resolve()
   })
- })
 }
 
 function readTime() {      
@@ -519,7 +505,6 @@ function readTime() {
 function earningsInfo() {      
  return new Promise((resolve, reject) => {
    const token = JSON.parse(signheaderVal)['Referer'].split("?")[1]
-  setTimeout(() =>  {
     const url = { 
       url: `https://kd.youth.cn/wap/user/balance?${token}`, 
       headers: signheaderVal,
@@ -536,7 +521,6 @@ function earningsInfo() {
      detail += '<今日合计>： '+infores.history[0].score+" 青豆"
       }
     resolve()
-     })
    })
  })
 }
