@@ -135,11 +135,12 @@ let url = {url: 'https://daojia.jd.com/client?functionId=signin%2FuserSigninNew&
      $.log(`${CookieName}, data: ${data}`)
     })
 }
-function showmsg() {
+async function showmsg() {
   if (signresult==true){
        $.subtitle = "签到重复🔁  " +pointsnum
 }
-if (signinfo.signresult==false){
+  if (signresult==false){
+       await sign()
        $.subtitle = "签到成功🎉  " +pointsnum
 }
        $.detail = gettoday+ `\n`+"已签到"+signdays+"天 "+tompoint
