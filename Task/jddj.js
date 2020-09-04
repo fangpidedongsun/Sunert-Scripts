@@ -56,11 +56,8 @@ if (isGetCookie) {
    GetCookie()
 } else {
 !(async () => {
-  await signinfo()
-  if(signresult == false){
-     await sign()
-   }
-   await showmsg()
+  await signinfo();
+  await showmsg()
 })()
   .catch((e) => $.logErr(e))
   .finally(() => $.done())
