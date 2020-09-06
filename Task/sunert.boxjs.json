@@ -146,6 +146,15 @@
        "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/txnews.js"
     },
     {
+      "id": "jingxi",
+      "name": "京喜",
+      "keys": ["signheaders_jx","coinurl_jx"],
+      "author": "@sunert",
+      "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/jingxi.js",
+      "icons": ["https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rules/Images/ICON/jingxi.png", "https://raw.githubusercontent.com/Sunert/Quantumult-X/master/Rules/Images/ICON/jingxi.png"],
+       "script": "https://gitee.com/Sunert/Scripts/raw/master/Task/jingxi.js"
+    },
+    {
       "id": "translate",
       "name": "谷歌翻译",
       "keys": [],
