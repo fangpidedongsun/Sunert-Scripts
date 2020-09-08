@@ -48,14 +48,10 @@ http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal url script-request-
 */
 const walkstep = '20000';//每日步数设置，可设置0-20000
 const gametimes = "2888";  //游戏时长
-const logs = 1   //响应日志开关,默认关闭
+const logs = 0   //响应日志开关,默认关闭
 const $ = new Env('电视家')
-const signurlKey = 'sy_signurl_dsj'
-const signheaderKey = 'sy_signheader_dsj'
-const drawalKey = 'drawal_dsj'
-const signurlVal = $.getdata(signurlKey)
-const signheaderVal = $.getdata(signheaderKey)
-const drawalVal = $.getdata(drawalKey)
+const signheaderVal = $.getdata('sy_signheader_dsj')
+const drawalVal = $.getdata('drawal_dsj')
 
 if (isGetCookie = typeof $request !== 'undefined') {
    GetCookie()
@@ -82,14 +78,14 @@ function GetCookie() {
   const signheaderVal = JSON.stringify($request.headers)
   $.log(`signurlVal:${signurlVal}`)
   $.log(`signheaderVal:${signheaderVal}`)
-  if (signurlVal) $.setdata(signurlVal, signurlKey)
-  if (signheaderVal) $.setdata(signheaderVal, signheaderKey)
+  if (signurlVal) $.setdata(signurlVal, 'sy_signurl_dsj')
+  if (signheaderVal) $.setdata(signheaderVal, 'sy_signheader_dsj')
   $.msg($.name, `获取Cookie: 成功`, ``)
   }
  else if ($request && $request.method != 'OPTIONS'&&$request.url.match(/\/cash\/withdrawal/)) {
   const drawalVal = $request.url
   $.log(`drawalVal:${drawalVal}`)
-  if (drawalVal) $.setdata(drawalVal, drawalKey)
+  if (drawalVal) $.setdata(drawalVal, 'drawal_dsj')
   $.msg($.name, `获取提现地址: 成功`, ``)
   }
  $.done()
@@ -110,10 +106,11 @@ function GetCookie() {
        wakeup()
    }
    var time = new Date(new Date(new Date().toLocaleDateString()).getTime())/1000
+   
 function signin() {      
    return new Promise((resolve, reject) =>
      {
-      const url = { url: signurlVal, headers: JSON.parse(signheaderVal)}
+      const url = { url: $.getdata('sy_signurl_dsj'), headers: JSON.parse(signheaderVal)}
       $.get(url, (error, response, data) =>
        {
       if(logs)$.log(`${$.name}, 签到结果: ${data}\n`)
@@ -215,8 +212,8 @@ function cash() {
       const cashresult = JSON.parse(data)
       subTitle += '现金:'+ cashresult.data.amount/100+'元 额度:'+cashresult.data.withdrawalQuota/100+'元'
     cashtotal = cashresult.data.totalWithdrawn/100
+       resolve()
       })
-  resolve()
    })
 }
 function cashlist() {
@@ -277,8 +274,8 @@ if(result.data[i].dayCompCount<result.data[i].dayDoCountMax){
       }
      }
     }
+    resolve()
    })
-resolve()
  })
 }
 
@@ -301,7 +298,6 @@ function mobileOnline() {
     $.get(shareurl, (error, response, data) => {
      if(logs)$.log(`${$.name}, 手机在线: ${data}\n`)
      })
-   
 resolve()
   })
 }
@@ -345,8 +341,8 @@ else {
     }
  catch (e) {
         $.msg($.name, `睡觉结果: 失败`, `说明: ${e}`)}
-   })
 resolve()
+   })
  })
 }
 
@@ -398,10 +394,10 @@ function coinlist() {
     let url = { url: `http://api.gaoqingdianshi.com/api/coin/detail`, 
     headers: JSON.parse(signheaderVal)}
    $.get(url, (error, response, data) => {
-   //if(logs)$.log(`金币列表: ${data}`)
+//$.log(`金币列表: ${data}`)
       const result = JSON.parse(data)
-       let onlamount = Number()
-         vdamount = new Number()
+       let onlamount = Number();
+         vdamount = new Number();
          gamestime = new Number()
     for (i=0;i<result.data.length&&result.data[i].ctime>=time;i++){
      if (result.data[i].from=="签到"){
