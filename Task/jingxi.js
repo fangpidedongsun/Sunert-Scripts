@@ -41,7 +41,7 @@ if (isGetCookie = typeof $request != 'undefined') {
 function getsign() {
   return new Promise((resolve) =>{
 	const signurl = {
-	  url: 'https://wq.jd.com/pgcenter/sign/UserSignOpr?sceneval=2&source=&_=1599366344614&sceneval=2&g_login_type=1&callback=jsonpCBKJ&g_ty=ls',
+	  url: 'https://wq.jd.com/pgcenter/sign/UserSignOpr?sceneval=2&source=&sceneval=2&g_login_type=1&callback=jsonpCBKJ&g_ty=ls',
        headers: JSON.parse(headersVal)
   }
     $.get(signurl, (err, resp, data) => {

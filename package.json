@@ -1,0 +1,25 @@
+{
+  "name": "Sunert",
+  "version": "1.0.0",
+  "description": "",
+  "main": "weibo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sunert/Scripts.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Sunert/Scripts/issues"
+  },
+  "homepage": "https://github.com/Sunert/Scripts#readme",
+  "dependencies": {
+    "download": "^0.0.1",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
+  }
+}
