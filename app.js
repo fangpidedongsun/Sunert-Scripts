@@ -18,9 +18,9 @@ async function downFile () {
 }
 
 async function changeFiele () {
-   let content = await fs.readFileSync('./JD_DailyBonus.js', 'utf8')
+   let content = await fs.readFileSync('./weibo.js', 'utf8')
    content = content.replace(/var Key = ''/, `var Key = '${KEY}'`)
-   await fs.writeFileSync( './JD_DailyBonus.js', content, 'utf8')
+   await fs.writeFileSync( './weibo.js', content, 'utf8')
 }
 
 async function sendNotify (text,desp) {
