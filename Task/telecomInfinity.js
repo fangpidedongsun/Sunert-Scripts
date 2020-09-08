@@ -44,8 +44,7 @@ let config = {
 const $ = new Env(config.name)
      d = new Date();
      Y = d.getFullYear(),
-     m = $.getdata('Mon'-1)||d.getMonth()  //上月
-     M = ("0" + m).slice(-2)
+     M = $.getdata('Mon').slice(-5,-3)||d.getMonth()  //上月
    let AUTHTOKEN = $.getdata(config.authTokenKey)
    let COOKIE = $.getdata(config.CookieKey)
 var requests = {
@@ -83,7 +82,7 @@ var requests = {
     }
 }
 
-
+//console.log(requests.bill)
 if (isGetCookie = typeof $request !== 'undefined') {
     GetCookie()
     $.done()
@@ -244,11 +243,11 @@ if(data.items[i].offerType == 19){
 
     var cost = "【话费】剩余: " + (balance / 100).toFixed(2) + "元"
 message = message + "\n" + cost
-    if (bldata != '无'){message +=  `  ${m}月消费合计: `+ bldata.items[0].sumCharge/100+'元'}
+    if (bldata != '无'){message +=  `  ${M}月消费合计: `+ bldata.items[0].sumCharge/100+'元'}
     if (bldata == '无'){
-message = message + "\n" + `【${m}月账单】   `+ bldata
+message = message + "\n" + `【${M}月账单】   `+ bldata
 } else if (typeof bldata.items[0].acctName != "undefined" && bldata.serviceResultCode == 0) {
-    bills = `【${m}月话费账单】` + "\n   " + bldata.items[0].items[1].chargetypeName + ':    '+
+    bills = `【${M}月话费账单】` + "\n   " + bldata.items[0].items[1].chargetypeName + ':    '+
 bldata.items[0].items[1].charge/100+'元'+ "\n   "+ bldata.items[0].items[2].chargetypeName + ':  '+
 bldata.items[0].items[2].charge/100+'元'+ "\n   "+ bldata.items[0].items[0].chargetypeName + '合计:  '+ bldata.items[0].items[0].charge/100+'元'
     message = message + "\n" + bills
