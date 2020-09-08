@@ -49,7 +49,7 @@ async function start() {
   await changeFiele();
   console.log('替换变量完毕')
   // 执行
-  await exec("node JD_DailyBonus.js >> result.txt");
+  await exec("node weibo.js >> result.txt");
   console.log('执行完毕')
 
   if (serverJ) {
