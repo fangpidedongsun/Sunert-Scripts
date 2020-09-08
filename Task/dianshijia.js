@@ -1,6 +1,6 @@
 
 /*
-更新时间: 2020-09-07 20:21
+更新时间: 2020-09-08 11:21
 赞赏:电视家邀请码`893988`,农妇山泉 -> 有点咸，万分感谢
 
 本脚本仅适用于电视家签到，
@@ -48,7 +48,7 @@ http:\/\/api\.gaoqingdianshi\.com\/api\/v2\/cash\/withdrawal url script-request-
 */
 const walkstep = '20000';//每日步数设置，可设置0-20000
 const gametimes = "2888";  //游戏时长
-const logs = 0   //响应日志开关,默认关闭
+const logs = 1   //响应日志开关,默认关闭
 const $ = new Env('电视家')
 const signurlKey = 'sy_signurl_dsj'
 const signheaderKey = 'sy_signheader_dsj'
@@ -66,7 +66,6 @@ if (isGetCookie = typeof $request !== 'undefined') {
   await signinfo();   // 签到信息
   await Withdrawal(); // 金额提现
 //await Withdrawal2();// 固定金额
-  await act618();     // 618活动
   await taskStatus(); // 任务状态
   await getGametime();// 游戏时长
   await total();      // 总计
@@ -110,7 +109,7 @@ function GetCookie() {
    else if(hour > 6&&hour <9){
        wakeup()
    }
-
+   var time = new Date(new Date(new Date().toLocaleDateString()).getTime())/1000
 function signin() {      
    return new Promise((resolve, reject) =>
      {
@@ -141,6 +140,45 @@ function signin() {
        })
     })
 }
+
+function signinfo() {
+  return new Promise((resolve, reject) => {
+    let awardurl = { url: `http://act.gaoqingdianshi.com/api/v4/sign/get`, headers: JSON.parse(signheaderVal)}
+     $.get(awardurl, (error, response, data) => 
+  {
+    if(logs)$.log(`${$.name}, 签到信息: ${data}\n`)
+     const result = JSON.parse(data)
+     if (result.errCode == 0) 
+    {
+     var d = `${result.data.currentDay}`
+     for (i=0; i < result.data.recentDays.length;i++)      
+        {
+       if (d == result.data.recentDays[i].day)
+          {  detail += ` 连续签到${d}天\n`
+       var j = result.data.recentDays[i].rewards.length
+       if (j > 1){
+                detail += `【奖励信息】今日:${result.data.recentDays[i].rewards[1].name}  `
+                 } 
+          else   if (j == 1) 
+                 { 
+                detail += `【奖励信息】今日: 无 ` 
+                 }
+        var k = result.data.recentDays[i+1].rewards.length
+        if ( k > 1 ) {
+          detail += ` 明日: `+ result.data.recentDays[i+1].rewards[1].name+`\n`
+           
+                 }  
+           else  { 
+              detail += `明日: 无\n`
+        
+                 }
+               }               
+           }  
+     resolve()
+        }
+    })
+  })
+}             
 
 function total() {
  return new Promise((resolve, reject) => {
@@ -181,15 +219,44 @@ function cash() {
   resolve()
    })
 }
-
+function cashlist() {
+  return new Promise((resolve, reject) => {
+    let url = { 
+     url: `http://api.gaoqingdianshi.com/api/cash/detail`, 
+     headers: JSON.parse(signheaderVal),
+   }
+    $.get(url, (error, response, data) => {
+     //if(logs)$.log(`提现列表: ${data}`)
+      const result = JSON.parse(data)
+            totalcash = Number()
+            cashres = ""
+     if (result.errCode == 0) {
+    for (i=0;i<result.data.length;i++){
+ if
+(result.data[i].type==2&&result.data[i].ctime>=time){
+      cashres = `✅ 今日提现:`+result.data[i].amount/100+`元 `
+        } 
+    
+      }
+    if(cashres&&cashtotal){
+      detail += `【提现结果】`+cashres+`共计提现:`+cashtotal+`元\n`
+     }
+     else if(cashtotal){
+     detail += `【提现结果】今日未提现 共计提现:`+cashtotal+`元\n`
+    }
+   }
+   resolve()
+    })
+  })
+}
 function taskStatus() {
  return new Promise((resolve, reject) => {    
     shareurl = { url: `http://act.gaoqingdianshi.com/api/v2/task/get`, headers: JSON.parse(signheaderVal)}
     $.get(shareurl, (error, response, data) => {
     if(logs)$.log(`${$.name},任务状态: ${data}\n`)
-      const result = JSON.parse(data)
+      let result = JSON.parse(data)
       if (result.errCode == 0){
-   for
+     for
 (i=0;i<result.data.length;i++){
 if(result.data[i].dayCompCount<result.data[i].dayDoCountMax){
       if(result.data[i].name=="双端活跃"){
@@ -239,44 +306,7 @@ resolve()
   })
 }
 
-function signinfo() {
-  return new Promise((resolve, reject) => {
-    let awardurl = { url: `http://act.gaoqingdianshi.com/api/v4/sign/get`, headers: JSON.parse(signheaderVal)}
-     $.get(awardurl, (error, response, data) => 
-  {
-    if(logs)$.log(`${$.name}, 签到信息: ${data}\n`)
-     const result = JSON.parse(data)
-     if (result.errCode == 0) 
-    {
-     var d = `${result.data.currentDay}`
-     for (i=0; i < result.data.recentDays.length;i++)      
-        {
-       if (d == result.data.recentDays[i].day)
-          {  detail += ` 连续签到${d}天\n`
-       var j = result.data.recentDays[i].rewards.length
-       if (j > 1){
-                detail += `【奖励信息】今日:${result.data.recentDays[i].rewards[1].name}  `
-                 } 
-          else   if (j == 1) 
-                 { 
-                detail += `【奖励信息】今日: 无 ` 
-                 }
-        var k = result.data.recentDays[i+1].rewards.length
-        if ( k > 1 ) {
-          detail += ` 明日: `+ result.data.recentDays[i+1].rewards[1].name+`\n`
-           
-                 }  
-           else  { 
-              detail += `明日: 无\n`
-        
-                 }
-               }               
-           }  
-     resolve()
-        }
-    })
-  })
-}             
+
 function walk() {
   return new Promise((resolve, reject) => {
     let url = { url: `http://act.gaoqingdianshi.com/api/taskext/getWalk?step=${walkstep}`, headers: JSON.parse(signheaderVal)}
@@ -373,7 +403,6 @@ function coinlist() {
        let onlamount = Number()
          vdamount = new Number()
          gamestime = new Number()
-        time = new Date(new Date(new Date().toLocaleDateString()).getTime())/1000
     for (i=0;i<result.data.length&&result.data[i].ctime>=time;i++){
      if (result.data[i].from=="签到"){
       detail += `【每日签到】✅ 获得金币`+result.data[i].amount+'\n'
@@ -456,63 +485,7 @@ resolve()
  })
 }
 
-function act618() {
-  return new Promise((resolve, reject) => {
-   const userid = JSON.parse(signheaderVal)['userid']
-    let url = { 
-     url: `http://share.dianshihome.com/api/activity/618/attend?userid=${userid}&acode=act618`, 
-     headers: JSON.parse(signheaderVal),
-   }
-     url.headers['host']= 'share.dianshihome.com'
-    $.get(url, (error, response, data) => {
-    if(logs)$.log(`618活动: ${data}`)
-    const result = JSON.parse(data)
-    if (result.errCode == 0) {
-    actres = result.data.prize.name+` 机会:`+result.data.remainCount+`次 `
-     }
-   else {
-    actres = ``
-     }
-resolve()
-   })
- })
-}
-function cashlist() {
-  return new Promise((resolve, reject) => {
-    let url = { 
-     url: `http://api.gaoqingdianshi.com/api/cash/detail`, 
-     headers: JSON.parse(signheaderVal),
-   }
-    $.get(url, (error, response, data) => {
-     //if(logs)$.log(`提现列表: ${data}`)
-      const result = JSON.parse(data)
-            totalcash = Number()
-            total618 = Number()
-            cashres = ""
-     if (result.errCode == 0) {
-    for (i=0;i<result.data.length;i++){
- if
-(result.data[i].type==2&&result.data[i].ctime>=time){
-      cashres = `✅ 今日提现:`+result.data[i].amount/100+`元 `
-        } 
-     if(result.data[i].from=="618活动"&&result.data[i].ctime>=time){
-      total618 += result.data[i].amount/100
-       }
-      }
-    if(cashres&&cashtotal){
-      detail += `【提现结果】`+cashres+`共计提现:`+cashtotal+`元\n`
-     }
-     else if(cashtotal){
-     detail += `【提现结果】今日未提现 共计提现:`+cashtotal+`元\n`
-    }
-    if(total618){
-      detail += `【618活动】✅ `+actres+`今日共计:`+total618+`元\n`
-     }
-   }
-   resolve()
-    })
-  })
-}
+
 function Withdrawal() {
   return new Promise((resolve, reject) => {
    if (drawalVal !=undefined||null){
