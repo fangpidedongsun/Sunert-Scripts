@@ -10,6 +10,7 @@ on:
     - cron: '8 16 * * *'
   watch:
     types: started
+    
 jobs:
   build:
     runs-on: ubuntu-latest

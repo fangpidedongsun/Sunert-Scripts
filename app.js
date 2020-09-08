@@ -8,7 +8,7 @@ const rp = require('request-promise')
 const download = require('download')
 
 // 公共变量
-const KEY = process.env.JD_COOKIE
+const KEY = process.env.TXNEWS_COOKIE
 const serverJ = process.env.PUSH_KEY
 
 async function downFile () {
