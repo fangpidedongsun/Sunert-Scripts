@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/Sunert/Scripts#readme",
   "dependencies": {
-    "download": "^0.0.1",
+    "download": "^8.0.0",
     "request": "^2.88.2",
     "request-promise": "^4.2.5"
   }
