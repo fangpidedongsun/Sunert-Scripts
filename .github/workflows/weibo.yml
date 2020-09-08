@@ -3,8 +3,6 @@
 name: weibosign
 
 on:
-  push:
-    branches: [ master ]
   schedule:
     - cron: '8 16 * * *'
   watch:
