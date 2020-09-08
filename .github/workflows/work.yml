@@ -28,6 +28,6 @@ jobs:
         run: |
           node app.js
         env:
-          JD_COOKIE: ${{ secrets.JD_COOKIE }}
+          JD_COOKIE: ${{ secrets.WB_COOKIE }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
 
