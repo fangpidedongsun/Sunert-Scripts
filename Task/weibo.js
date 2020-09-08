@@ -1,5 +1,5 @@
 /*
-更新时间: 2020-09-7 21:25
+更新时间: 2020-09-07 21:25
 
 本脚本仅适用于微博每日签到  
 获取Cookie方法:
@@ -39,20 +39,18 @@ QX 1.0.6+ :
 [rewrite_local]
 https:\/\/api\.weibo\.cn\/\d\/video\/machine\?gsid url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js
 
-https:\/\/m\.weibo\.cn\/c\/checkin\/ug\/v2\/signin\/signin url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js
-
-
 # 钱包签到Cookie
 https:\/\/pay\.sc\.weibo\.com\/aj\/mobile\/home\/welfare\/signin\/do\? url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js
 
 ~~~~~~~~~~~~~~~~
 [MITM]
-hostname = api.weibo.cn, m.weibo.cn, pay.sc.weibo.com
+hostname = api.weibo.cn, pay.sc.weibo.com
 ~~~~~~~~~~~~~~~~
 */
 
 const $ = new Env('新浪微博')
 const token = $.getdata('sy_token_wb')
+const payheaderVal = $.getdata('sy_payheader_wb')
 
 if (isGetCookie = typeof $request !==`undefined`) {
    GetCookie()
@@ -60,7 +58,7 @@ if (isGetCookie = typeof $request !==`undefined`) {
  !(async() => {
   await getsign();
   await doCard();
- if ('sy_payheader_wb' !== undefined||null){
+ if (payheaderVal !== undefined||null){
   await paysign()
  };
   //await getst();
@@ -80,12 +78,13 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/video\/mac
   if (signheaderVal) sy.setdata(signheaderVal, 'sy_signheader_wb')
   if (token) $.setdata(token, 'sy_token_wb')
   $.msg($.name, `获取微博签到Cookie: 成功`, ``)
-} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/c\/checkin/)) {
+} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/ug\/v2\/signin/)) {
   const infourl = $request.url
   const infoheaderVal = JSON.stringify($request.headers)
-  if (infourl) $.setdata(infourl, 'infourl_wb')
-  if (infoheaderVal) $.setdata(infoheaderVal, 'infoheader_wb')
-  $.msg($.name, `获取微博信息Cookie: 成功`, ``)}
+  //if (infourl) $.setdata(infourl, 'infourl_wb')
+  //if (infoheaderVal) $.setdata(infoheaderVal, 'infoheader_wb')
+// $.msg($.name, `获取微博信息Cookie: 成功`, ``)
+}
 else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/home\/welfare\/signin\/do\?_=[1-9]+/)) {
   const payheaderVal = JSON.stringify($request.headers)
   if (payheaderVal) $.setdata(payheaderVal,  'sy_payheader_wb')
@@ -97,7 +96,7 @@ function getsign() {
   return new Promise((resolve, reject) =>{
    let signurl =  {
       url: `https://api.weibo.cn/2/checkin/add?${token}`,
-      headers: {"User-Agent": `Weibo/41997 (iPhone; iOS 13.4.1; Scale/3.00)`}}
+      headers: {"User-Agent": `Weibo/46902 (iPhone; iOS 14; Scale/3.00)`}}
      $.post(signurl, (error, response, data) => {
      let result = JSON.parse(data)
      if (result.status == 10000){
@@ -123,7 +122,7 @@ function doCard() {
   return new Promise((resolve, reject) =>{
    let doCardurl =  {
       url: `https://api.weibo.cn/2/!/ug/king_act_home?${token}`,
-      headers: {"User-Agent": `Weibo/41997 (iPhone; iOS 13.4.1; Scale/3.00)`}}
+      headers: {"User-Agent": `Weibo/46902 (iPhone; iOS 14; Scale/3.00)`}}
   $.get(doCardurl, (error, response, data) => {
      let result = JSON.parse(data)
       if (result.status ==10000){
@@ -138,7 +137,6 @@ function doCard() {
      })
   })
 }
-
 
 // 钱包签到
 function paysign() {
@@ -167,22 +165,11 @@ $.post(payurl, (error, response, data) => {
 function getst() {
  return new Promise((resolve, reject) =>{
    let sturl =  {
-      url: `https://m.weibo.cn/c/checkin?ua=iPhone8%2C2__weibo__10.8.3__iphone__os13.7&from=10A8393010`,
-     headers: JSON.parse($.getdata('sy_signheader_wb'))}
+     url: `https://m.weibo.cn/c/checkin?ua=iPhone10%2C2__weibo__10.8.3__iphone__os14&from=10A8393010`,
+     headers: JSON.parse($.getdata('infoheader_wb'))}
+  sturl.headers['Accept']='json'
 $.post(sturl, (error, response, data) => {
-   $.log(data)
-   try{
-     let result = JSON.parse(data)
-     if (result.status == 1){
-          paybag = `【微博钱包】 ✅ +`+ result.score+' 分\n'
-         }  
-     else if (result.code == 100000){
-          paybag = `【微博钱包】 🔁\n`
-         }
-       }
-    catch(e){
-       paybag = `【钱包签到】❌ 签到失败`+ e+ '\n'
-       }
+    st = data.split(":")[7].replace("login","").replace(/[\'\,\s]+/g,"")
     resolve()
      })
   })
@@ -192,9 +179,10 @@ function userinfo() {
  return new Promise((resolve, reject) =>{
    let infourl =  {
       url: `https://m.weibo.cn/c/checkin/ug/v2/signin/signin?st=${st}`,
-          headers: JSON.parse($.getdata('sy_signheader_wb'))
+          headers: JSON.parse($.getdata('infoheader_wb'))
 }
-$.post(payurl, (error, response, data) => {
+ //console.log(infourl)
+$.post(infourl, (error, response, data) => {
    $.log(data)
     resolve()
      })
@@ -202,7 +190,7 @@ $.post(payurl, (error, response, data) => {
 }
 
 function showmsg() {
-  if ('sy_payheader_wb' == undefined||null){
+  if (payheaderVal == undefined||null){
    paybag = `【钱包签到】❌ 未获取Cooiekie`
   }
    $.sub = nickname

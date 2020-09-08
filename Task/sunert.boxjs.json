@@ -8,7 +8,7 @@
     {
       "id": "weibo",
       "name": "新浪微博",
-      "keys": ["infourl_wb", "infoheader_wb", "sy_payheader_wb", "sy_token_wb"],
+      "keys": ["sy_payheader_wb", "sy_token_wb"],
       "author": "@sunert",
       "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/weibo.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/weibo.png", "https://raw.githubusercontent.com/Orz-3/task/master/weibo.png"],
