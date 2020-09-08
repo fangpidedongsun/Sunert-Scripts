@@ -1,6 +1,5 @@
 
 /**
- 
 ～～～～～～～～～～～～～～～～
 QX 1.0.6+ :
 
@@ -16,7 +15,6 @@ Surge 4.0 :
 ～～～～～～～～～～～～～～～～～
 Loon 2.1.0+
 [Script]
-
 cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/master/Task/translate.js, enabled=true, tag=谷歌中英互译
 
 ----------------
@@ -24,44 +22,55 @@ cron "04 00 * * *" script-path=https://raw.githubusercontent.com/Sunert/Scripts/
 * 谷歌中英互译，适合简单的中英短语单词互译
 */
 
-var TEXT = 'CL Online network Technology Co.LTD'  //翻译内容填入引号内
-const $ = new Env("谷歌翻译")
+var TEXT = 'CL Online network Technology Co.LTD' ; //翻译内容填入引号内
 
-let  ENword = $.getdata('word')||TEXT
+const $ = new Env("谷歌翻译");
+let  ENword = $.getdata('word')||TEXT,
+     setword = encodeURI(ENword);
+const cnToenUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q="+setword};
+const enTocnUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q="+setword};
 
- setword = encodeURI(ENword)
+!(async() => {
+if (/[^a-zA-Z.,]+$/.test(ENword)){
+  await ENWORD()
+}
+if (/[^\u4e00-\u9fa5]+$/.test(ENword))
+  {
+  await ENWORD()
+  }
+})()
+    .catch((e) => $.logErr(e))
+    .finally(() => $.done())
 
-const cnToenUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=zh-CN&tl=en&dt=t&q="+setword}
-const enTocnUrl = {url: "http://translate.google.cn/translate_a/single?client=gtx&sl=auto&tl=zh-CN&dt=t&q="+setword}
-
-//console.log(enTocnUrl)
-
-if (/[^a-zA-Z.,]+$/.test(ENword))
-{
+function CNWORD(){
+return new Promise((resolve, reject) =>{
   $.get(cnToenUrl, (err, resp, data) => {
    console.log(data)
    try{
       enres = data.split(/[\"]+/g)[1]
-       console.log(`谷歌翻译`+`\n中文原文: `+ENword+`\n翻译结果: `+ enres)
        $.msg(`谷歌翻译  中译英`,`🇨🇳 中文原文 :   `+ENword,`🇬🇧 翻译结果 :  `+ enres)
    }
    catch (err){
        $.msg(`谷歌翻译  中译英`,`🇨🇳 中文原文 :   `+ENword,`🇬🇧 翻译结果 : 失败 \n`+err)
     }
+    resolve()
+   })
  })
 }
-if (/[^\u4e00-\u9fa5]+$/.test(ENword))
-{
+
+function ENWORD(){
+return new Promise((resolve, reject) => {
   $.get(enTocnUrl, (err, resp, data) => {
         //console.log(data)
     try {
       cnres = data.split(/[\"]+/g)[1]
-       console.log(`谷歌翻译`+`\n英文原文: `+ENword+`\n翻译结果: `+ cnres)
        $.msg(`谷歌翻译  英译中`,`🇨🇳 英文原文 :  `+ENword,`🇬🇧 翻译结果 :  `+ cnres)
        }
     catch (err){
        $.msg(`谷歌翻译  英译中`,`🇨🇳 英文原文 :   `+ENword,`🇬🇧 翻译结果 : 失败 \n`+err)
-    }
+       }
+       resolve()
+    })
  })
 }
 

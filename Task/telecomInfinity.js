@@ -41,13 +41,13 @@ let config = {
     delay: 0, //自定义延迟签到,单位毫秒,(如填200则每个接口延迟0.2秒执行),默认无延迟
     info: 1, //是否显示手机归属地，1为显示，0为不显示
 }
-const $tool = Tool()
+const $ = new Env(config.name)
      d = new Date();
      Y = d.getFullYear(),
-     m = d.getMonth()  //上月
+     m = $.getdata('Mon'-1)||d.getMonth()  //上月
      M = ("0" + m).slice(-2)
-   let AUTHTOKEN = $tool.read(config.authTokenKey)
-   let COOKIE = $tool.read(config.CookieKey)
+   let AUTHTOKEN = $.getdata(config.authTokenKey)
+   let COOKIE = $.getdata(config.CookieKey)
 var requests = {
     detail: {
         url: "https://e.189.cn/store/user/package_detail.do",
@@ -84,22 +84,25 @@ var requests = {
 }
 
 
-if ($tool.ishttp) {
+if (isGetCookie = typeof $request !== 'undefined') {
     GetCookie()
-    $tool.done()
+    $.done()
 } else {
-    cron()
-    $tool.done()
+ !(async() => {
+  await cron()
+})()
+    .catch((e) => $.logErr(e))
+    .finally(() => $.done())
 }
 function GetCookie() {
     if ($request && $request.headers) {
         var cookieVal = $request.headers['authToken']
         var COOKIE = $request.headers['Cookie']
-      $tool.write(COOKIE, config.CookieKey)
+      $.setdata(COOKIE, config.CookieKey)
         if (cookieVal) {
-            if ($tool.write(cookieVal, config.authTokenKey)) {
-                $tool.notify(config.name, '获取authToken: 成功', '')
-                $tool.log.info(`[${config.name}] 获取authToken: 成功, authToken: ${cookieVal}, Cookie: [${COOKIE}]` )
+            if ($.setdata(cookieVal, config.authTokenKey)) {
+                $.msg(config.name, '获取authToken: 成功', '')
+              // $.log.info(`[${config.name}] 获取authToken: 成功, authToken: ${cookieVal}, Cookie: [${COOKIE}]` )
             }
         }
     }
@@ -107,7 +110,7 @@ function GetCookie() {
 
 async function cron() {
     if (!AUTHTOKEN) {
-        $tool.notify(config.name, "请获取authToken", "下载安装APP[天翼账号中心]获取")
+        $.msg(config.name, "请获取authToken", "下载安装APP[天翼账号中心]获取")
         return
     }
     let detail = await httpRequest(requests.detail, config.delay)
@@ -122,31 +125,33 @@ async function cron() {
 
 async function httpRequest(resq, delay = 0, statusCode = 200) {
     return new Promise(resolve => {
-        $tool.timeout(() => {
-            var adapterClient = $tool.get;
+      setTimeout(() => {
+            var adapterClient = $.get;
             if (typeof resq.method != "undefined") {
                 if (resq.method == "POST") {
-                    adapterClient = $tool.post
+                    adapterClient = $.post
+                }
+                if (resq.method == "GET") {
+                    adapterClient = $.GET
                 }
                 delete resq.method
             }
-            adapterClient(resq, function (error, response, body) {
+          $.post(resq, function (error, response, body) {
                 try {
                     if (!error) {
                         if (typeof response.statusCode == "undefined" || response.statusCode == statusCode) {
 resolve(JSON.parse(body));
                         }
                     } else {
-                        $tool.notify('', 'httpRequest', error)
+                        $.msg('', 'httpRequest', error)
                         resolve("")
                     }
                 } catch (e) {
-                    $tool.notify('', 'httpRequest catch', e)
+                    $.msg('', 'httpRequest catch', e)
                     resolve("")
                 }
             });
-
-        }, parseInt(delay))
+     }, parseInt(delay))
     })
 }
 
@@ -157,12 +162,12 @@ function parseData(detail, balance, info, bill) {
             return
         }
         if (balance.result != 0) {
-            $tool.notify(config.name, "获取余额信息失败", `${balance.msg}`)
+            $.msg(config.name, "获取余额信息失败", `${balance.msg}`)
             resolve("done")
             return
         }
         if (config.info && info.result != 10000) {
-            $tool.notify(config.name, "", "获取手机号归属地信息失败，请稍后重试")
+            $.msg(config.name, "", "获取手机号归属地信息失败，请稍后重试")
             resolve("done")
             return
         }
@@ -178,7 +183,7 @@ function parseData(detail, balance, info, bill) {
 }
 
 function notify(data, balance, exdata, bldata) {
-//$tool.log.info(data)
+//console.log(bldata)
     var subtitle = ""
     if (config.info) {
         subtitle = "【手机】" + exdata.mobileShort + "  (" + exdata.province + "-" + exdata.city + ")"
@@ -213,7 +218,7 @@ if(data.items[i].items[k].nameType == 131100){
    voiceBalance = data.items[i].items[k].balanceAmount
    voiceUsage = data.items[i].items[k].usageAmount
   }
-//$tool.log.info(data.items[i].items[k].nameType)
+//$.log.info(data.items[i].items[k].nameType)
 if(data.items[i].items[k].nameType == 401100||data.items[i].items[k].nameType == 431100){
    msgUsage = data.items[i].items[k].usageAmount
    msgAmount = data.items[i].items[k].ratableAmount
@@ -248,9 +253,7 @@ bldata.items[0].items[1].charge/100+'元'+ "\n   "+ bldata.items[0].items[2].cha
 bldata.items[0].items[2].charge/100+'元'+ "\n   "+ bldata.items[0].items[0].chargetypeName + '合计:  '+ bldata.items[0].items[0].charge/100+'元'
     message = message + "\n" + bills
     }
-
-    $tool.notify(config.name, subtitle, message)
-    $tool.log.info(config.name + "\n" + subtitle + "\n" + message)
+    $.msg(config.name, subtitle, message)
 }
 
 // MB 和 GB 自动转换
@@ -261,293 +264,4 @@ function formatFlow(number) {
     return (number / 1024).toFixed(2) + "GB"
 }
 
-// https://github.com/yichahucha/surge/blob/master/tool.js
-//https://github.com/chavyleung/scripts/blob/master/chavy.js
-// 工具方法编写参考了以上脚本，在此感谢 🙏
-function Tool() {
-    // app
-    const _isQuanX = typeof $task != "undefined"
-    const _isSurge = typeof $httpClient != "undefined"
-    const _isJSBox = typeof $app != "undefined" && $app.info.bundleID == "app.cyan.jsbox"
-    const _isNode = typeof require == "function" && !_isJSBox
-
-    // environment
-    const _isRequest = typeof $request != "undefined"
-    const _isResponse = typeof $response != "undefined"
-
-    const ishttp = _isRequest || _isResponse
-
-    // require Tools
-    const _requireTools = (() => {
-        var tools = {}
-        if (typeof require == "function") {
-            let request = require('request')
-            if (request) tools.request = request
-            let fs = require("fs")
-            if (fs) tools.fs = fs
-        }
-        return tools
-    })()
-
-    // config
-    const _nodeStoreName = "prefs.json"
-
-    // custom log
-    // if you want to add log level, just add to _logLevels
-    const _log = (() => {
-        // default log value
-        let _logLevel = "debug"
-
-        const _logLevels = new Array("trace", "debug", "info", "warn", "error", "fatal")
-
-        const _setLogLevel = (level = "") => {
-            if (_logLevels.indexOf(level) > -1) {
-                _logLevel = level
-            }
-            return _logLevel
-        }
-
-        const _setLogFunction = (level) => {
-            return (message) => {
-                _consolelog(message, level, _setLogLevel)
-            }
-        }
-
-        const _consolelog = (message, level, loglevel) => {
-            let index = _logLevels.indexOf(level)
-            let current = _logLevels.indexOf(loglevel())
-            if (index > -1 && current > -1) {
-                if (index >= current) {
-                    return console.log(message)
-                }
-            }
-        }
-
-        const level = _setLogLevel
-
-        var logFunc = {level}
-        _logLevels.forEach((item) => {
-            logFunc[item] = _setLogFunction(item)
-        })
-        return logFunc
-    })
-    const log = _log()
-    // setTimeout
-    const timeout = (() => {
-        if (typeof setTimeout != "undefined") {
-            return setTimeout
-        }
-        return (handler, timeout = 0) => {
-            handler()
-        }
-    })()
-
-    // notification
-    const notify = (title, subtitle, message) => {
-        if (_isQuanX) {
-            $notify(title, subtitle, message)
-        }
-        if (_isSurge) {
-            $notification.post(title, subtitle, message)
-        }
-        if (_isNode) {
-            console.log(JSON.stringify({title, subtitle, message}))
-        }
-        if (_isJSBox) {
-            if (subtitle && message) {
-                $push.schedule({title: title, body: subtitle + "\n" + message})
-            } else {
-                $push.schedule({title: title, body: subtitle + message})
-            }
-        }
-    }
-
-    // store
-    const read = (key) => {
-        if (_isQuanX) return $prefs.valueForKey(key)
-        if (_isSurge) return $persistentStore.read(key)
-        if (_isJSBox) return _jsBoxRead(key)
-        if (_isNode) return _nodeRead(key)
-    }
-
-    const write = (value, key) => {
-        if (_isQuanX) return $prefs.setValueForKey(value, key)
-        if (_isSurge) return $persistentStore.write(value, key)
-        if (_isJSBox) return _jsBoxWrite(value, key)
-        if (_isNode) return _nodeWrite(value, key)
-    }
-
-    const _nodeRead = (key) => {
-        try {
-            var data = JSON.parse(_requireTools.fs.readFileSync(_nodeStoreName))
-            if (typeof data[key] != "undefined") {
-                return data[key]
-            }
-        } catch (error) {
-            log.error(error)
-        }
-        return ""
-    }
-
-    const _nodeWrite = (value, key) => {
-        try {
-            if (!_requireTools.fs.existsSync(_nodeStoreName)) {
-                _requireTools.fs.writeFileSync(_nodeStoreName, JSON.stringify({}))
-            }
-            var data = JSON.parse(_requireTools.fs.readFileSync(_nodeStoreName))
-            data[key] = value
-            _requireTools.fs.writeFileSync(_nodeStoreName, JSON.stringify(data))
-            return true
-        } catch (error) {
-            log.error(error)
-        }
-        return false
-    }
-
-    const _jsBoxRead = (key) => {
-        try {
-            if (_jsBoxEnvName != "icloud") {
-                return $prefs.get(key)
-            }
-            if (typeof $drive != "undefined") {
-                let filePath = "Code/" + _nodeStoreName
-                if ($drive.exists(filePath)) {
-                    let content = $drive.read(filePath)
-                    if (content) {
-                        let data = JSON.parse(content)
-                        if (typeof data[key] != "undefined") {
-                            return data[key]
-                        }
-                    }
-                }
-            }
-        } catch (error) {
-            log.error(error)
-        }
-        return ""
-    }
-
-    const _jsBoxWrite = (value, key) => {
-        try {
-            if (_jsBoxEnvName != "icloud") {
-                return $prefs.set(key, value)
-            }
-            if (typeof $drive != "undefined") {
-                let filePath = "Code/" + _nodeStoreName
-                var data = {}
-                if ($drive.exists(filePath)) {
-                    let content = $drive.read(filePath)
-                    data = JSON.parse(content)
-                }
-                data[key] = value
-                return $drive.write({data: $data({string: JSON.stringify(data)}), path: filePath})
-            }
-        } catch (error) {
-            log.error(error)
-        }
-        return false
-    }
-
-    const _jsBoxEnvName = (() => {
-        if (typeof $addin != "undefined") {
-            if (typeof $addin.current == "undefined") {
-                // 运行在icloud
-                return "icloud"
-            } else {
-
-                let _version = typeof $addin.current.version != "undefined"
-                let _author = typeof $addin.current.author != "undefined"
-                let _url = typeof $addin.current.url != "undefined"
-                let _website = typeof $addin.current.website != "undefined"
-                if (_version || _author || _url || _website) {
-                    // jsBox 应用
-                    return "app"
-                } else {
-                    // jsBox 脚本
-                    return "script"
-                }
-            }
-        }
-        return ""
-    })()
-
-    // http request
-    const get = (options, callback) => {
-        if (_isQuanX) {
-            if (typeof options == "string") options = {url: options}
-            options["method"] = "GET"
-            $task.fetch(options).then(response => {
-                callback(null, _status(response), response.body)
-            }, reason => callback(reason.error, null, null))
-        }
-        if (_isSurge) $httpClient.get(options, (error, response, body) => {
-            callback(error, _status(response), body)
-        });
-        if (_isNode) {
-            _requireTools.request(options, (error, response, body) => {
-                callback(error, _status(response), body)
-            })
-        }
-        if (_isJSBox) $http.get(_jsBoxRequest(options, callback))
-    }
-    const post = (options, callback) => {
-        if (_isQuanX) {
-            if (typeof options == "string") options = {url: options}
-            options["method"] = "POST"
-            $task.fetch(options).then(response => {
-                callback(null, _status(response), response.body)
-            }, reason => callback(reason.error, null, null))
-        }
-        if (_isSurge) {
-            $httpClient.post(options, (error, response, body) => {
-                callback(error, _status(response), body)
-            })
-        }
-        if (_isNode) {
-            _requireTools.request.post(options, (error, response, body) => {
-                callback(error, _status(response), body)
-            })
-        }
-        if (_isJSBox) $http.post(_jsBoxRequest(options, callback))
-    }
-
-    const _jsBoxRequest = (options, callback) => {
-        if (typeof options == "string") options = {url: options}
-        options["header"] = options["headers"]
-        delete options["headers"]
-        let body = options["body"]
-        if (typeof body != "undefined") {
-            try {
-                body = JSON.parse(body)
-                options["body"] = body
-            } catch (e) {}
-        }
-        options["handler"] = function (resp) {
-            let error = resp.error
-            if (error) error = JSON.stringify(resp.error)
-            let body = resp.data
-            if (typeof body == "object") body = JSON.stringify(resp.data)
-            callback(error, _status(resp.response), body)
-        }
-        return options
-    }
-
-    const _status = (response) => {
-        if (response) {
-            if (response.status) {
-                response["statusCode"] = response.status
-            } else if (response.statusCode) {
-                response["status"] = response.statusCode
-            }
-        }
-        return response
-    }
-
-    // done
-    const done = (value = {}) => {
-        if (_isQuanX) ishttp ? $done(value) : ""
-        if (_isSurge) ishttp ? $done(value) : $done()
-    }
-
-    return {read, write, notify, get, post, ishttp, log, timeout, done}
-}
+function Env(t,e){class s{constructor(t){this.env=t}send(t,e="GET"){t="string"==typeof t?{url:t}:t;let s=this.get;return"POST"===e&&(s=this.post),new Promise((e,i)=>{s.call(this,t,(t,s,r)=>{t?i(t):e(s)})})}get(t){return this.send.call(this.env,t)}post(t){return this.send.call(this.env,t,"POST")}}return new class{constructor(t,e){this.name=t,this.http=new s(this),this.data=null,this.dataFile="box.dat",this.logs=[],this.isMute=!1,this.isNeedRewrite=!1,this.logSeparator="\n",this.startTime=(new Date).getTime(),Object.assign(this,e),this.log("",`\ud83d\udd14${this.name}, \u5f00\u59cb!`)}isNode(){return"undefined"!=typeof module&&!!module.exports}isQuanX(){return"undefined"!=typeof $task}isSurge(){return"undefined"!=typeof $httpClient&&"undefined"==typeof $loon}isLoon(){return"undefined"!=typeof $loon}toObj(t,e=null){try{return JSON.parse(t)}catch{return e}}toStr(t,e=null){try{return JSON.stringify(t)}catch{return e}}getjson(t,e){let s=e;const i=this.getdata(t);if(i)try{s=JSON.parse(this.getdata(t))}catch{}return s}setjson(t,e){try{return this.setdata(JSON.stringify(t),e)}catch{return!1}}getScript(t){return new Promise(e=>{this.get({url:t},(t,s,i)=>e(i))})}runScript(t,e){return new Promise(s=>{let i=this.getdata("@chavy_boxjs_userCfgs.httpapi");i=i?i.replace(/\n/g,"").trim():i;let r=this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout");r=r?1*r:20,r=e&&e.timeout?e.timeout:r;const[o,h]=i.split("@"),a={url:`http://${h}/v1/scripting/evaluate`,body:{script_text:t,mock_type:"cron",timeout:r},headers:{"X-Key":o,Accept:"*/*"}};this.post(a,(t,e,i)=>s(i))}).catch(t=>this.logErr(t))}loaddata(){if(!this.isNode())return{};{this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e);if(!s&&!i)return{};{const i=s?t:e;try{return JSON.parse(this.fs.readFileSync(i))}catch(t){return{}}}}}writedata(){if(this.isNode()){this.fs=this.fs?this.fs:require("fs"),this.path=this.path?this.path:require("path");const t=this.path.resolve(this.dataFile),e=this.path.resolve(process.cwd(),this.dataFile),s=this.fs.existsSync(t),i=!s&&this.fs.existsSync(e),r=JSON.stringify(this.data);s?this.fs.writeFileSync(t,r):i?this.fs.writeFileSync(e,r):this.fs.writeFileSync(t,r)}}lodash_get(t,e,s){const i=e.replace(/\[(\d+)\]/g,".$1").split(".");let r=t;for(const t of i)if(r=Object(r)[t],void 0===r)return s;return r}lodash_set(t,e,s){return Object(t)!==t?t:(Array.isArray(e)||(e=e.toString().match(/[^.[\]]+/g)||[]),e.slice(0,-1).reduce((t,s,i)=>Object(t[s])===t[s]?t[s]:t[s]=Math.abs(e[i+1])>>0==+e[i+1]?[]:{},t)[e[e.length-1]]=s,t)}getdata(t){let e=this.getval(t);if(/^@/.test(t)){const[,s,i]=/^@(.*?)\.(.*?)$/.exec(t),r=s?this.getval(s):"";if(r)try{const t=JSON.parse(r);e=t?this.lodash_get(t,i,""):e}catch(t){e=""}}return e}setdata(t,e){let s=!1;if(/^@/.test(e)){const[,i,r]=/^@(.*?)\.(.*?)$/.exec(e),o=this.getval(i),h=i?"null"===o?null:o||"{}":"{}";try{const e=JSON.parse(h);this.lodash_set(e,r,t),s=this.setval(JSON.stringify(e),i)}catch(e){const o={};this.lodash_set(o,r,t),s=this.setval(JSON.stringify(o),i)}}else s=this.setval(t,e);return s}getval(t){return this.isSurge()||this.isLoon()?$persistentStore.read(t):this.isQuanX()?$prefs.valueForKey(t):this.isNode()?(this.data=this.loaddata(),this.data[t]):this.data&&this.data[t]||null}setval(t,e){return this.isSurge()||this.isLoon()?$persistentStore.write(t,e):this.isQuanX()?$prefs.setValueForKey(t,e):this.isNode()?(this.data=this.loaddata(),this.data[e]=t,this.writedata(),!0):this.data&&this.data[e]||null}initGotEnv(t){this.got=this.got?this.got:require("got"),this.cktough=this.cktough?this.cktough:require("tough-cookie"),this.ckjar=this.ckjar?this.ckjar:new this.cktough.CookieJar,t&&(t.headers=t.headers?t.headers:{},void 0===t.headers.Cookie&&void 0===t.cookieJar&&(t.cookieJar=this.ckjar))}get(t,e=(()=>{})){t.headers&&(delete t.headers["Content-Type"],delete t.headers["Content-Length"]),this.isSurge()||this.isLoon()?(this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.get(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)})):this.isQuanX()?(this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t))):this.isNode()&&(this.initGotEnv(t),this.got(t).on("redirect",(t,e)=>{try{const s=t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString();this.ckjar.setCookieSync(s,null),e.cookieJar=this.ckjar}catch(t){this.logErr(t)}}).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)}))}post(t,e=(()=>{})){if(t.body&&t.headers&&!t.headers["Content-Type"]&&(t.headers["Content-Type"]="application/x-www-form-urlencoded"),t.headers&&delete t.headers["Content-Length"],this.isSurge()||this.isLoon())this.isSurge()&&this.isNeedRewrite&&(t.headers=t.headers||{},Object.assign(t.headers,{"X-Surge-Skip-Scripting":!1})),$httpClient.post(t,(t,s,i)=>{!t&&s&&(s.body=i,s.statusCode=s.status),e(t,s,i)});else if(this.isQuanX())t.method="POST",this.isNeedRewrite&&(t.opts=t.opts||{},Object.assign(t.opts,{hints:!1})),$task.fetch(t).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>e(t));else if(this.isNode()){this.initGotEnv(t);const{url:s,...i}=t;this.got.post(s,i).then(t=>{const{statusCode:s,statusCode:i,headers:r,body:o}=t;e(null,{status:s,statusCode:i,headers:r,body:o},o)},t=>{const{message:s,response:i}=t;e(s,i,i&&i.body)})}}time(t){let e={"M+":(new Date).getMonth()+1,"d+":(new Date).getDate(),"H+":(new Date).getHours(),"m+":(new Date).getMinutes(),"s+":(new Date).getSeconds(),"q+":Math.floor(((new Date).getMonth()+3)/3),S:(new Date).getMilliseconds()};/(y+)/.test(t)&&(t=t.replace(RegExp.$1,((new Date).getFullYear()+"").substr(4-RegExp.$1.length)));for(let s in e)new RegExp("("+s+")").test(t)&&(t=t.replace(RegExp.$1,1==RegExp.$1.length?e[s]:("00"+e[s]).substr((""+e[s]).length)));return t}msg(e=t,s="",i="",r){const o=t=>{if(!t||!this.isLoon()&&this.isSurge())return t;if("string"==typeof t)return this.isLoon()?t:this.isQuanX()?{"open-url":t}:void 0;if("object"==typeof t){if(this.isLoon()){let e=t.openUrl||t["open-url"],s=t.mediaUrl||t["media-url"];return{openUrl:e,mediaUrl:s}}if(this.isQuanX()){let e=t["open-url"]||t.openUrl,s=t["media-url"]||t.mediaUrl;return{"open-url":e,"media-url":s}}}};this.isMute||(this.isSurge()||this.isLoon()?$notification.post(e,s,i,o(r)):this.isQuanX()&&$notify(e,s,i,o(r)));let h=["","==============\ud83d\udce3\u7cfb\u7edf\u901a\u77e5\ud83d\udce3=============="];h.push(e),s&&h.push(s),i&&h.push(i),console.log(h.join("\n")),this.logs=this.logs.concat(h)}log(...t){t.length>0&&(this.logs=[...this.logs,...t]),console.log(t.join(this.logSeparator))}logErr(t,e){const s=!this.isSurge()&&!this.isQuanX()&&!this.isLoon();s?this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t.stack):this.log("",`\u2757\ufe0f${this.name}, \u9519\u8bef!`,t)}wait(t){return new Promise(e=>setTimeout(e,t))}done(t={}){const e=(new Date).getTime(),s=(e-this.startTime)/1e3;this.log("",`\ud83d\udd14${this.name}, \u7ed3\u675f! \ud83d\udd5b ${s} \u79d2`),this.log(),(this.isSurge()||this.isQuanX()||this.isLoon())&&$done(t)}}(t,e)}

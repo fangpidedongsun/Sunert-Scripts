@@ -83,6 +83,15 @@
       "id": "chinatelecomEnquiry",
       "name": "电信套餐查询",
       "keys": ["china_telecom_authToken_10000", "china_telecom_cookie"],
+      "settings": [
+       {
+        "id": "Mon",
+        "name": "查询月份", 
+        "val":  "09", 
+        "type": "date", 
+        "desc": "填入账单月份，可查最近六个月，本月账单下月可查" 
+         }
+       ],
       "author": "@sunert",
       "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/telecomInfinity.js",
       "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/telecominfinty.png", "https://raw.githubusercontent.com/Orz-3/task/master/telecominfinty.png"],
