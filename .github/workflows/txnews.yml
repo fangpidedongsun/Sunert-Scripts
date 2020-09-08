@@ -28,7 +28,7 @@ jobs:
           npm install
       - name: '运行 【腾讯新闻】'
         run: |
-          node app.js
+          node txnews.js
         env:
           JD_COOKIE: ${{ secrets.TXNEWS_COOKIE }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
