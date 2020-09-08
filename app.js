@@ -12,15 +12,14 @@ const KEY = process.env.JD_COOKIE
 const serverJ = process.env.PUSH_KEY
 
 async function downFile () {
-    // const url = 'https://cdn.jsdelivr.net/gh/NobyDa/Script@master/JD-DailyBonus/JD_DailyBonus.js'
-    const url = 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/weibo.js'
+    const url = 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js'
     await download(url, './')
 }
 
 async function changeFiele () {
-   let content = await fs.readFileSync('./weibo.js', 'utf8')
+   let content = await fs.readFileSync('./txnews.js', 'utf8')
    content = content.replace(/var Key = ''/, `var Key = '${KEY}'`)
-   await fs.writeFileSync( './weibo.js', content, 'utf8')
+   await fs.writeFileSync( './txnews.js', content, 'utf8')
 }
 
 async function sendNotify (text,desp) {
@@ -49,7 +48,7 @@ async function start() {
   await changeFiele();
   console.log('替换变量完毕')
   // 执行
-  await exec("node weibo.js >> result.txt");
+  await exec("node txnews.js >> result.txt");
   console.log('执行完毕')
 
   if (serverJ) {
@@ -58,7 +57,7 @@ async function start() {
     if (fs.existsSync(path)) {
       content = fs.readFileSync(path, "utf8");
     }
-    await sendNotify("微博签到-" + new Date().toLocaleDateString(), content);
+    await sendNotify("腾讯新闻-" + new Date().toLocaleDateString(), content);
     console.log('发送结果完毕')
   }
 }
