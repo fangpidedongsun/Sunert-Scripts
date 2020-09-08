@@ -80,7 +80,7 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/video\/mac
   if (signheaderVal) sy.setdata(signheaderVal, 'sy_signheader_wb')
   if (token) $.setdata(token, 'sy_token_wb')
   $.msg($.name, `获取微博签到Cookie: 成功`, ``)
-} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/ug\/v2\/signin/)) {
+} else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/c\/checkin/)) {
   const infourl = $request.url
   const infoheaderVal = JSON.stringify($request.headers)
   if (infourl) $.setdata(infourl, 'infourl_wb')
