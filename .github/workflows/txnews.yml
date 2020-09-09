@@ -29,6 +29,8 @@ jobs:
         run: |
           node app.js
         env:
-          TXNEWS_COOKIE: ${{ secrets.TXNEWS_COOKIE }}
+          cookieVal: ${{ secrets.TXNEWS_COOKIE }}
+          signurlVal: ${{ secrets.TXNEWS_SIGN }}
+          videoVal: ${{ secrets.TXNEWS_VIDEO }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
           BARK_PUSH: ${{ secrets.BARK_PUSH }}
