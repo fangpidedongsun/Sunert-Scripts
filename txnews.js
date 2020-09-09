@@ -47,7 +47,7 @@ Cookie获取后，请注释掉Cookie地址。
 const cookieName = '腾讯新闻';
 const $ = new Env(cookieName);
 let notifyInterval = $.getdata('notifynum')||1; //视频红包间隔通知开为1，常关为0;
-let logs = $.getdata('logsturn')||false; // 日志开关，0为关，1为开;
+let logs = $.getdata('logsturn')||true; // 日志开关，0为关，1为开;
 
 const signurlVal = $.getdata('sy_signurl_txnews')
 const cookieVal = $.getdata( 'sy_cookie_txnews')
