@@ -75,7 +75,7 @@ if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/video\/mac
   const token = signurlVal.split(`?`)[1]
   const signheaderVal = JSON.stringify($request.headers)
    $.log(`token:${token}`)
-  if (signheaderVal) sy.setdata(signheaderVal, 'sy_signheader_wb')
+  //if (signheaderVal) $.setdata(signheaderVal, 'sy_signheader_wb')
   if (token) $.setdata(token, 'sy_token_wb')
   $.msg($.name, `获取微博签到Cookie: 成功`, ``)
 } else if ($request && $request.method != 'OPTIONS' && $request.url.match(/\/ug\/v2\/signin/)) {
