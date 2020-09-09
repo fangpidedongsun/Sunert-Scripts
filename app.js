@@ -9,8 +9,8 @@ const download = require('download')
 
 // 公共变量
 const cookie = process.env.TXNEWS_COOKIE
-const signurl = process.env.TXNEWS_SIGN
-const videourl = process.env.TXNEWS_VIDEO
+//const signurl = process.env.TXNEWS_SIGN
+//const videourl = process.env.TXNEWS_VIDEO
 const serverJ = process.env.PUSH_KEY
 
 
@@ -21,9 +21,9 @@ async function downFile () {
 
 async function changeFiele () {
    let content = await fs.readFileSync('./txnews.js', 'utf8')
-   content += content.replace(/var cookieVal = ''/, `var cookieVal = '${cookie}'`)
-   content += content.replace(/var signurlVal = ''/, `var signurlVal = '${signurl}'`)
-   content += content.replace(/var videoVal = ''/, `var videoVal = '${videourl}'`)
+   content = content.replace(/var cookieVal = ''/, `var cookieVal = '${cookie}'`)
+   //content = content.replace(/var signurlVal = ''/, `var signurlVal = '${signurl}'`)
+   //content = content.replace(/var videoVal = ''/, `var videoVal = '${videourl}'`)
    await fs.writeFileSync( './txnews.js', content, 'utf8')
 }
 
