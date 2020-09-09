@@ -51,7 +51,7 @@ async function sendNotify (text,desp) {
 }
 
 async function start() {
-  if (!cookie) {
+  if (!cookieVal) {
     console.log('请填写 key 后在继续')
     return
   }
