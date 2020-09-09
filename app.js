@@ -8,9 +8,9 @@ const rp = require('request-promise')
 const download = require('download')
 
 // 公共变量
-const cookieVal = process.env.TXNEWS_COOKIE
+const KEY = process.env.TXNEWS_COOKIE
 const signurl = process.env.TXNEWS_SIGN
-const videoVal= process.env.TXNEWS_VIDEO
+const videourl = process.env.TXNEWS_VIDEO
 const serverJ = process.env.PUSH_KEY
 
 
@@ -21,9 +21,9 @@ async function downFile () {
 
 async function changeFiele () {
    let content = await fs.readFileSync('./txnews.js', 'utf8')
-   content = content.replace(/var Key = ''/, `var cookieVal = '${cookieVal}'`)
-   content = content.replace(/var Key = ''/, `var videoVal = '${videoVal}'`)
-   content = content.replace(/var Key = ''/, `var signurlVal = '${signurl}'`)
+   content = content.replace(/var cookieVal = ''/, `var cookieVal = '${KEY}'`)
+   content = content.replace(/var signurlVal = ''/, `var signurlVal = '${signurl}'`)
+   content = content.replace(/var videoVal = ''/, `var videoVal = '${videourl}'`)
    await fs.writeFileSync( './txnews.js', content, 'utf8')
 }
 
@@ -42,7 +42,7 @@ async function sendNotify (text,desp) {
 }
 
 async function start() {
-  if (!cookieVal) {
+  if (!KEY) {
     console.log('请填写 key 后在继续')
     return
   }
