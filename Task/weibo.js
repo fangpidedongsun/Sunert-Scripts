@@ -103,7 +103,7 @@ function getsign() {
          wbsign = `【微博签到】✅ 连续签到${result.data.continuous}天，收益: ${result.data.desc}💰\n`  
          }  
      else if (result.errno == 30000){
-         wbsign = `【每日签到】 🔁\n`
+         wbsign = `【每日签到】 🔁  `
        }
      else if (result.status == 90005){
          wbsign = `【每日签到】‼️`+ result.msg + '\n'
