@@ -21,9 +21,9 @@ async function downFile () {
 
 async function changeFiele () {
    let content = await fs.readFileSync('./txnews.js', 'utf8')
-   content = content.replace(/var cookieVal = ''/, `var cookieVal = '${cookie}'`)
-   //content = content.replace(/var signurlVal = ''/, `var signurlVal = '${signurl}'`)
-   //content = content.replace(/var videoVal = ''/, `var videoVal = '${videourl}'`)
+   content += content.replace(/var cookieVal = ''/, `var cookieVal = '${cookie}'`)
+   content += content.replace(/var signurlVal = ''/, `var signurlVal = '${signurl}'`)
+   content += content.replace(/var videoVal = ''/, `var videoVal = '${videourl}'`)
    await fs.writeFileSync( './txnews.js', content, 'utf8')
 }
 
