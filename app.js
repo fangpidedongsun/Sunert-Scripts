@@ -64,8 +64,6 @@ async function start() {
   // 执行
   await exec("node txnews.js >> result.txt");
   console.log('执行完毕')
-  await deleteFile(path);
-
   if (serverJ) {
     const path = "./result.txt";
     let content = "";
