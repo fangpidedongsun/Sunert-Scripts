@@ -27,15 +27,6 @@ async function changeFiele () {
    await fs.writeFileSync( './txnews.js', content, 'utf8')
 }
 
-async function deleteFile(path) {
-  // 查看文件result.txt是否存在,如果存在,先删除
-  const fileExists = await fs.existsSync(path);
-  // console.log('fileExists', fileExists);
-  if (fileExists) {
-    const unlinkRes = await fs.unlinkSync(path);
-    // console.log('unlinkRes', unlinkRes)
-  }
-}
 async function sendNotify (text,desp) {
   const options ={
     uri:  `https://sc.ftqq.com/${serverJ}.send`,
