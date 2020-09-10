@@ -44,9 +44,8 @@ hostname = api.inews.qq.com
 Cookie获取后，请注释掉Cookie地址。
 
 */
-const cookieName = '腾讯新闻';
-let s = 500 // 间隔延迟时间
-const $ = new Env(cookieName);
+const $ = new Env('腾讯新闻');
+let s = $.getdata('delay')||500 // 间隔延迟时间
 let notifyInterval =$.getdata('notifynum')||50; //阅读篇数间隔通知开为1，常关为0;
 
 const signurlVal = $.getdata('sy_signurl_txnews')
@@ -74,7 +73,7 @@ if(getreadred > 0){
   await Redpack()
 };
 if(getvideored>0){
-redbody = `redpack_type=video&activity_id=${actid}`
+ redbody = `redpack_type=video&activity_id=${actid}`
   await Redpack()
 };
   await getTotal();
@@ -93,13 +92,13 @@ if ($request &&$request.body.indexOf("article_read")> -1) {
   $.log(`cookieVal:${cookieVal}`)
   if (signurlVal) $.setdata(signurlVal, 'sy_signurl_txnews')
   if (cookieVal) $.setdata(cookieVal,  'sy_cookie_txnews')
-  $.msg(cookieName, `获取Cookie: 成功🎉`, ``)
+  $.msg($.name, `获取Cookie: 成功🎉`, ``)
   }
 if ($request &&$request.body.indexOf("video_read")> -1) {
   const videoVal =  $request.url
   $.log(`videoVal:${videoVal}`)
   if (videoVal) $.setdata(videoVal,  'video_txnews')
-  $.msg(cookieName, `获取视频地址: 成功🎉`, ``)
+  $.msg($.name, `获取视频地址: 成功🎉`, ``)
   }
  }
 
@@ -237,15 +236,13 @@ function Redpack() {
          }
        }
      catch(err){
-        $.log("打开红包失败,响应数据: "+ data+"\n错误代码:"+err)
-       }
-   
-     resolve()
+        $.log("打开红包失败,响应数据: "+ data+"\n错误代码:"+err) };
+        $.msg($.name, "开红包失败，详情请看日志 ❌", err)
+        resolve()
        })
     },s)
   })
 }
-
 
 //收益总计
 function getTotal() {
@@ -273,10 +270,10 @@ function showmsg() {
   }
   if
 (readnum%notifyInterval==0){
-   $.msg(cookieName,subTile,detail,{ 'open-url': "https://news.qq.com/FERD/cjRedDown.htm", 'media-url': imgurl } )
+   $.msg($.name,subTile,detail,{ 'open-url': "https://news.qq.com/FERD/cjRedDown.htm", 'media-url': imgurl } )
   }
    else if (openreadred==readredtotal&&openvideored==videoredtotal){
-   $.msg(cookieName+` 今日任务已完成✅`,subTile,detail,{ 'open-url': "https://news.qq.com/FERD/cjRedDown.htm", 'media-url': imgurl } )
+   $.msg($.name+` 今日任务已完成✅`,subTile,detail,{ 'open-url': "https://news.qq.com/FERD/cjRedDown.htm", 'media-url': imgurl } )
   }
  resolve()
  })
