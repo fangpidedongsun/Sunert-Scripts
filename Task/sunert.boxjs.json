@@ -139,16 +139,19 @@
         {
           "id": "notifynum",
           "name": "通知频率",
-          "val": 4,
+          "val": "",
           "type": "number",
-          "desc": "视频红包间隔通知开为1，常关为0(默认4次)"
+          "placeholder": "默认50 (点击以展开说明)",
+          "desc": "阅读篇数间隔通知开为1，常关为0(默认50篇)"
         },
         {
-          "id": "logsturn",
-          "name": "调试日志",
-          "val": false,
-          "type": "boolean"
-        }
+          "id": "delay",
+          "name": "延迟时间(毫秒)",
+          "val": "",
+          "type": "number",
+         "placeholder": "默认500 (点击以展开说明)",
+          "desc": "接口延迟时间"
+        }          
       ],
        "repo": "https://gitee.com/Sunert/Scripts/blob/master/Task/txnews.js",
        "icons": ["https://raw.githubusercontent.com/Orz-3/mini/master/txnews.png", "https://raw.githubusercontent.com/Orz-3/task/master/txnews.png"],
