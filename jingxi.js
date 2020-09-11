@@ -1,7 +1,9 @@
 /*
 本脚本为京东旗下京喜app签到脚本
-本脚本使用京东公共Cooike，支持双账号，获取方法请查看NobyDa大佬脚本说明
-
+获取Cookie方法:
+打开app首页，点击"任务赚金币",再点击"我的金币"即可
+[rewrite_local]
+https:\/\/wq\.jd\.com\/pgcenter\/sign\/QueryPGDetail\?sceneval=2&pageSize=20 url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jingxi.js
 [task_local]
 0 9 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jingxi.js
 
@@ -12,10 +14,10 @@ hostname = wq.jd.com
 */
 
 const $ = new Env('京喜')
-const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+let cookiesArr = [], KEY = '';
 const notify = $.isNode() ? require('./sendNotify') : '';
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
-let cookiesArr = [], cookie = '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
@@ -24,21 +26,16 @@ if ($.isNode()) {
   cookiesArr.push($.getdata('CookieJD'));
   cookiesArr.push($.getdata('CookieJD2'))
 }
- 
+
 !(async() => {
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
     return;
   }
-  if ($.index === 1) {
-        $.setdata('', 'CookieJD');//cookie失效，故清空cookie。
-      } else if ($.index === 2){
-        $.setdata('', 'CookieJD2');//cookie失效，故清空cookie。
-  }
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
-      cookie = cookiesArr[i];
-      UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+      KEY = cookiesArr[i];
+      UserName = decodeURIComponent(KEY.match(/pt_pin=(.+?);/) && KEY.match(/pt_pin=(.+?);/)[1])
       $.index = i + 1;
       console.log(`\n开始【京东账号${$.index}】${UserName}\n`);
     await getsign();
@@ -57,7 +54,7 @@ function getsign() {
 	  url: 'https://wq.jd.com/pgcenter/sign/UserSignOpr?g_login_type=1',
           headers: {
          "Content-Type": "application/x-www-form-urlencoded",
-          Cookie: cookie,
+          Cookie: KEY,
           Referer: "https://wqsh.jd.com/pingou/taskcenter/index.html"
         },
   }
@@ -65,16 +62,18 @@ function getsign() {
       nickname = data.split(':')[6].split(',')[0].replace(/[\"]+/g,"")
       totalpoints = data.match(/[0-9]+/g)[3]
       signdays = " 已签"+data.match(/[0-9]+/g)[6]+"天"
+    if (data.match(/"retCode":\d+/) == '"retCode":0') {
     if (data.match(/[0-9]+/g)[9] == 0){
       signresult = "签到成功"
       signdays += " 今日获得"+data.match(/[0-9]+/g)[4]+"积分"
-      }
+         }
     else if (data.match(/[0-9]+/g)[9] == 1){
       signresult = "签到重复"
-      }
-    else{
-      signresult = "签到失败"
-      }
+         }
+       }
+    else if (data.match(/"retCode":\d+/) == '"retCode":30003') {
+      $.msg($.name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"})
+       } 
       resolve()
      })
   })
@@ -86,7 +85,7 @@ return new Promise((resolve) =>{
 	  url: "https://wq.jd.com/pgcenter/sign/QueryPGDetail?sceneval=",
           headers: {
          "Content-Type": "application/x-www-form-urlencoded",
-          Cookie: cookie,
+          Cookie: KEY,
           Referer: "https://jddx.jd.com/m/jddnew/money/index.html"
         },
   }
@@ -115,7 +114,7 @@ return new Promise((resolve) =>{
 	  url: 'https://m.jingxi.com/double_sign/IssueReward?sceneval=2&g_login_type=1&g_ty=ajax',
           headers: {
          "Content-Type": "application/x-www-form-urlencoded",
-          Cookie: cookie,
+          Cookie: KEY,
           Referer: "https://st.jingxi.com/pingou/jxapp_double_signin/index.html?ptag=139037.2.1"
         }
   }
