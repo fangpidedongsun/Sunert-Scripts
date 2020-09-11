@@ -4,9 +4,11 @@
 name: jingxi
 
 on:
+
   push:
     branches: 
      - master 
+
   schedule:
     - cron: '20 18 * * *'
   watch:
