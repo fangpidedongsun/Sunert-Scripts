@@ -1,9 +1,8 @@
 /*
+更新时间:09-11 14:05
 本脚本为京东旗下京喜app签到脚本
-获取Cookie方法:
-打开app首页，点击"任务赚金币",再点击"我的金币"即可
-[rewrite_local]
-https:\/\/wq\.jd\.com\/pgcenter\/sign\/QueryPGDetail\?sceneval=2&pageSize=20 url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jingxi.js
+本脚本使用京东公共Cooike，支持双账号，获取方法请查看NobyDa大佬脚本说明
+
 [task_local]
 0 9 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jingxi.js
 
@@ -101,9 +100,10 @@ return new Promise((resolve) =>{
        account = Number(time[i-5].replace(",",""))
        today += account
        }
-    if (time[i-4]==10000){
+    if (time[i-4]==10000&&time[i] >= totime){
         toaccount = Number(time[i-5].replace(",",""))
         coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币";
+        
        }
      }
     resolve()
