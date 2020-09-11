@@ -3,8 +3,8 @@
 
 name: txnews
 
-on:
-  push:
+-0on:
+  -push:
     branches: 
      - master 
   schedule:
