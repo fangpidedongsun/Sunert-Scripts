@@ -104,6 +104,7 @@ return new Promise((resolve) =>{
         toaccount = Number(time[i-5].replace(",",""))
         }
        coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币"
+       break;
        }
      }
     resolve()
