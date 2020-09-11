@@ -95,19 +95,18 @@ return new Promise((resolve) =>{
     $.get(coinurl, (err, resp, data) => {
    let time =data.match(/[\d{11}$][^\"|\{|\}]+/g)
        totime = new Date(new Date().toLocaleDateString()).getTime()/1000
-       today = Number()
+       today = ""
    for (i=0; i<time.length;i++){
     if (time[i] >= totime){
        account = Number(time[i-5].replace(",",""))
        today += account
     if (time[i-4]==10000){
         toaccount = Number(time[i-5].replace(",",""))
-        coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币"
         }
-       $.log(coin)
+       coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币"
        }
-     resolve()
      }
+    resolve()
   })
  })
 }
