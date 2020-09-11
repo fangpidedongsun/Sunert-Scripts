@@ -102,11 +102,10 @@ return new Promise((resolve) =>{
        }
     if (time[i-4]==10000&&time[i] >= totime){
         toaccount = Number(time[i-5].replace(",",""))
-        coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币";
-        
+        coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币"
        }
+       resolve()
      }
-    resolve()
   })
  })
 }
