@@ -28,7 +28,7 @@ jobs:
           npm install
       - name: '运行 【京喜】'
         run: |
-          node jingxi.js
+          node jdtest.js
         env:
           JD_COOKIE: ${{ secrets.JD_COOKIE }}
           PUSH_KEY: ${{ secrets.PUSH_KEY }}
