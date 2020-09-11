@@ -1,12 +1,12 @@
 # This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+# push:
+#   branches: 
+#   - master 
 
 name: txnews
 
--0on:
-  -push:
-    branches: 
-     - master 
+on:
   schedule:
     - cron: '8 16 * * *'
   watch:

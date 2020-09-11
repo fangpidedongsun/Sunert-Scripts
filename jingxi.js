@@ -59,6 +59,7 @@ function getsign() {
         },
   }
     $.get(signurl, (err, resp, data) => {
+    $.log("开始签到")
    if (data.match(/"retCode":\d+/) == '"retCode":0') {
       nickname = data.split(':')[6].split(',')[0].replace(/[\"]+/g,"")
       totalpoints = data.match(/[0-9]+/g)[3]
@@ -66,10 +67,12 @@ function getsign() {
     if (data.match(/[0-9]+/g)[9] == 0){
       signresult = "签到成功"
       signdays += " 今日获得"+data.match(/[0-9]+/g)[4]+"积分"
-         }
+ 
+    }
     else if (data.match(/[0-9]+/g)[9] == 1){
       signresult = "签到重复"
          }
+      $.log(signresult)
        }
     else if (data.match(/"retCode":\d+/) == '"retCode":30003') {
         $.msg($.name, '【提示】京东cookie已失效,请重新登录获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
@@ -99,11 +102,12 @@ return new Promise((resolve) =>{
        today += account
     if (time[i-4]==10000){
         toaccount = Number(time[i-5].replace(",",""))
-     coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币"
+        coin = "今日签到得"+ toaccount+ "个金币 共计"+today+ "个金币"
         }
+       $.log(coin)
        }
+     resolve()
      }
-  resolve()
   })
  })
 }
@@ -119,6 +123,7 @@ return new Promise((resolve) =>{
         }
   }
     $.get(doubleurl, (err, resp, data) => {
+ 
     doubleresult = JSON.parse(data)
    if (doubleresult.data.double_sign_status ==0){
     doubleres = "双签成功 🧧+ "+doubleresult.data.jd_amount/100+"元"
