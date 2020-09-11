@@ -2,7 +2,7 @@
   "name": "Sunert",
   "version": "1.0.0",
   "description": "",
-  "main": "weibo.js",
+  "main": "jingxi.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -1,9 +1,7 @@
 /*
 本脚本为京东旗下京喜app签到脚本
-获取Cookie方法:
-打开app首页，点击"任务赚金币",再点击"我的金币"即可
-[rewrite_local]
-https:\/\/wq\.jd\.com\/pgcenter\/sign\/QueryPGDetail\?sceneval=2&pageSize=20 url script-request-header https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jingxi.js
+本脚本使用京东公共Cooike，支持双账号，获取方法请查看NobyDa大佬脚本说明
+
 [task_local]
 0 9 * * * https://raw.githubusercontent.com/Sunert/Scripts/master/Task/jingxi.js
 
@@ -14,35 +12,49 @@ hostname = wq.jd.com
 */
 
 const $ = new Env('京喜')
-const headersVal = $.getdata('signheaders_jx')
+const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
+const notify = $.isNode() ? require('./sendNotify') : '';
 
-if (isGetCookie = typeof $request != 'undefined') {
-   if ($request.headers && $request.method != 'OPTIONS') 
-  {
-   const headersVal = JSON.stringify($request.headers)
-   coinurl = $request.url
-   $.log(` ${$.name}`,`coinurl: ${coinurl}`)
-   $.log(` ${$.name}`,`headers: ${headersVal}`)
-   $.setdata(headersVal, 'signheaders_jx')
-   $.setdata(coinurl, 'coinurl_jx')
-   if(coinurl&&headersVal) $.msg($.name, `获取Cookie: 成功🎉`, ``)
-  }
+let cookiesArr = [], KEY = '';
+if ($.isNode()) {
+  Object.keys(jdCookieNode).forEach((item) => {
+    cookiesArr.push(jdCookieNode[item])
+  })
 } else {
+  cookiesArr.push($.getdata('CookieJD'));
+  cookiesArr.push($.getdata('CookieJD2'))
+}
+
 !(async() => {
-    await getsign(),
-    await coininfo(),
-    await doublesign(),
+  if (!cookiesArr[0]) {
+    $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {"open-url": "https://bean.m.jd.com/"});
+    return;
+  }
+  for (let i = 0; i < cookiesArr.length; i++) {
+    if (cookiesArr[i]) {
+      KEY = cookiesArr[i];
+      UserName = decodeURIComponent(KEY.match(/pt_pin=(.+?);/) && KEY.match(/pt_pin=(.+?);/)[1])
+      $.index = i + 1;
+      console.log(`\n开始【京东账号${$.index}】${UserName}\n`);
+    await getsign();
+    await coininfo();
+    await doublesign();
     await showmsg()
-  })()
+    }
+  }
+})()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
-}
 
 function getsign() {
   return new Promise((resolve) =>{
 	const signurl = {
-	  url: 'https://wq.jd.com/pgcenter/sign/UserSignOpr?sceneval=2&source=&sceneval=2&g_login_type=1&callback=jsonpCBKJ&g_ty=ls',
-       headers: JSON.parse(headersVal)
+	  url: 'https://wq.jd.com/pgcenter/sign/UserSignOpr?g_login_type=1',
+          headers: {
+         "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: KEY,
+          Referer: "https://wqsh.jd.com/pingou/taskcenter/index.html"
+        },
   }
     $.get(signurl, (err, resp, data) => {
       nickname = data.split(':')[6].split(',')[0].replace(/[\"]+/g,"")
@@ -66,8 +78,12 @@ function getsign() {
 function coininfo() {
 return new Promise((resolve) =>{
 	const coinurl = {
-	  url: $.getdata('coinurl_jx'),
-       headers: JSON.parse(headersVal)
+	  url: "https://wq.jd.com/pgcenter/sign/QueryPGDetail?sceneval=",
+          headers: {
+         "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: KEY,
+          Referer: "https://jddx.jd.com/m/jddnew/money/index.html"
+        },
   }
     $.get(coinurl, (err, resp, data) => {
    let time =data.match(/[\d{11}$][^\"|\{|\}]+/g)
@@ -92,7 +108,11 @@ function doublesign() {
 return new Promise((resolve) =>{
 	const doubleurl = {
 	  url: 'https://m.jingxi.com/double_sign/IssueReward?sceneval=2&g_login_type=1&g_ty=ajax',
-       headers: JSON.parse(headersVal)
+          headers: {
+         "Content-Type": "application/x-www-form-urlencoded",
+          Cookie: KEY,
+          Referer: "https://st.jingxi.com/pingou/jxapp_double_signin/index.html?ptag=139037.2.1"
+        }
   }
     $.get(doubleurl, (err, resp, data) => {
     doubleresult = JSON.parse(data)
