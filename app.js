@@ -8,23 +8,19 @@ const rp = require('request-promise')
 const download = require('download')
 
 // 公共变量
-const cookie = process.env.TXNEWS_COOKIE
-//const signurl = process.env.TXNEWS_SIGN
-//const videourl = process.env.TXNEWS_VIDEO
+const KEY = process.env.JD_COOKIE
 const serverJ = process.env.PUSH_KEY
 
-
 async function downFile () {
-    const url = 'https://raw.githubusercontent.com/Sunert/Scripts/master/Task/txnews.js'
+    // const url = 'https://cdn.jsdelivr.net/gh/NobyDa/Script@master/JD-DailyBonus/JD_DailyBonus.js'
+    const url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js'
     await download(url, './')
 }
 
 async function changeFiele () {
-   let content = await fs.readFileSync('./txnews.js', 'utf8')
-   content = content.replace(/var cookieVal = ''/, `var cookieVal = '${cookie}'`)
-   //content = content.replace(/var signurlVal = ''/, `var signurlVal = '${signurl}'`)
-   //content = content.replace(/var videoVal = ''/, `var videoVal = '${videourl}'`)
-   await fs.writeFileSync( './txnews.js', content, 'utf8')
+   let content = await fs.readFileSync('./JD_DailyBonus.js', 'utf8')
+   content = content.replace(/var Key = ''/, `var Key = '${KEY}'`)
+   await fs.writeFileSync( './JD_DailyBonus.js', content, 'utf8')
 }
 
 async function sendNotify (text,desp) {
@@ -42,7 +38,7 @@ async function sendNotify (text,desp) {
 }
 
 async function start() {
-  if (!cookieVal) {
+  if (!KEY) {
     console.log('请填写 key 后在继续')
     return
   }
@@ -53,15 +49,16 @@ async function start() {
   await changeFiele();
   console.log('替换变量完毕')
   // 执行
-  await exec("node txnews.js >> result.txt");
+  await exec("node JD_DailyBonus.js >> result.txt");
   console.log('执行完毕')
+
   if (serverJ) {
     const path = "./result.txt";
     let content = "";
     if (fs.existsSync(path)) {
       content = fs.readFileSync(path, "utf8");
     }
-    await sendNotify("腾讯新闻-" + new Date().toLocaleDateString(), content);
+    await sendNotify("京东签到-" + new Date().toLocaleDateString(), content);
     console.log('发送结果完毕')
   }
 }
