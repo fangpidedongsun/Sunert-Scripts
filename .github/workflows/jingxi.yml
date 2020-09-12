@@ -3,8 +3,8 @@
 
 name: jingxi
 
-#on:
- # push:
+on:
+  push:
     branches: 
      - master 
 
@@ -15,7 +15,6 @@ name: jingxi
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     if: github.event.repository.owner.id == github.event.sender.id
     steps:
