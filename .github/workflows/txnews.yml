@@ -5,6 +5,7 @@
 #   - master 
 
 name: txnews
+
 on:
   push:
     branches: 
