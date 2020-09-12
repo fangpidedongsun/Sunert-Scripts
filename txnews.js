@@ -57,7 +57,89 @@ if ($.isNode()) {
   cookieVal = process.env.cookieVal;
   signurlVal = process.env.signurlVal;
   videoVal = process.env.videoVal
+  if (process.env.PUSH_KEY) {
+  SCKEY = process.env.PUSH_KEY;
 }
+if (process.env.BARK_PUSH) {
+  if(process.env.BARK_PUSH.indexOf('https') > -1 || process.env.BARK_PUSH.indexOf('http') > -1) {
+    BARK_PUSH = process.env.BARK_PUSH
+  } else {
+    BARK_PUSH = `https://api.day.app/${process.env.BARK_PUSH}`
+  }
+  module.exports = {
+  sendNotify,
+  BarkNotify,
+  SCKEY,
+  BARK_PUSH
+}
+ }
+}
+
+function sendNotify(text, desp) {
+  return  new Promise(resolve => {
+    if (SCKEY) {
+      const options = {
+        url: `https://sc.ftqq.com/${SCKEY}.send`,
+        body: `text=${text}&desp=${desp}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      }
+      $.post(options, (err, resp, data) => {
+        try {
+          if (err) {
+            console.log('发送通知调用API失败！！')
+          } else {
+            data = JSON.parse(data);
+            if (data.errno === 0) {
+              console.log('server酱发送通知消息成功')
+            } else if (data.errno === 1024) {
+              console.log('PUSH_KEY 错误')
+            }
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve(data);
+        }
+      })
+    } else {
+      console.log('您未提供server酱的SCKEY，取消微信推送消息通知');
+      resolve()
+    }
+  })
+}
+function BarkNotify(text, desp) {
+  return  new Promise(resolve => {
+    if (BARK_PUSH) {
+      const options = {
+        url: `${BARK_PUSH}/${encodeURIComponent(text)}/${encodeURIComponent(desp)}`,
+      }
+      $.get(options, (err, resp, data) => {
+        try {
+          if (err) {
+            console.log('发送Bark通知调用API失败！！')
+          } else {
+            data = JSON.parse(data);
+            if (data.code === 200) {
+              console.log('发送Bark通知消息成功')
+            } else {
+              console.log(data.message);
+            }
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve();
+        }
+      })
+    } else {
+      console.log('您未提供Bark的APP推送BARK_PUSH，取消Bark推送消息通知');
+      resolve()
+    }
+  })
+}
+
 
 let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
@@ -280,7 +362,7 @@ function showmsg() {
       $.msg($.name+` 今日任务已完成✅`,subTile,detail,{ 'open-url': "https://news.qq.com/FERD/cjRedDown.htm", 'media-url': imgurl } )
     }
     if ($.isNode()) {
-        $.log($.name,subTile,detail)
+        $.log('-----------'+'\n'+$.name,subTile,detail)
       }
     resolve()
   })
