@@ -9,7 +9,7 @@ on:
      - master 
 
   schedule:
-    - cron: '20 18 * * *'
+     - cron: '20 18 * * *'
   watch:
     types: started
 
