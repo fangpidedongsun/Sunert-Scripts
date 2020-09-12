@@ -279,6 +279,9 @@ function showmsg() {
     else if (openreadred==readredtotal&&openvideored==videoredtotal){
       $.msg($.name+` 今日任务已完成✅`,subTile,detail,{ 'open-url': "https://news.qq.com/FERD/cjRedDown.htm", 'media-url': imgurl } )
     }
+    if ($.isNode()) {
+        $.log($.name,subTile,detail)
+      }
     resolve()
   })
 }
