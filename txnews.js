@@ -66,12 +66,13 @@ let isGetCookie = typeof $request !== 'undefined'
 if (isGetCookie) {
   GetCookie()
 } else {
-
-  !(async () => {
+ !(async () => {
     {
-      if(signurlVal){
-      ID = signurlVal.match(/devid=[a-zA-Z0-9_-]+/g)
-      }
+  if(!signurlVal&&cookieVal){
+    $.msg($.name, '【提示】请先获取腾讯新闻一Cookie',"", {"open-url": "qqnews://article_9500?tab=news_news&from=self"})
+}
+    ID =   signurlVal.match(/devid=[a-zA-Z0-9_-]+/g) 
+
       $.log("\n开始获取您的活动ID")
       await getsign();
       await activity();
@@ -90,11 +91,11 @@ if (isGetCookie) {
       await showmsg();
   if ($.isNode()){
    if (readnum%notifyInterval!==0){
-        await notify.sendNotify($.name+`\n`+subTile+`\n`+detail);
+        await notify.sendNotify($.name,subTile,detail);
       }
     }
     else if (openreadred==readredtotal&&openvideored==videoredtotal){
-        await notify.sendNotify($.name+` 今日任务已完成✅`+`\n`+subTile+`\n`+detail);
+        await notify.sendNotify($.name+` 今日任务已完成✅`,subTile,detail);
       }
       console.log('-----------'+'\n'+$.name,subTile,detail)
     }
