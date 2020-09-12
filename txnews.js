@@ -89,7 +89,7 @@ if (isGetCookie) {
       await getTotal();
       await showmsg();
   if ($.isNode()){
-   if (readnum%notifyInterval==0){
+   if (readnum%notifyInterval!==0){
         await notify.sendNotify($.name+`\n`+subTile+`\n`+detail);
       }
     }
